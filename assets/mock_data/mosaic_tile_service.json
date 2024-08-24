@@ -1,0 +1,40 @@
+{
+  "data": [
+    {
+      "main_text": "市政服務",
+      "sub_text": "Service",
+      "icon": "assets/svg/Illustrations_gov.svg",
+      "destination_url": ""
+    },
+    {
+      "main_text": "有話要說",
+      "sub_text": "1999",
+      "icon": "assets/svg/icon_talk.svg",
+      "destination_url": ""
+    },
+    {
+      "main_text": "警政報警",
+      "sub_text": "Police",
+      "icon": "assets/svg/icon_police.svg",
+      "destination_url": ""
+    },
+    {
+      "main_text": "防疫醫療",
+      "sub_text": "Health",
+      "icon": "assets/svg/icon_covid_medical.svg",
+      "destination_url": ""
+    },
+    {
+      "main_text": "市政APP",
+      "sub_text": "More",
+      "icon": "assets/svg/icon_more.svg",
+      "destination_url": ""
+    },
+    {
+      "main_text": "城市生活",
+      "sub_text": "City Life",
+      "icon": "assets/svg/Illustrations_chair.svg",
+      "destination_url": ""
+    }
+  ]
+}
