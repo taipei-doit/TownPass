@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/page/city_service/model/my_service_item_model.dart';
+import 'package:town_pass/page/city_service/model/my_service_model.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class PinnedServiceItemWidget extends StatelessWidget {
   final MyServiceItem service;
@@ -17,18 +17,6 @@ class PinnedServiceItemWidget extends StatelessWidget {
     this.onTap,
     this.isEdit,
   });
-
-  factory PinnedServiceItemWidget.add({GestureTapCallback? onTap}) {
-    return PinnedServiceItemWidget(
-      service: MyServiceItem(
-        icon: Assets.svg.iconAdd.svg(),
-        title: '新增',
-        description: '',
-        destinationUrl: '',
-      ),
-      onTap: () => onTap?.call(),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {

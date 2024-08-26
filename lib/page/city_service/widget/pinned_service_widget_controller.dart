@@ -1,5 +1,5 @@
-import 'package:town_pass/page/city_service/model/my_service_item_model.dart';
 import 'package:get/get.dart';
+import 'package:town_pass/page/city_service/model/my_service_model.dart';
 
 class PinnedServiceWidgetController extends GetxController {
   final RxList<MyServiceItemId> _pinnedList = RxList(

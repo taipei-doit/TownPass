@@ -1,13 +1,13 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/page/city_service/model/my_service_item_model.dart';
+import 'package:town_pass/page/city_service/model/my_service_model.dart';
 import 'package:town_pass/page/city_service/widget/pinned_service_item_widget.dart';
 import 'package:town_pass/page/city_service/widget/pinned_service_widget_controller.dart';
 import 'package:town_pass/util/extension/list.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
 
 class PinnedServiceWidget extends GetView<PinnedServiceWidgetController> {
   final GestureTapCallback? onMoreTap;
