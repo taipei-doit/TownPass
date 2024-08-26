@@ -116,12 +116,13 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                           Fluttertoast.showToast(msg: '置頂服務已達上限(12個)');
                                         }
                                     }
-                                  }
-                                  if (itemId.item.destinationUrl.isNotEmpty) {
-                                    Get.toNamed(
-                                      TPRoute.webView,
-                                      arguments: itemId.item.destinationUrl,
-                                    );
+                                  } else {
+                                    if (itemId.item.destinationUrl.isNotEmpty) {
+                                      Get.toNamed(
+                                        TPRoute.webView,
+                                        arguments: itemId.item.destinationUrl,
+                                      );
+                                    }
                                   }
                                 },
                                 child: Padding(
