@@ -23,5 +23,10 @@ export default defineNuxtConfig({
   devServer: {
     host: '0.0.0.0', // 监听所有接口，包括 127.0.0.1
     port: 3000
+  },
+  runtimeConfig: {
+    public: {
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY
+    }
   }
 })

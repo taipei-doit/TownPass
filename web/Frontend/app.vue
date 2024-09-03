@@ -6,11 +6,8 @@
   transition: all 0.1s;
 }
 </style>
-
 <template>
   <div>
-    <h1>Welcome to the homepage</h1>
-    <p>Click the button below to navigate to the about page</p>
-    
+    <NuxtPage/>
   </div>
 </template>
