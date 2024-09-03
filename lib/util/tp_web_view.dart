@@ -66,7 +66,11 @@ class TPWebView extends StatelessWidget {
       body: TPInAppWebView(
         onWebViewCreated: (controller) {
           webViewController.value = controller;
-          controller.loadUrl(urlRequest: URLRequest(url: WebUri(url)));
+          try {
+            controller.loadUrl(urlRequest: URLRequest(url: WebUri(url)));
+          } catch (_) {
+            controller.loadData(data: _failedToLoadUrlData(url: url));
+          }
         },
         onUpdateVisitedHistory: (_, __, ___) async {
           canGoBack.value = await webViewController.value?.canGoBack() ?? false;
@@ -305,4 +309,26 @@ class TPInAppWebView extends StatelessWidget {
       onMicrophoneCaptureStateChanged: onMicrophoneCaptureStateChanged,
     );
   }
+}
+
+String _failedToLoadUrlData({String? url}) {
+  return '''
+  <!DOCTYPE html>
+  <html>
+  <head>
+    <title>Failed to load URL</title>
+  </head>
+  <body>
+
+  <h1>Failed to load url:</h1>
+
+  <h3>${switch (url) {
+    null => '(null)',
+    String() when url.isEmpty => '(empty)',
+    _ => url,
+  }}</h3>
+
+  </body>
+  </html>
+  ''';
 }

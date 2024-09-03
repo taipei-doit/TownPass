@@ -8,6 +8,7 @@ import 'package:town_pass/gen/assets.gen.dart';
 // Then add MyServiceItem within MyServiceIdExt extension.
 
 enum MyServiceItemId {
+  dedicatedHistoryChat,
   dedicatedLine,
   districtOffice,
   reportIssue,
@@ -34,6 +35,13 @@ enum MyServiceItemId {
 extension MyServiceIdExt on MyServiceItemId {
   MyServiceItem get item {
     return switch (this) {
+      MyServiceItemId.dedicatedHistoryChat => MyServiceItem(
+          title: '文化時空隧道',
+          description: '這是文化時空隧道',
+          icon: Assets.svg.iconTaipeiRadio.svg(),
+          category: MyServiceCategory.cityService,
+          destinationUrl: 'http://172.19.32.1:3000/',
+        ),
       MyServiceItemId.dedicatedLine => MyServiceItem(
           title: '1999',
           description: '播打網路語音通話',
@@ -165,7 +173,8 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '提供各區日常服務地圖查找',
           icon: Assets.svg.iconLocationSearch24.svg(),
           category: MyServiceCategory.explore,
-          destinationUrl: 'https://taipei-pass-service.vercel.app/surrounding-service/',
+          destinationUrl:
+              'https://taipei-pass-service.vercel.app/surrounding-service/',
         ),
       MyServiceItemId.zoo => MyServiceItem(
           title: '愛遊動物園',

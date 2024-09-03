@@ -23,6 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
+    
     namespace "com.example.townpass"
     compileSdk flutter.compileSdkVersion
     ndkVersion "25.1.8937393"
@@ -41,6 +42,8 @@ android {
     }
 
     defaultConfig {
+        minSdkVersion flutter.minSdkVersion  // 必須設置為至少 19
+        
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.townpass"
         // You can update the following values to match your application needs.

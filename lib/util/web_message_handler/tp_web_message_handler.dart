@@ -20,7 +20,7 @@ abstract class TPWebMessageHandler {
     required Function(WebMessage replyWebMessage)? onReply,
   });
 
-  WebMessage replyWebMessage({required Object data}) {
+  WebMessage replyWebMessage({required Object? data}) {
     return TPWebStringMessageReply(
       name: name,
       data: data,

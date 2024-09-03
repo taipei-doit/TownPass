@@ -4,7 +4,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 abstract class TPWebMessageReply {
   final String name;
-  final Object data;
+  final Object? data;
 
   const TPWebMessageReply({
     required this.name,
