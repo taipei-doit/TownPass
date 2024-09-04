@@ -26,7 +26,10 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      OPENAI_API_KEY: process.env.OPENAI_API_KEY
+      OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+      GEMINI_API_KEY: process.env.GEMINI_API_KEY,
+      AZURE_API_KEY: process.env.AZURE_API_KEY,
+      AZURE_ENDPOINT: process.env.AZURE_ENDPOINT
     }
   }
 })

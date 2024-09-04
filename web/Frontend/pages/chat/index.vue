@@ -1,46 +1,69 @@
 <script setup>
-import TextList from '@/components/TextList.vue';
 const config = useRuntimeConfig();
 
 const messageLists = ref([]);
 const tempUserMessage = ref('');
+const isLoading = ref(false);
 
-const add_user_message = () => {
+const add_user_message = async () => {
   if (tempUserMessage.value.trim()) {
     messageLists.value.push({
       type: 'user',
       text: tempUserMessage.value
     });
+    const userMessage = tempUserMessage.value;
     tempUserMessage.value = '';
-    // 模擬AI回覆
-    setTimeout(() => {
+    
+    // Show loading state
+    isLoading.value = true;
+    
+    try {
+      const gptResponse = await get_gpt_response(userMessage);
       messageLists.value.push({
         type: 'ai',
-        text: 'ai 回覆'
+        text: gptResponse
       });
-    }, 300);
+    } catch (error) {
+      console.error('Error getting GPT response:', error);
+      messageLists.value.push({
+        type: 'ai',
+        text: 'Sorry, I encountered an error. Please try again.'
+      });
+    } finally {
+      isLoading.value = false;
+    }
   }
 };
 
-
-// 取得GPT回覆
-const get_gpt_response = async () => {
-  const { data, error } = await useFetch('https://api.openai.com/v1/chat/completions', {
+const get_gpt_response = async (message) => {
+  const { data, error } = await useFetch(config.public.AZURE_ENDPOINT, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${config.public.OPENAI_API_KEY}`,
+      'api-key': config.public.AZURE_API_KEY
     },
     body: JSON.stringify({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: tempUserMessage.value }],
+      messages: [
+        {
+          role: "system",
+          content: "You are an AI assistant that helps people find information."
+        },
+        {
+          role: "user",
+          content: message
+        }
+      ],
+      temperature: 0.7,
+      top_p: 0.95,
+      max_tokens: 800
     }),
   });
+
   if (error.value) {
-    console.error('Error fetching GPT response:', error.value);
-  } else if (data.value) {
-    return data.value.choices[0].message.content;
+    throw new Error(error.value.message);
   }
+  console.log('data.value', data.value);
+  return data.value.choices[0].message.content;
 };
 </script>
 <template>
@@ -62,6 +85,10 @@ const get_gpt_response = async () => {
           :class="['message', message.type === 'user' ? 'user-message' : 'ai-message']">
           {{ message.text }}
         </div>
+        <div v-if="isLoading" class="message ai-message">
+          Thinking...
+        </div>
+
       </div>
     </main>
 
