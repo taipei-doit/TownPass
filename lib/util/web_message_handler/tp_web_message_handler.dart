@@ -14,7 +14,7 @@ abstract class TPWebMessageHandler {
   String get name;
 
   Future<void> handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage replyWebMessage)? onReply,
@@ -34,7 +34,7 @@ class UserinfoWebMessageHandler extends TPWebMessageHandler {
 
   @override
   Future<void> handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required onReply,
@@ -51,17 +51,17 @@ class LaunchMapWebMessageHandler extends TPWebMessageHandler {
 
   @override
   handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
   }) async {
-    if (message == null) {
+    if (message == null || message is! String) {
       onReply?.call(
         replyWebMessage(data: false),
       );
     }
-    final Uri uri = Uri.parse(message!);
+    final Uri uri = Uri.parse(message as String);
     final bool canLaunch = await canLaunchUrl(uri);
 
     onReply?.call(
@@ -80,7 +80,7 @@ class PhoneCallMessageHandler extends TPWebMessageHandler {
 
   @override
   handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
@@ -109,7 +109,7 @@ class LocationMessageHandler extends TPWebMessageHandler {
 
   @override
   handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
@@ -135,7 +135,7 @@ class DeviceInfoMessageHandler extends TPWebMessageHandler {
 
   @override
   handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
@@ -152,7 +152,7 @@ class OpenLinkMessageHandler extends TPWebMessageHandler {
 
   @override
   handle({
-    required String? message,
+    required Object? message,
     required WebUri? sourceOrigin,
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
