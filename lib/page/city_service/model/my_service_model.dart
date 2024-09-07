@@ -14,6 +14,7 @@ enum MyServiceItemId {
   reservation,
   iVoting,
   dashboard,
+  parkFlow,
   survey,
   police,
   neighborhood,
@@ -76,6 +77,20 @@ extension MyServiceIdExt on MyServiceItemId {
           category: MyServiceCategory.cityService,
           destinationUrl: 'https://dashboard.gov.taipei/',
         ),
+      MyServiceItemId.parkFlow => MyServiceItem(
+        title: '找車位',
+        description: 'Park smart, stay on time',
+        icon: Assets.svg.iconParkFlow.svg(),
+        category: MyServiceCategory.cityService,
+        destinationUrl: 'https://vaclis-taipei-town.web.app/',
+      ),
+      MyServiceItemId.parkFlow => MyServiceItem(
+        title: '找車位 dev',
+        description: 'Park smart, stay on time',
+        icon: Assets.svg.iconParkFlow.svg(),
+        category: MyServiceCategory.cityService,
+        destinationUrl: 'https://localhost:5173/',
+      ),
       MyServiceItemId.survey => MyServiceItem(
           title: '意見調查',
           description: '了解民眾與台北市互動體驗調查',
