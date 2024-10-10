@@ -26,6 +26,6 @@ class HolderViewController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    index.value = SharedPreferencesService().instance.getInt('home_index') ?? index.value;
+    index.value = SharedPreferencesService().instance.getInt(SharedPreferencesService.keyHomeIndex) ?? index.value;
   }
 }

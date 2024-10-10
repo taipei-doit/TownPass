@@ -6,6 +6,7 @@ class SharedPreferencesService extends GetxService {
 
   SharedPreferences get instance => _sharedPreferences!;
 
+  static String keyHomeIndex = 'home_index';
   Future<SharedPreferencesService> init() async {
     await SharedPreferences.getInstance().then(
       (value) => _sharedPreferences = value,
