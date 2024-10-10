@@ -27,7 +27,7 @@ class SubscriptionWidget extends StatelessWidget {
         const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 24),
-          color: const Color(0xFFEDF8FA),
+          color: TPColors.primary50,
           child: Row(
             children: [
               Assets.svg.illustrationsBookingS.svg(width: 54, height: 46),
@@ -35,10 +35,10 @@ class SubscriptionWidget extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  const TPText(
                     '活動、服務、福利 一鍵讓你知',
                     style: TextStyle(
-                      color: Color(0xFF30383D),
+                      color: TPColors.grayscale800,
                       fontSize: 16,
                       fontFamily: FontFamily.pingFangTC,
                       fontWeight: FontWeight.w500,
@@ -48,15 +48,15 @@ class SubscriptionWidget extends StatelessWidget {
                     onTap: () {
                       // TODO: do subscription setting page
                     },
-                    child: const Text(
+                    child: const TPText(
                       '訂閱設定',
                       style: TextStyle(
-                        color: Color(0xFF5AB4C5),
+                        color: TPColors.primary500,
                         fontSize: 16,
                         fontFamily: FontFamily.pingFangTC,
                         fontWeight: FontWeight.w400,
                         decoration: TextDecoration.underline,
-                        decorationColor: Color(0xFF5AB4C5),
+                        decorationColor: TPColors.primary500,
                       ),
                     ),
                   )

@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/gen/fonts.gen.dart';
-import 'package:flutter/material.dart';
+import 'package:town_pass/util/tp_colors.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class CityNewsWidget extends StatelessWidget {
@@ -58,12 +59,12 @@ class _Button extends StatelessWidget {
         decoration: ShapeDecoration(
           color: Colors.white,
           shape: RoundedRectangleBorder(
-            side: const BorderSide(width: 1, color: Color(0xFFF1F3F4)),
+            side: const BorderSide(width: 1, color: TPColors.grayscale50),
             borderRadius: BorderRadius.circular(6),
           ),
           shadows: const [
             BoxShadow(
-              color: Color(0xFFE3E7E9),
+              color: TPColors.grayscale100,
               blurRadius: 8,
               offset: Offset(0, 1),
               spreadRadius: 0,
@@ -79,7 +80,7 @@ class _Button extends StatelessWidget {
               text,
               textAlign: TextAlign.center,
               style: const TextStyle(
-                color: Color(0xFF30383D),
+                color: TPColors.grayscale800,
                 fontSize: 16,
                 fontFamily: FontFamily.pingFangTC,
                 fontWeight: FontWeight.w600,

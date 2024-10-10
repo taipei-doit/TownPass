@@ -1,6 +1,7 @@
-import 'package:town_pass/page/holder/holder_view_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:town_pass/page/holder/holder_view_controller.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
 class HolderView extends GetView<HolderViewController> {
   const HolderView({super.key});
@@ -29,8 +30,8 @@ class HolderView extends GetView<HolderViewController> {
           () => BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
             items: controller.items,
-            selectedItemColor: const Color(0xFF2EB6C7),
-            unselectedItemColor: const Color(0xFF000000),
+            selectedItemColor: TPColors.primary500,
+            unselectedItemColor: TPColors.grayscale950,
             selectedLabelStyle: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w400,
