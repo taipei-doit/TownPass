@@ -119,4 +119,10 @@ final class TPTextStyles extends TextStyle {
     fontFamily: FontFamily.pingFangTC,
     fontWeight: FontWeight.w600,
   );
+
+  static const TPTextStyles titleSemiBold = TPTextStyles(
+    fontSize: 18,
+    fontFamily: FontFamily.pingFangTC,
+    fontWeight: FontWeight.w600,
+  );
 }

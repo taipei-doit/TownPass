@@ -10,7 +10,7 @@
       "main_text": "有話要說",
       "sub_text": "1999",
       "icon": "assets/svg/icon_talk.svg",
-      "destination_url": ""
+      "destination_url": "https://taipei-pass-service.vercel.app/citizen-report/"
     },
     {
       "main_text": "警政報警",

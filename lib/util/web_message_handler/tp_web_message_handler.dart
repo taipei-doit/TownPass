@@ -74,6 +74,63 @@ class LaunchMapWebMessageHandler extends TPWebMessageHandler {
   }
 }
 
+class Agree1999MessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => '1999agree';
+
+  @override
+  handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required Function(WebMessage reply)? onReply,
+  }) async {
+    if (message == null) {
+      onReply?.call(
+        replyWebMessage(data: false),
+      );
+    }
+    final Uri uri = Uri.parse('tel://1999');
+
+    final bool canLaunch = await canLaunchUrl(uri);
+    if (!canLaunch) {
+      onReply?.call(replyWebMessage(data: false));
+      return;
+    }
+
+    final bool userAgreement = SharedPreferencesService().instance.getBool(SharedPreferencesService.keyPhoneCallUserAgreement) ?? false;
+    if (!userAgreement) {
+      await Get.toNamed(TPRoute.phoneCallUserAgreement);
+
+      final bool userAgreement = SharedPreferencesService().instance.getBool(SharedPreferencesService.keyPhoneCallUserAgreement) ?? false;
+      if (!userAgreement) {
+        onReply?.call(replyWebMessage(data: false));
+        return;
+      }
+    }
+
+    await TPDialog.show(
+      padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 40),
+      showCloseCross: true,
+      barrierDismissible: false,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Assets.svg.phoneCallService.svg(),
+          const TPText('語音通報', style: TPTextStyles.titleSemiBold),
+          const SizedBox(height: 8),
+          const TPText('電話撥號'),
+          const SizedBox(height: 24),
+          TPButton.primary(
+            text: '立即撥號',
+            onPressed: () async => await launchUrl(uri),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class PhoneCallMessageHandler extends TPWebMessageHandler {
   @override
   String get name => 'phone_call';
