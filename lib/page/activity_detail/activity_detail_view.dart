@@ -26,9 +26,17 @@ class ActivityDetailView extends StatelessWidget {
       body: Column(
         children: [
           CachedNetworkImage(imageUrl: activity.imageUrl),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: TPText(
+              activity.title,
+              style: TPTextStyles.h3SemiBold,
+              color: TPColors.primary500,
+            ),
+          ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: Column(
                 children: [
                   Padding(
@@ -42,6 +50,7 @@ class ActivityDetailView extends StatelessWidget {
                   const SizedBox(height: 16),
                   Expanded(
                     child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 16.0),
                       child: TPText(
                         activity.content,
                         style: TPTextStyles.h3Regular,
