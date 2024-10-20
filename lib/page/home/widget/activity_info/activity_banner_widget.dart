@@ -1,6 +1,7 @@
 import 'package:town_pass/bean/activity.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget_controller.dart';
 import 'package:town_pass/util/tp_cached_network_image.dart';
+import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -108,7 +109,7 @@ class _BannerRectangle extends StatelessWidget {
       width: 132,
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(3)),
-        color: Color(0xFFFFFFFF),
+        color: TPColors.white,
       ),
       clipBehavior: Clip.antiAlias,
       child: child,
@@ -135,7 +136,7 @@ class _BannerTextPlaceHolder extends StatelessWidget {
     return Container(
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(2)),
-        color: Color(0xFFFFFFFF),
+        color: TPColors.white,
       ),
       height: 16,
       width: width,

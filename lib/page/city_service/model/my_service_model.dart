@@ -53,14 +53,14 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '陳情系統',
           icon: Assets.svg.iconTalk.svg(),
           category: MyServiceCategory.cityService,
-          destinationUrl: '',
+          destinationUrl: 'https://taipei-pass-service.vercel.app/citizen-report/',
         ),
       MyServiceItemId.reservation => MyServiceItem(
           title: '臨櫃叫號',
           description: '臨櫃服務查看叫號、預約',
           icon: Assets.svg.iconReservation.svg(),
           category: MyServiceCategory.cityService,
-          destinationUrl: '',
+          destinationUrl: 'https://taipei-pass-service.vercel.app/counter-calling/',
         ),
       MyServiceItemId.iVoting => MyServiceItem(
           title: '網路投票',

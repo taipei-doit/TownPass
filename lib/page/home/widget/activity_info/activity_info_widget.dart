@@ -2,6 +2,7 @@ import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/gen/fonts.gen.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget_controller.dart';
+import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
 import 'package:flutter/cupertino.dart';
@@ -21,7 +22,7 @@ class ActivityInfoWidget extends StatelessWidget {
               const Text(
                 '活動訊息',
                 style: TextStyle(
-                  color: Color(0xFF30383D),
+                  color: TPColors.grayscale800,
                   fontSize: 20,
                   fontFamily: FontFamily.pingFangTC,
                   fontWeight: FontWeight.w600,
@@ -40,7 +41,7 @@ class ActivityInfoWidget extends StatelessWidget {
                       '更多',
                       textAlign: TextAlign.right,
                       style: TextStyle(
-                        color: Color(0xFF30383D),
+                        color: TPColors.grayscale800,
                         fontSize: 16,
                         fontFamily: FontFamily.pingFangTC,
                         fontWeight: FontWeight.w400,

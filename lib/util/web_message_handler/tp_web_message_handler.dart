@@ -1,13 +1,20 @@
 import 'dart:async';
 
-import 'package:town_pass/service/account_service.dart';
-import 'package:town_pass/service/device_service.dart';
-import 'package:town_pass/service/geo_locator_service.dart';
-import 'package:town_pass/util/tp_route.dart';
-import 'package:town_pass/util/web_message_handler/tp_web_message_reply.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
+import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/service/account_service.dart';
+import 'package:town_pass/service/device_service.dart';
+import 'package:town_pass/service/geo_locator_service.dart';
+import 'package:town_pass/service/notification_service.dart';
+import 'package:town_pass/service/shared_preferences_service.dart';
+import 'package:town_pass/util/tp_button.dart';
+import 'package:town_pass/util/tp_dialog.dart';
+import 'package:town_pass/util/tp_route.dart';
+import 'package:town_pass/util/tp_text.dart';
+import 'package:town_pass/util/web_message_handler/tp_web_message_reply.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 abstract class TPWebMessageHandler {
@@ -71,6 +78,63 @@ class LaunchMapWebMessageHandler extends TPWebMessageHandler {
     if (canLaunch) {
       await launchUrl(uri);
     }
+  }
+}
+
+class Agree1999MessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => '1999agree';
+
+  @override
+  handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required Function(WebMessage reply)? onReply,
+  }) async {
+    if (message == null) {
+      onReply?.call(
+        replyWebMessage(data: false),
+      );
+    }
+    final Uri uri = Uri.parse('tel://1999');
+
+    final bool canLaunch = await canLaunchUrl(uri);
+    if (!canLaunch) {
+      onReply?.call(replyWebMessage(data: false));
+      return;
+    }
+
+    final bool userAgreement = SharedPreferencesService().instance.getBool(SharedPreferencesService.keyPhoneCallUserAgreement) ?? false;
+    if (!userAgreement) {
+      await Get.toNamed(TPRoute.phoneCallUserAgreement);
+
+      final bool userAgreement = SharedPreferencesService().instance.getBool(SharedPreferencesService.keyPhoneCallUserAgreement) ?? false;
+      if (!userAgreement) {
+        onReply?.call(replyWebMessage(data: false));
+        return;
+      }
+    }
+
+    await TPDialog.show(
+      padding: const EdgeInsets.symmetric(horizontal: 68, vertical: 40),
+      showCloseCross: true,
+      barrierDismissible: false,
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Assets.svg.phoneCallService.svg(),
+          const TPText('語音通報', style: TPTextStyles.titleSemiBold),
+          const SizedBox(height: 8),
+          const TPText('電話撥號'),
+          const SizedBox(height: 24),
+          TPButton.primary(
+            text: '立即撥號',
+            onPressed: () async => await launchUrl(uri),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -165,5 +229,30 @@ class OpenLinkMessageHandler extends TPWebMessageHandler {
       TPRoute.webView,
       arguments: message,
     );
+  }
+}
+
+class NotifyMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'notify';
+
+  @override
+  Future<void> handle(
+      {required Object? message,
+      required WebUri? sourceOrigin,
+      required bool isMainFrame,
+      required Function(
+        WebMessage replyWebMessage,
+      )? onReply}) async {
+    switch (message) {
+      case Object json when json is Map<String, dynamic>:
+        NotificationService.showNotification(
+          title: json['title'],
+          content: json['content'],
+        );
+      default:
+        onReply?.call(replyWebMessage(data: false));
+        return;
+    }
   }
 }

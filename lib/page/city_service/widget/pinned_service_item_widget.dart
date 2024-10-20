@@ -56,7 +56,7 @@ class PinnedServiceItemWidget extends StatelessWidget {
                   shape: CircleBorder(),
                   shadows: [
                     BoxShadow(
-                      color: Color(0xFFE3E7E9),
+                      color: TPColors.grayscale100,
                       blurRadius: 8,
                       offset: Offset(0, 1),
                       spreadRadius: 0,

@@ -8,9 +8,11 @@ abstract class TPWebMessageListener {
         UserinfoWebMessageHandler(),
         LaunchMapWebMessageHandler(),
         PhoneCallMessageHandler(),
+        Agree1999MessageHandler(),
         LocationMessageHandler(),
         DeviceInfoMessageHandler(),
         OpenLinkMessageHandler(),
+        NotifyMessageHandler(),
       ];
 
   static WebMessageListener webMessageListener() {

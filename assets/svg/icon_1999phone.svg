@@ -1,0 +1,13 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="icon_1999phone" clip-path="url(#clip0_2714_3504)">
+<path id="Path 11932" d="M6.66667 5.33334H12L14.6667 12L11.3333 14C12.7613 16.8954 15.1046 19.2387 18 20.6667L20 17.3333L26.6667 20V25.3333C26.6667 26.0406 26.3857 26.7189 25.8856 27.219C25.3855 27.7191 24.7072 28 24 28C18.799 27.6839 13.8935 25.4753 10.2091 21.7909C6.52467 18.1065 4.31607 13.201 4 8.00001C4 7.29277 4.28095 6.61449 4.78105 6.11439C5.28115 5.61429 5.95942 5.33334 6.66667 5.33334Z" stroke="#475259" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+<path id="Path 22831" d="M22 7V13" stroke="#5AB4C5" stroke-width="2" stroke-linecap="round"/>
+<path id="Path 22832" d="M26 5V13" stroke="#5AB4C5" stroke-width="2" stroke-linecap="round"/>
+<path id="Path 22833" d="M30 1V13" stroke="#5AB4C5" stroke-width="2" stroke-linecap="round"/>
+</g>
+<defs>
+<clipPath id="clip0_2714_3504">
+<rect width="32" height="32" fill="white"/>
+</clipPath>
+</defs>
+</svg>

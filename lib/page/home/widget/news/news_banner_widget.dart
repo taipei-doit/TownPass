@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:town_pass/page/home/widget/news/news_banner_widget_controller.dart';
+import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -62,7 +63,7 @@ class NewsBannerWidget extends StatelessWidget {
                             fit: BoxFit.fitWidth,
                             placeholder: (context, url) => const Center(
                               child: CircularProgressIndicator(
-                                color: Color(0xFF2EB6C7),
+                                color: TPColors.primary500,
                               ),
                             ),
                             errorWidget: (context, url, error) => const Icon(Icons.error),
@@ -104,7 +105,7 @@ class _BannerRectangle extends StatelessWidget {
         height: 173.5,
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(10)),
-          color: Color(0xFFFFFFFF),
+          color: TPColors.white,
         ),
         clipBehavior: Clip.antiAlias,
         child: child,

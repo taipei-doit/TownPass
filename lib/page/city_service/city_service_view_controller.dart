@@ -31,7 +31,7 @@ MosaicTileService get _defaultStaticService => const MosaicTileService(
         MosaicTileServiceItem(
           mainText: '有話要說',
           subText: '1999',
-          url: '',
+          url: 'https://taipei-pass-service.vercel.app/citizen-report/',
           icon: 'assets/svg/icon_talk.svg',
         ),
         MosaicTileServiceItem(

@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:town_pass/gen/assets.gen.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
 class TPCachedNetworkImage extends StatelessWidget {
   final String imageUrl;
@@ -19,7 +19,7 @@ class TPCachedNetworkImage extends StatelessWidget {
     this.width,
     this.height,
     this.fit,
-    this.color = const Color(0xFFFFFFFF),
+    this.color = TPColors.white,
     this.borderRadius = 6,
   });
 
@@ -40,7 +40,7 @@ class TPCachedNetworkImage extends StatelessWidget {
         fit: fit,
         placeholder: (context, string) => const Center(child: CircularProgressIndicator()),
         errorWidget: (context, string, object) => ColoredBox(
-          color: const Color(0xFFE3E7E9),
+          color: TPColors.grayscale100,
           child: Center(
             // TODO: change this svg
             child: Assets.svg.logoS.svg(),

@@ -1,7 +1,8 @@
-import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view_controller.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view_controller.dart';
+import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
 extension on ToggleTab {
   String get string {
@@ -30,7 +31,7 @@ class PortfolioAndAuthView extends StatelessWidget {
                   color: Colors.cyan,
                   borderColor: Colors.cyan,
                   fillColor: Colors.cyan,
-                  selectedColor: const Color(0xFFFFFFFF),
+                  selectedColor: TPColors.white,
                   isSelected: List.generate(
                     controller.toggles.length,
                     (index) => index == controller.selectIndex,
