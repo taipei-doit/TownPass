@@ -12,6 +12,7 @@ abstract class TPWebMessageListener {
         LocationMessageHandler(),
         DeviceInfoMessageHandler(),
         OpenLinkMessageHandler(),
+        NotifyMessageHandler(),
       ];
 
   static WebMessageListener webMessageListener() {

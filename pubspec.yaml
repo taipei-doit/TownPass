@@ -37,6 +37,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_inappwebview: ^6.0.0
+  flutter_local_notifications: ^17.2.3
   flutter_native_splash: ^2.4.1
   flutter_svg: ^2.0.10+1
   fluttertoast: ^8.2.8
