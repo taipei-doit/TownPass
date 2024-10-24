@@ -233,6 +233,8 @@ class OpenLinkMessageHandler extends TPWebMessageHandler {
 }
 
 class NotifyMessageHandler extends TPWebMessageHandler {
+  static Map<String, Timer> timers = {};
+
   @override
   String get name => 'notify';
 
@@ -246,10 +248,29 @@ class NotifyMessageHandler extends TPWebMessageHandler {
       )? onReply}) async {
     switch (message) {
       case Object json when json is Map<String, dynamic>:
-        NotificationService.showNotification(
-          title: json['title'],
-          content: json['content'],
-        );
+        final String title = json['title'];
+        final String content = json['content'];
+        if (RegExp(r'已訂閱(.+)').hasMatch(content)) {
+          final String target = RegExp(r'已訂閱(.+)').firstMatch(content)!.group(1)!;
+          timers.addAll({
+            target: Timer.periodic(
+              const Duration(seconds: 5),
+              (_) {
+                NotificationService.showNotification(
+                  title: title,
+                  content: content,
+                );
+              },
+            )
+          });
+        } else if (RegExp(r'已取消訂閱(.+)').hasMatch(content)) {
+          final String target = RegExp(r'已取消訂閱(.+)').firstMatch(content)!.group(1)!;
+          timers.remove(target)?.cancel();
+          NotificationService.showNotification(
+            title: title,
+            content: content,
+          );
+        }
       default:
         onReply?.call(replyWebMessage(data: false));
         return;
