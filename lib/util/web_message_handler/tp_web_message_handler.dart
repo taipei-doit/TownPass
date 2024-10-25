@@ -233,7 +233,7 @@ class OpenLinkMessageHandler extends TPWebMessageHandler {
 }
 
 class NotifyMessageHandler extends TPWebMessageHandler {
-  static Map<String, Timer> timers = {};
+  static Map<String, ({int id, Timer timer})> timers = {};
 
   @override
   String get name => 'notify';
@@ -252,20 +252,38 @@ class NotifyMessageHandler extends TPWebMessageHandler {
         final String content = json['content'];
         if (RegExp(r'已訂閱(.+)').hasMatch(content)) {
           final String target = RegExp(r'已訂閱(.+)').firstMatch(content)!.group(1)!;
-          timers.addAll({
-            target: Timer.periodic(
-              const Duration(seconds: 5),
-              (_) {
-                NotificationService.showNotification(
-                  title: title,
-                  content: content,
-                );
+          if (!timers.containsKey(target)) {
+            NotificationService.showNotification(
+              title: title,
+              content: content,
+            );
+            timers.addAll(
+              {
+                target: (
+                  id: 0,
+                  timer: Timer.periodic(
+                    const Duration(seconds: 10),
+                    (_) {
+                      NotificationService.showNotification(
+                        title: title,
+                        content: '$target, id: ${timers[target]!.id}',
+                      );
+                      timers.update(
+                        target,
+                        (value) => (
+                          id: value.id + 1,
+                          timer: value.timer,
+                        ),
+                      );
+                    },
+                  ),
+                ),
               },
-            )
-          });
+            );
+          }
         } else if (RegExp(r'已取消訂閱(.+)').hasMatch(content)) {
           final String target = RegExp(r'已取消訂閱(.+)').firstMatch(content)!.group(1)!;
-          timers.remove(target)?.cancel();
+          timers.remove(target)?.timer.cancel();
           NotificationService.showNotification(
             title: title,
             content: content,
