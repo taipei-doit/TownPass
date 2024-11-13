@@ -10,6 +10,7 @@ import 'package:town_pass/service/device_service.dart';
 import 'package:town_pass/service/geo_locator_service.dart';
 import 'package:town_pass/service/notification_service.dart';
 import 'package:town_pass/service/shared_preferences_service.dart';
+import 'package:town_pass/service/subscription_service.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_dialog.dart';
 import 'package:town_pass/util/tp_route.dart';
@@ -250,6 +251,14 @@ class NotifyMessageHandler extends TPWebMessageHandler {
           title: json['title'],
           content: json['content'],
         );
+        final String content = json['content'];
+        if (RegExp(r'已訂閱(.+)').hasMatch(content)) {
+          final String target = RegExp(r'已訂閱(.+)').firstMatch(content)!.group(1)!;
+          Get.find<SubscriptionService>().addSubscription(title: target);
+        } else if (RegExp(r'已取消訂閱(.+)').hasMatch(content)) {
+          final String target = RegExp(r'已取消訂閱(.+)').firstMatch(content)!.group(1)!;
+          Get.find<SubscriptionService>().removeSubscription(title: target);
+        }
       default:
         onReply?.call(replyWebMessage(data: false));
         return;
