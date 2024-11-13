@@ -1,9 +1,9 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_constant.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 // appbar leading IconButton cannot be change
 class TPAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -58,7 +58,7 @@ class TPAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(
             width: 24,
             height: 24,
-            child: Assets.svg.logoS.svg(),
+            child: Semantics(excludeSemantics: true, child: Assets.svg.logoS.svg()),
           ),
           const SizedBox(width: 8),
         ],

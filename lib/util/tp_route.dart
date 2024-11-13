@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:town_pass/page/account/account_view.dart';
 import 'package:town_pass/page/account/account_view_controller.dart';
 import 'package:town_pass/page/activity_detail/activity_detail_view.dart';
@@ -15,8 +16,9 @@ import 'package:town_pass/page/city_service_edit/city_service_edit_view.dart';
 import 'package:town_pass/page/city_service_edit/city_service_edit_view_controller.dart';
 import 'package:town_pass/page/feedback/feedback_view.dart';
 import 'package:town_pass/page/feedback/feedback_view_controller.dart';
+import 'package:town_pass/page/holder/holder_view.dart';
+import 'package:town_pass/page/holder/holder_view_controller.dart';
 import 'package:town_pass/page/home/home_view_controller.dart';
-import 'package:town_pass/page/home/subscription/subscription_view.dart';
 import 'package:town_pass/page/invoice_receipt/invoice_receipt_view.dart';
 import 'package:town_pass/page/language/language_view.dart';
 import 'package:town_pass/page/language/language_view_controller.dart';
@@ -29,12 +31,10 @@ import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreeme
 import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view.dart';
 import 'package:town_pass/page/setting/setting_view.dart';
 import 'package:town_pass/page/setting/setting_view_controller.dart';
+import 'package:town_pass/page/subscription/subscription_view.dart';
 import 'package:town_pass/page/suspend_account/suspend_account_controller.dart';
 import 'package:town_pass/page/suspend_account/suspend_account_view.dart';
-import 'package:town_pass/page/holder/holder_view.dart';
 import 'package:town_pass/util/tp_web_view.dart';
-import 'package:town_pass/page/holder/holder_view_controller.dart';
-import 'package:get/get.dart';
 
 abstract class TPRoute {
   static const String holder = '/';
@@ -71,7 +71,7 @@ abstract class TPRoute {
           ..put<CityServiceViewController>(CityServiceViewController())
           ..put<PerkViewController>(PerkViewController())
           ..put<PinnedServiceWidgetController>(PinnedServiceWidgetController());
-          // ..put<BillViewController>(BillViewController())
+        // ..put<BillViewController>(BillViewController())
       }),
     ),
     GetPage(

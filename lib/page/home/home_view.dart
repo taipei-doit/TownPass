@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_info_widget.dart';
 import 'package:town_pass/page/home/widget/city_news/city_news_widget.dart';
@@ -6,8 +8,6 @@ import 'package:town_pass/page/home/widget/subscription/subscription_widget.dart
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -19,7 +19,10 @@ class HomeView extends StatelessWidget {
         showLogo: true,
         title: '首頁',
         leading: IconButton(
-          icon: Assets.svg.iconPerson.svg(),
+          icon: Semantics(
+            label: '帳戶',
+            child: Assets.svg.iconPerson.svg(),
+          ),
           onPressed: () => Get.toNamed(TPRoute.account),
         ),
         backgroundColor: TPColors.white,
@@ -34,6 +37,7 @@ class HomeView extends StatelessWidget {
           SliverToBoxAdapter(child: CityNewsWidget()),
           SliverToBoxAdapter(child: SizedBox(height: 16)),
           SliverToBoxAdapter(child: SubscriptionWidget()),
+          SliverToBoxAdapter(child: SizedBox(height: 32)),
         ],
       ),
     );

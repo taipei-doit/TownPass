@@ -20,7 +20,10 @@ class CityServiceView extends StatelessWidget {
         showLogo: true,
         title: '服務',
         leading: IconButton(
-          icon: Assets.svg.iconPerson.svg(),
+          icon: Semantics(
+            label: '帳戶',
+            child: Assets.svg.iconPerson.svg(),
+          ),
           onPressed: () => Get.toNamed(TPRoute.account),
         ),
       ),
@@ -45,30 +48,33 @@ class CityServiceView extends StatelessWidget {
   }
 
   Widget _myServiceTitle() {
-    return Row(
-      children: [
-        TPText(
-          '我的服務',
-          style: TPTextStyles.h3SemiBold.copyWith(fontSize: 18),
-          color: TPColors.grayscale900,
-        ),
-        const Spacer(),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () => Get.toNamed(TPRoute.serviceEdit),
-          child: Row(
-            children: [
-              const TPText(
-                '更多',
-                style: TPTextStyles.h3Regular,
-                color: TPColors.grayscale700,
-              ),
-              const SizedBox(width: 8.0),
-              Assets.svg.iconExpand.svg(),
-            ],
+    return Semantics(
+      explicitChildNodes: true,
+      child: Row(
+        children: [
+          TPText(
+            '我的服務',
+            style: TPTextStyles.h3SemiBold.copyWith(fontSize: 18),
+            color: TPColors.grayscale900,
           ),
-        ),
-      ],
+          const Spacer(),
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () => Get.toNamed(TPRoute.serviceEdit),
+            child: Row(
+              children: [
+                const TPText(
+                  '更多',
+                  style: TPTextStyles.h3Regular,
+                  color: TPColors.grayscale700,
+                ),
+                const SizedBox(width: 8.0),
+                Assets.svg.iconExpand.svg(),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

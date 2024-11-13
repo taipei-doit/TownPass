@@ -1,12 +1,12 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/extension/string.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_switch.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class TPSettingList extends StatelessWidget {
   final List<TPSettingListTile> children;
@@ -30,24 +30,24 @@ class TPSettingListTile extends StatelessWidget {
   final EdgeInsets? padding;
   final Color? backgroundColor;
   final GestureTapCallback? onTap;
-  final GestureLongPressCallback? onLongPress;
   final Widget? child;
+  final bool? excludeFromSemantics;
 
   const TPSettingListTile({
     super.key,
     this.padding,
     this.backgroundColor,
     this.onTap,
-    this.onLongPress,
     this.child,
+    this.excludeFromSemantics,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      excludeFromSemantics: excludeFromSemantics ?? false,
       behavior: HitTestBehavior.opaque,
       onTap: () => onTap?.call(),
-      onLongPress: () => onLongPress?.call(),
       child: Container(
         color: backgroundColor,
         padding: padding ?? const EdgeInsets.all(16.0),
@@ -57,6 +57,7 @@ class TPSettingListTile extends StatelessWidget {
   }
 
   factory TPSettingListTile.listTile({
+    bool? excludeFromSemantics,
     Widget? leading,
     Widget? title,
     Widget? subtitle,
@@ -68,10 +69,10 @@ class TPSettingListTile extends StatelessWidget {
     GestureLongPressCallback? onLongPress,
   }) {
     return TPSettingListTile(
+      excludeFromSemantics: excludeFromSemantics,
       padding: padding,
       backgroundColor: backgroundColor ?? TPColors.white,
       onTap: onTap,
-      onLongPress: onLongPress,
       child: Row(
         children: [
           if (leading != null) ...[
@@ -115,6 +116,7 @@ class TPSettingListTile extends StatelessWidget {
     GestureLongPressCallback? onLongPress,
   }) {
     return TPSettingListTile.listTile(
+      excludeFromSemantics: true,
       onTap: () => onTap?.call(),
       onLongPress: () => onLongPress?.call(),
       leading: leading,
@@ -170,6 +172,7 @@ class TPSettingListTile extends StatelessWidget {
     GestureLongPressCallback? onLongPress,
   }) {
     return TPSettingListTile.listTile(
+      excludeFromSemantics: true,
       backgroundColor: background ?? TPColors.transparent,
       onTap: () => onTap?.call(),
       onLongPress: () => onLongPress?.call(),
@@ -188,6 +191,7 @@ class TPSettingListTile extends StatelessWidget {
     TPSwitchController? controller,
   }) {
     return TPSettingListTile.listTile(
+      excludeFromSemantics: true,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11.5),
       backgroundColor: background,
       onTap: () => onTap?.call(),
@@ -202,6 +206,7 @@ class TPSettingListTile extends StatelessWidget {
 
   factory TPSettingListTile.line() {
     return const TPSettingListTile(
+      excludeFromSemantics: true,
       padding: EdgeInsets.zero,
       child: TPLine.horizontal(
         margin: EdgeInsets.symmetric(horizontal: 16),
@@ -211,6 +216,7 @@ class TPSettingListTile extends StatelessWidget {
 
   factory TPSettingListTile.space({double? height, Color? backgroundColor}) {
     return TPSettingListTile(
+      excludeFromSemantics: true,
       backgroundColor: backgroundColor,
       padding: EdgeInsets.zero,
       child: SizedBox(height: height ?? 8.0),
