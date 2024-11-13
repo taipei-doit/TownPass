@@ -21,9 +21,13 @@ class HomeBannerItem {
   @JsonKey(name: 'web_url')
   final String webUrl;
 
+  @JsonKey(name: 'title')
+  final String title;
+
   const HomeBannerItem({
     required this.imageUrl,
     required this.webUrl,
+    required this.title,
   });
 
   factory HomeBannerItem.fromJson(Map<String, dynamic> json) => _$HomeBannerItemFromJson(json);

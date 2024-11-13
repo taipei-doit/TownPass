@@ -5,11 +5,13 @@ class BasicInfoEditArgument {
   final String title;
   final String currentValue;
   final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
 
   const BasicInfoEditArgument({
     required this.title,
     required this.currentValue,
     this.validator,
+    this.keyboardType,
   });
 }
 
