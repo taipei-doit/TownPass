@@ -15,20 +15,23 @@ class TrendingServiceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: TPText(
-            '熱門',
-            style: TPTextStyles.h3SemiBold.copyWith(fontSize: 18.0),
-            color: TPColors.grayscale900,
+    return Semantics(
+      explicitChildNodes: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: TPText(
+              '熱門',
+              style: TPTextStyles.h3SemiBold.copyWith(fontSize: 18.0),
+              color: TPColors.grayscale900,
+            ),
           ),
-        ),
-        const SizedBox(height: 7.0),
-        Table(children: _tableRowList),
-      ],
+          const SizedBox(height: 7.0),
+          Table(children: _tableRowList),
+        ],
+      ),
     );
   }
 

@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:town_pass/page/home/widget/news/news_banner_widget_controller.dart';
-import 'package:town_pass/util/tp_colors.dart';
-import 'package:town_pass/util/tp_route.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:town_pass/page/home/widget/news/news_banner_widget_controller.dart';
+import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_route.dart';
 
 class NewsBannerWidget extends StatelessWidget {
   const NewsBannerWidget({super.key});
@@ -55,18 +55,21 @@ class NewsBannerWidget extends StatelessWidget {
                     (item) {
                       return GestureDetector(
                         onTap: () => Get.toNamed(TPRoute.webView, arguments: item.webUrl),
-                        child: _BannerRectangle(
-                          child: CachedNetworkImage(
-                            imageUrl: item.imageUrl,
-                            height: double.infinity,
-                            width: double.infinity,
-                            fit: BoxFit.fitWidth,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(
-                                color: TPColors.primary500,
+                        child: Semantics(
+                          label: item.title,
+                          child: _BannerRectangle(
+                            child: CachedNetworkImage(
+                              imageUrl: item.imageUrl,
+                              height: double.infinity,
+                              width: double.infinity,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator(
+                                  color: TPColors.primary500,
+                                ),
                               ),
+                              errorWidget: (context, url, error) => const Icon(Icons.error),
                             ),
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
                           ),
                         ),
                       );

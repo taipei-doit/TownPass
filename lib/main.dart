@@ -1,16 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/service/account_service.dart';
 import 'package:town_pass/service/device_service.dart';
 import 'package:town_pass/service/geo_locator_service.dart';
 import 'package:town_pass/service/notification_service.dart';
 import 'package:town_pass/service/package_service.dart';
+import 'package:town_pass/service/shared_preferences_service.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
-import 'package:town_pass/service/shared_preferences_service.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:get/get.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,7 +58,10 @@ class MyApp extends StatelessWidget {
           actionsIconTheme: IconThemeData(size: 56),
         ),
         actionIconTheme: ActionIconThemeData(
-          backButtonIconBuilder: (_) => Assets.svg.iconLeftArrow.svg(width: 24, height: 24),
+          backButtonIconBuilder: (_) => Semantics(
+            excludeSemantics: true,
+            child: Assets.svg.iconLeftArrow.svg(width: 24, height: 24),
+          ),
         ),
       ),
       debugShowCheckedModeBanner: false,

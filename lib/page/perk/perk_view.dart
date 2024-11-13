@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_web_view.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:get/get.dart';
 
 class PerkView extends StatelessWidget {
   const PerkView({super.key});
@@ -16,12 +16,18 @@ class PerkView extends StatelessWidget {
         showLogo: true,
         title: '優惠',
         leading: IconButton(
-          icon: Assets.svg.iconPerson.svg(),
+          icon: Semantics(
+            label: '帳戶',
+            child: Assets.svg.iconPerson.svg(),
+          ),
           onPressed: () => Get.toNamed(TPRoute.account),
         ),
         actions: [
           IconButton(
-            icon: Assets.svg.iconCouponTicket.svg(),
+            icon: Semantics(
+              label: '票夾',
+              child: Assets.svg.iconCouponTicket.svg(),
+            ),
             onPressed: () async {
               await Get.toNamed(TPRoute.webView, arguments: 'https://taipei-pass-service.vercel.app/ticket-wallet');
             },
