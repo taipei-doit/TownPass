@@ -44,7 +44,9 @@ dependencies:
   get: ^4.6.6
   geolocator: ^13.0.1
   intl: any
+  image_picker: ^1.1.2
   json_annotation: ^4.9.0
+  mobile_scanner: ^6.0.2
   package_info_plus: ^8.0.2
   shared_preferences: ^2.3.2
   shimmer: ^3.0.0
