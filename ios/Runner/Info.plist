@@ -54,6 +54,10 @@
 			<key>LocationTemporaryUsageKey</key>
 			<string>TownPass 需要精確定位權限才可正常使用</string>
 		</dict>
+		<key>NSCameraUsageDescription</key>
+        <string>This app needs camera access to scan QR codes</string>
+        <key>NSPhotoLibraryUsageDescription</key>
+        <string>This app needs photos access to get QR code from photo library</string>
 		<key>UIStatusBarHidden</key>
 		<false/>
 	</dict>

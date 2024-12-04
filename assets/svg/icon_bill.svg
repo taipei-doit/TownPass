@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <g data-name="组 23403">
+        <g data-name="组 23402">
+            <path data-name="路径 19889" d="M16.3 4.959c0 2.392-3.49 4.331-7.8 4.331S.709 7.351.709 4.959" transform="translate(2.291 1.372)" style="stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none"/>
+            <path data-name="路径 19890" d="M16.3 5.04c0-2.392-3.49-4.331-7.8-4.331S.709 2.648.709 5.04" transform="translate(2.291 1.291)" style="stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none"/>
+            <path data-name="直线 11266" transform="translate(3 6.33)" style="stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none" d="M0 0v4.331"/>
+            <path data-name="直线 11267" transform="translate(3 10.661)" style="stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none" d="M0 0v4.331"/>
+            <path data-name="直线 11268" transform="translate(18.591 10.661)" style="stroke-linecap:round;stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none" d="M0 0v3.951"/>
+            <path data-name="直线 11269" transform="translate(18.591 6.33)" style="stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none" d="M0 0v4.331"/>
+            <path data-name="路径 19891" d="M.709 13.459c0 2.391 3.49 4.331 7.8 4.331" transform="translate(2.291 1.534)" style="stroke-linecap:round;stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none"/>
+            <path data-name="路径 19892" d="M12.452 12.837a11.561 11.561 0 0 1-10.686-1.463A2.968 2.968 0 0 1 .709 9.209" transform="translate(2.291 1.453)" style="stroke-linecap:round;stroke-width:1.6px;stroke:#333;stroke-miterlimit:10;fill:none"/>
+            <path data-name="直线 11270" transform="translate(14.208 19.638)" style="stroke:#2eb6c7;stroke-linecap:round;stroke-width:1.6px;fill:none" d="M0 0h6.198"/>
+            <path data-name="直线 11271" transform="translate(17.927 17.159)" style="stroke:#2eb6c7;stroke-linecap:round;stroke-width:1.6px;fill:none" d="m0 0 2.479 2.479"/>
+            <path data-name="直线 11272" transform="translate(17.927 19.638)" style="stroke:#2eb6c7;stroke-linecap:round;stroke-width:1.6px;fill:none" d="M0 2.479 2.479 0"/>
+        </g>
+        <path data-name="矩形 10491" style="fill:none" d="M0 0h24v24H0z"/>
+    </g>
+</svg>

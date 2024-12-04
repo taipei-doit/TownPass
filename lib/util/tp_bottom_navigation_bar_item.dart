@@ -1,4 +1,5 @@
 import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/page/bill/bill_view.dart';
 import 'package:town_pass/page/city_service/city_service_view.dart';
 import 'package:town_pass/page/home/home_view.dart';
 import 'package:town_pass/page/perk/perk_view.dart';
@@ -9,7 +10,7 @@ class TPBottomNavigationBarItemFactory {
         ServiceBottomNavigationBarItem(),
         HomeBottomNavigationBarItem(),
         PerkBottomNavigationBarItem(),
-        // BillBottomNavigationBarItem(),
+        BillBottomNavigationBarItem(),
       ];
 }
 
@@ -75,15 +76,18 @@ class PerkBottomNavigationBarItem extends TPBottomNavigationBarItem {
   StatelessWidget view() => const PerkView();
 }
 
-// class BillBottomNavigationBarItem extends TPBottomNavigationBarItem {
-//   const BillBottomNavigationBarItem();
-//
-//   @override
-//   Widget icon() => Assets.svg.iconTabbarAccountDefault.svg(height: 24, width: 24);
-//
-//   @override
-//   Widget activeIcon() => Assets.svg.iconTabbarAccountSelect.svg(height: 24, width: 24);
-//
-//   @override
-//   String label() => '帳務';
-// }
+class BillBottomNavigationBarItem extends TPBottomNavigationBarItem {
+  const BillBottomNavigationBarItem();
+
+  @override
+  Widget icon() => Assets.svg.iconTabbarAccountDefault.svg(height: 24, width: 24);
+
+  @override
+  Widget activeIcon() => Assets.svg.iconTabbarAccountSelect.svg(height: 24, width: 24);
+
+  @override
+  String label() => '帳務';
+
+  @override
+  StatelessWidget view() => const BillView();
+}

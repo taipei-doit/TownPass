@@ -298,3 +298,21 @@ class NotifyMessageHandler extends TPWebMessageHandler {
     }
   }
 }
+
+class QRCodeScanMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'qr_code_scan';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    final result = await Get.toNamed(TPRoute.qrCodeScan);
+    onReply?.call(
+      replyWebMessage(data: result),
+    );
+  }
+}

@@ -52,6 +52,11 @@ class AppHomePageView extends GetView<AppHomePageController> {
                   unselectedLeading: Assets.svg.iconTabbarCouponDefault.svg(),
                   title: '優惠',
                 ),
+                SettingSelectionListItem(
+                  selectedLeading: Assets.svg.iconTabbarAccountSelect.svg(),
+                  unselectedLeading: Assets.svg.iconTabbarAccountDefault.svg(),
+                  title: '帳務',
+                ),
               ],
             ),
           ],

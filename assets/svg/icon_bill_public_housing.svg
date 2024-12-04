@@ -1,0 +1,17 @@
+<svg id="Icon_bill_public_housing" data-name="Icon / bill / public housing" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+    <defs>
+        <style>
+            .cls-3{fill:#333}
+        </style>
+    </defs>
+    <path id="矩形_6820" data-name="矩形 6820" style="fill:none" d="M0 0h24v24H0z"/>
+    <g id="组件_236_27" data-name="组件 236 27" transform="translate(1 2)">
+        <g id="组_3901" data-name="组 3901">
+            <path id="路径_3989" data-name="路径 3989" d="M4749.9 372.45h-4.388v-8.726h4.388zm-2.712-1.677h1.035V365.4h-1.035z" transform="translate(-4734.217 -353.427)" style="fill:#2eb6c7"/>
+            <path id="路径_3985" data-name="路径 3985" class="cls-3" d="M4754.1 358.537a.835.835 0 0 1-.325-.066l-14.232-5.984a.839.839 0 0 1-.448-1.1.839.839 0 0 1 1.1-.448l14.232 5.983a.839.839 0 0 1 .448 1.1.838.838 0 0 1-.775.515z" transform="translate(-4732.931 -350.875)"/>
+            <path id="路径_3986" data-name="路径 3986" class="cls-3" d="M4732.235 363.117a.818.818 0 0 1-.763-.541.845.845 0 0 1 .473-1.082l7.929-3.093a.813.813 0 0 1 1.055.486.846.846 0 0 1-.474 1.081l-7.929 3.094a.825.825 0 0 1-.291.055z" transform="translate(-4731.418 -352.358)"/>
+            <path id="路径_3987" data-name="路径 3987" class="cls-3" d="M4754.218 370.086h-12.947v-17.427a.839.839 0 0 1 1.677 0v15.75h9.592V357.4a.839.839 0 0 1 1.677 0z" transform="translate(-4733.375 -351.063)"/>
+            <path id="路径_3988" data-name="路径 3988" class="cls-3" d="M4740.863 371.969h-7.043l-.021-9.829a.839.839 0 0 1 .838-.839.84.84 0 0 1 .839.839l.018 8.155h5.365a.837.837 0 1 1 0 1.673z" transform="translate(-4731.891 -352.945)"/>
+        </g>
+    </g>
+</svg>
