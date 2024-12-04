@@ -277,17 +277,9 @@ class QRCodeScanMessageHandler extends TPWebMessageHandler {
     required bool isMainFrame,
     required onReply,
   }) async {
-    switch (await Get.toNamed(TPRoute.qrCodeScan)) {
-      case String? result:
-        onReply?.call(replyWebMessage(
-          data: result,
-        ));
-        break;
-      default:
-        onReply?.call(replyWebMessage(
-          data: null,
-        ));
-        break;
-    }
+    final result = await Get.toNamed(TPRoute.qrCodeScan);
+    onReply?.call(
+      replyWebMessage(data: result),
+    );
   }
 }

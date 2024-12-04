@@ -1,9 +1,9 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/page/qr_code_scan/qr_code_scan_controller.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_dialog.dart';
@@ -121,38 +121,6 @@ class QRCodeScanView extends GetView<QRCodeScanController> {
         width: Get.width * 0.6,
         height: Get.width * 0.6,
       );
-}
-
-class QRCodeScanController extends GetxController {
-  final MobileScannerController scanController = MobileScannerController(formats: [BarcodeFormat.qrCode]);
-
-  Future<String?> scanFromImage() async {
-    try {
-      return switch (switch (await ImagePicker().pickImage(source: ImageSource.gallery)) {
-        null => null,
-        XFile file => await scanController.analyzeImage(file.path),
-      }) {
-        null => null,
-        BarcodeCapture capture => capture.barcodes.first.displayValue,
-      };
-    } catch (_) {}
-    return null;
-  }
-
-  @override
-  void onInit() {
-    super.onInit();
-
-    scanController.barcodes.listen((capture) {
-      Get.back(result: capture.barcodes.first.displayValue);
-    });
-  }
-
-  @override
-  void dispose() async {
-    await scanController.dispose();
-    super.dispose();
-  }
 }
 
 class _ScannerOverlay extends CustomPainter {

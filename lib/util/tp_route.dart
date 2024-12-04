@@ -29,6 +29,7 @@ import 'package:town_pass/page/perk/perk_view_controller.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view_controller.dart';
 import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view.dart';
+import 'package:town_pass/page/qr_code_scan/qr_code_scan_controller.dart';
 import 'package:town_pass/page/qr_code_scan/qr_code_scan_view.dart';
 import 'package:town_pass/page/setting/setting_view.dart';
 import 'package:town_pass/page/setting/setting_view_controller.dart';
