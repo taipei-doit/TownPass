@@ -25,6 +25,7 @@ import 'package:town_pass/page/language/language_view_controller.dart';
 import 'package:town_pass/page/message/message_view.dart';
 import 'package:town_pass/page/message/message_view_controller.dart';
 import 'package:town_pass/page/message_detail/message_detail_view.dart';
+import 'package:town_pass/page/online_police/online_police_view.dart';
 import 'package:town_pass/page/perk/perk_view_controller.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view_controller.dart';
@@ -51,6 +52,7 @@ abstract class TPRoute {
   static const String language = '/language';
   static const String message = '/message';
   static const String messageDetail = '/message_detail';
+  static const String onlinePolice = '/online_police';
   static const String phoneCallUserAgreement = '/phone_call_user_agreement';
   static const String portfolioAndAuth = '/portfolio_and_auth';
   static const String qrCodeScan = '/qr_code_scan';
@@ -127,6 +129,10 @@ abstract class TPRoute {
       page: () => const MessageDetailView(),
     ),
     GetPage(
+      name: onlinePolice,
+      page: () => const OnlinePoliceView(),
+    ),
+    GetPage(
       name: phoneCallUserAgreement,
       page: () => const PhoneCallUserAgreementView(),
       binding: BindingsBuilder(() {
@@ -189,4 +195,21 @@ abstract class TPRoute {
       page: () => const ActivityDetailView(),
     ),
   ];
+
+  static Future<T?> toUrl<T>({required String url}) async {
+    if (url.isEmpty) {
+      return Future.value(null);
+    }
+
+    return switch (Uri.tryParse(url)) {
+      null => Future.value(null),
+      Uri uri => switch (uri.scheme) {
+          'local' => Get.toNamed(uri.host),
+          _ => Get.toNamed(
+              TPRoute.webView,
+              arguments: uri.path,
+            ),
+        },
+    };
+  }
 }

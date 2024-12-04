@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/bean/mosaic_tile_service.dart';
 import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/util/tp_route.dart';
 
 class CityServiceViewController extends GetxController {
   final Rx<MosaicTileService> staticService = Rx(_defaultStaticService);
@@ -35,9 +36,9 @@ MosaicTileService get _defaultStaticService => const MosaicTileService(
           icon: 'assets/svg/icon_talk.svg',
         ),
         MosaicTileServiceItem(
-          mainText: '警政報警',
+          mainText: '警政報案',
           subText: 'Police',
-          url: '',
+          url: 'local://online_police',
           icon: 'assets/svg/icon_police.svg',
         ),
         MosaicTileServiceItem(

@@ -13,10 +13,10 @@
       "destination_url": "https://taipei-pass-service.vercel.app/citizen-report/"
     },
     {
-      "main_text": "警政報警",
+      "main_text": "警政報案",
       "sub_text": "Police",
       "icon": "assets/svg/icon_police.svg",
-      "destination_url": ""
+      "destination_url": "local://online_police"
     },
     {
       "main_text": "防疫醫療",

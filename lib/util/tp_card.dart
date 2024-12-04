@@ -4,21 +4,24 @@ import 'package:flutter/material.dart';
 class TPCard extends StatelessWidget {
   final Color? backgroundColor;
   final EdgeInsets? padding;
-  final Widget? child;
+  final double? cornerRadius;
+  final Widget child;
 
   const TPCard({
     super.key,
     this.backgroundColor,
     this.padding,
-    this.child,
+    this.cornerRadius,
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: ShapeDecoration(
         color: backgroundColor ?? TPColors.white,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cornerRadius ?? 3)),
         shadows: const [
           BoxShadow(
             color: Color(0x0A000000),

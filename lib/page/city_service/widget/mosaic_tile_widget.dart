@@ -64,12 +64,13 @@ class MosaicTileWidget extends StatelessWidget {
           height: constraint.maxWidth / goldenRatio,
           gradient: _backgroundGradient,
           onTap: () {
-            if (service.contentList[0].url.isNotEmpty) {
-              Get.toNamed(
-                TPRoute.webView,
-                arguments: service.contentList[0].url,
-              );
-            }
+            TPRoute.toUrl(url: service.contentList[0].url);
+            // if (service.contentList[0].url.isNotEmpty) {
+            //   Get.toNamed(
+            //     TPRoute.webView,
+            //     arguments: service.contentList[0].url,
+            //   );
+            // }
           },
           child: Stack(
             fit: StackFit.passthrough,
@@ -183,12 +184,13 @@ class MosaicTileWidget extends StatelessWidget {
           padding: EdgeInsets.zero,
           gradient: _backgroundGradient,
           onTap: () {
-            if (service.contentList[5].url.isNotEmpty) {
-              Get.toNamed(
-                TPRoute.webView,
-                arguments: service.contentList[5].url,
-              );
-            }
+            TPRoute.toUrl(url: service.contentList[5].url);
+            // if (service.contentList[5].url.isNotEmpty) {
+            //   Get.toNamed(
+            //     TPRoute.webView,
+            //     arguments: service.contentList[5].url,
+            //   );
+            // }
           },
           child: Stack(
             fit: StackFit.passthrough,
@@ -343,12 +345,13 @@ class _CardSplitButton extends StatelessWidget {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () {
-        if (item.url.isNotEmpty) {
-          Get.toNamed(
-            TPRoute.webView,
-            arguments: item.url,
-          );
-        }
+        TPRoute.toUrl(url: item.url);
+        // if (item.url.isNotEmpty) {
+        //   Get.toNamed(
+        //     TPRoute.webView,
+        //     arguments: item.url,
+        //   );
+        // }
       },
       child: Row(
         children: [
