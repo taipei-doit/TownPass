@@ -17,6 +17,7 @@ enum MyServiceItemId {
   survey,
   police,
   neighborhood,
+  disasterReport,
   vaccineAppointment,
   medicalAppointment,
   cityRadio,
@@ -97,6 +98,13 @@ extension MyServiceIdExt on MyServiceItemId {
           category: MyServiceCategory.cityService,
           destinationUrl: '',
         ),
+      MyServiceItemId.disasterReport => MyServiceItem(
+        title: '災情通報',
+        description: '立即通報發生災情地點',
+        icon: Assets.svg.iconEarthquake.svg(),
+        category: MyServiceCategory.cityService,
+        destinationUrl: 'https://taipei-pass-service.vercel.app/disaster-report',
+      ),
       MyServiceItemId.vaccineAppointment => MyServiceItem(
           title: '疫苗預約',
           description: '預約Covid-19、流感疫苗施打',
@@ -158,7 +166,7 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '市立圖書館借閱服務',
           icon: Assets.svg.iconLibraryBorrow.svg(),
           category: MyServiceCategory.cityLife,
-          destinationUrl: '',
+          destinationUrl: 'https://taipei-pass-service.vercel.app/library-service/',
         ),
       MyServiceItemId.locationSearch => MyServiceItem(
           title: '找地點',
