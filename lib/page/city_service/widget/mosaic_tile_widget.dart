@@ -64,13 +64,12 @@ class MosaicTileWidget extends StatelessWidget {
           height: constraint.maxWidth / goldenRatio,
           gradient: _backgroundGradient,
           onTap: () {
-            TPRoute.toUrl(url: service.contentList[0].url);
-            // if (service.contentList[0].url.isNotEmpty) {
-            //   Get.toNamed(
-            //     TPRoute.webView,
-            //     arguments: service.contentList[0].url,
-            //   );
-            // }
+            if (service.contentList[0].url.isNotEmpty) {
+              Get.toNamed(
+                TPRoute.webView,
+                arguments: service.contentList[0].url,
+              );
+            }
           },
           child: Stack(
             fit: StackFit.passthrough,
@@ -344,14 +343,15 @@ class _CardSplitButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () {
-        TPRoute.toUrl(url: item.url);
-        // if (item.url.isNotEmpty) {
-        //   Get.toNamed(
-        //     TPRoute.webView,
-        //     arguments: item.url,
-        //   );
-        // }
+      onTap: () async {
+        return switch (Uri.tryParse(item.url)?.scheme) {
+          'local' => await TPRoute.toUrl(url: item.url),
+          'http' || 'https' => await Get.toNamed(
+              TPRoute.webView,
+              arguments: item.url,
+            ),
+          _ => null,
+        };
       },
       child: Row(
         children: [
