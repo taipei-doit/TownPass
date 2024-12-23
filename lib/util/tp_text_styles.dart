@@ -1,8 +1,6 @@
 import 'package:town_pass/gen/fonts.gen.dart';
 import 'package:flutter/material.dart';
 
-// TODO: update each textstyle's usage description
-
 /// An immutable style describing how to format and paint text within City Pass App
 final class TPTextStyles extends TextStyle {
   const TPTextStyles({

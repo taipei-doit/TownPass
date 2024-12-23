@@ -42,7 +42,6 @@ class TPCachedNetworkImage extends StatelessWidget {
         errorWidget: (context, string, object) => ColoredBox(
           color: TPColors.grayscale100,
           child: Center(
-            // TODO: change this svg
             child: Assets.svg.logoS.svg(),
           ),
         ),
