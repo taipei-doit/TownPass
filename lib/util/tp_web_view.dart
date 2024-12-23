@@ -80,6 +80,7 @@ class TPWebView extends StatelessWidget {
           // should be deal individually (ask for user agreement)
           return GeolocationPermissionShowPromptResponse(origin: origin, allow: true, retain: true);
         },
+        onCloseWindow: (_) => Get.back(),
       ),
     );
   }
