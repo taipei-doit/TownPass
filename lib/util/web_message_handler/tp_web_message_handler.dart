@@ -222,14 +222,12 @@ class OpenLinkMessageHandler extends TPWebMessageHandler {
     required bool isMainFrame,
     required Function(WebMessage reply)? onReply,
   }) async {
-    if (message == null) {
-      onReply?.call(replyWebMessage(data: false));
-      return;
+    switch (message as String?) {
+      case String uri:
+        await TPRoute.openUri(uri: uri);
+      case null:
+        onReply?.call(replyWebMessage(data: false));
     }
-    await Get.toNamed(
-      TPRoute.webView,
-      arguments: message,
-    );
   }
 }
 

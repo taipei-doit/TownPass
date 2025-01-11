@@ -20,12 +20,9 @@ class AccountViewFooter extends GetView<AccountViewController> {
         children: [
           GestureDetector(
             behavior: HitTestBehavior.opaque,
-            onTap: () async {
-              await Get.toNamed(
-                TPRoute.webView,
-                arguments: 'https://id.taipei/tpcd/about/policies/privacy',
-              );
-            },
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://id.taipei/tpcd/about/policies/privacy',
+            ),
             child: TPText(
               '隱私權政策',
               style: TPTextStyles.h3Regular.copyWith(decoration: TextDecoration.underline),

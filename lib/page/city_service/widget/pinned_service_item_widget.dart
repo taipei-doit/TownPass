@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/city_service/model/my_service_model.dart';
 import 'package:town_pass/util/tp_colors.dart';
@@ -23,9 +22,9 @@ class PinnedServiceItemWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap?.call ??
           switch (service.destinationUrl.isNotEmpty) {
-            true => () => Get.toNamed(
-                  TPRoute.webView,
-                  arguments: service.destinationUrl,
+            true => () async => await TPRoute.openUri(
+                  uri: service.destinationUrl,
+                  forceTitle: service.forceWebViewTitle,
                 ),
             false => null,
           },

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_card.dart';
@@ -24,9 +23,8 @@ class OnlinePoliceView extends StatelessWidget {
             const SizedBox(height: 4),
             _Card(
                 icon: Assets.svg.iconOnlineReporting.svg(),
-                onTap: () => Get.toNamed(
-                      TPRoute.webView,
-                      arguments: 'https://taipei-pass-service.vercel.app/police-report',
+                onTap: () async => await TPRoute.openUri(
+                      uri: 'https://taipei-pass-service.vercel.app/police-report',
                     ),
                 child: Row(
                   children: [
@@ -46,9 +44,8 @@ class OnlinePoliceView extends StatelessWidget {
             const SizedBox(height: 8),
             _Card(
               icon: Assets.svg.iconCaseSearch.svg(),
-              onTap: () => Get.toNamed(
-                TPRoute.webView,
-                arguments: 'https://taipei-pass-service.vercel.app/police-report/record',
+              onTap: () async => await TPRoute.openUri(
+                uri: 'https://taipei-pass-service.vercel.app/police-report/record',
               ),
               child: Row(
                 children: [

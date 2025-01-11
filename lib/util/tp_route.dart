@@ -196,18 +196,21 @@ abstract class TPRoute {
     ),
   ];
 
-  static Future<T?> toUrl<T>({required String url}) async {
-    if (url.isEmpty) {
+  static Future openUri({required String uri, String? forceTitle}) async {
+    if (uri.isEmpty) {
       return Future.value(null);
     }
 
-    return switch (Uri.tryParse(url)) {
+    return switch (Uri.tryParse(uri)) {
       null => Future.value(null),
       Uri uri => switch (uri.scheme) {
           'local' => Get.toNamed(uri.host),
           _ => Get.toNamed(
               TPRoute.webView,
-              arguments: uri.path,
+              arguments: WebViewArgument(
+                url: uri.toString(),
+                forceTitle: forceTitle,
+              ),
             ),
         },
     };

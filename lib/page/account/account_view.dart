@@ -79,9 +79,8 @@ class AccountView extends GetView<AccountViewController> {
                     TPSettingListTile.space(),
                     TPSettingListTile.navigate(
                       title: '功能教學',
-                      onTap: () => Get.toNamed(
-                        TPRoute.webView,
-                        arguments: 'https://id.taipei/tpcd/about/faq',
+                      onTap: () async => await TPRoute.openUri(
+                        uri: 'https://id.taipei/tpcd/about/faq',
                       ),
                     ),
                     TPSettingListTile.line(),

@@ -63,11 +63,10 @@ class MosaicTileWidget extends StatelessWidget {
           padding: EdgeInsets.zero,
           height: constraint.maxWidth / goldenRatio,
           gradient: _backgroundGradient,
-          onTap: () {
+          onTap: () async {
             if (service.contentList[0].url.isNotEmpty) {
-              Get.toNamed(
-                TPRoute.webView,
-                arguments: service.contentList[0].url,
+              await TPRoute.openUri(
+                uri: service.contentList[0].url,
               );
             }
           },
@@ -182,15 +181,9 @@ class MosaicTileWidget extends StatelessWidget {
           height: constraint.maxWidth,
           padding: EdgeInsets.zero,
           gradient: _backgroundGradient,
-          onTap: () {
-            TPRoute.toUrl(url: service.contentList[5].url);
-            // if (service.contentList[5].url.isNotEmpty) {
-            //   Get.toNamed(
-            //     TPRoute.webView,
-            //     arguments: service.contentList[5].url,
-            //   );
-            // }
-          },
+          onTap: () async => await TPRoute.openUri(
+            uri: service.contentList[5].url,
+          ),
           child: Stack(
             fit: StackFit.passthrough,
             children: [
@@ -345,11 +338,8 @@ class _CardSplitButton extends StatelessWidget {
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         return switch (Uri.tryParse(item.url)?.scheme) {
-          'local' => await TPRoute.toUrl(url: item.url),
-          'http' || 'https' => await Get.toNamed(
-              TPRoute.webView,
-              arguments: item.url,
-            ),
+          'local' => await TPRoute.openUri(uri: item.url),
+          'http' || 'https' => await TPRoute.openUri(uri: item.url),
           _ => null,
         };
       },

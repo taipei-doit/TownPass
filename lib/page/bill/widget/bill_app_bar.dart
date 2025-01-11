@@ -76,17 +76,15 @@ class BillAppBar extends StatelessWidget implements PreferredSizeWidget {
               _BottomItem(
                 icon: Assets.svg.iconAppBarScan.svg(),
                 title: '掃描',
-                onTap: () => Get.toNamed(
-                  TPRoute.webView,
-                  arguments: 'https://taipei-pass-service.vercel.app/fee-payment/scan/',
+                onTap: () async => await TPRoute.openUri(
+                  uri: 'https://taipei-pass-service.vercel.app/fee-payment/scan/',
                 ),
               ),
               _BottomItem(
                 icon: Assets.svg.iconAppBarAccountingRecord.svg(),
                 title: '紀錄',
-                onTap: () => Get.toNamed(
-                  TPRoute.webView,
-                  arguments: 'https://taipei-pass-service.vercel.app/fee-payment/history/',
+                onTap: () async => await TPRoute.openUri(
+                  uri: 'https://taipei-pass-service.vercel.app/fee-payment/history/',
                 ),
               ),
               _BottomItem(

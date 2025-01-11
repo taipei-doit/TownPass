@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:town_pass/page/city_service/model/trending_service_model.dart';
 import 'package:town_pass/util/extension/list.dart';
 import 'package:town_pass/util/tp_colors.dart';
@@ -44,12 +43,10 @@ class TrendingServiceWidget extends StatelessWidget {
         (item) => _ServiceButton(
           icon: item.icon,
           title: item.title,
-          onTap: () async {
-            await Get.toNamed(
-              TPRoute.webView,
-              arguments: item.url,
-            );
-          },
+          onTap: () async => await TPRoute.openUri(
+            uri: item.url,
+            forceTitle: item.forceWebViewTitle,
+          ),
         ),
       )
       .toList();

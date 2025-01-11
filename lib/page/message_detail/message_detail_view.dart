@@ -1,4 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/bean/message.dart';
 import 'package:town_pass/bean/tp_rich_text.dart';
 import 'package:town_pass/util/extension/datetime.dart';
@@ -6,9 +9,6 @@ import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class MessageDetailView extends StatelessWidget {
   MessageItem get item => Get.arguments;
@@ -109,10 +109,9 @@ class _RichText extends StatelessWidget {
                 },
               ),
               recognizer: switch (object.url) {
-                String() => TapGestureRecognizer()
-                  ..onTap = () => Get.toNamed(
-                        TPRoute.webView,
-                        arguments: object.url,
+                String uri => TapGestureRecognizer()
+                  ..onTap = () async => await TPRoute.openUri(
+                        uri: uri,
                       ),
                 null => null,
               },

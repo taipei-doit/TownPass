@@ -106,7 +106,7 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                             () {
                               return GestureDetector(
                                 behavior: HitTestBehavior.opaque,
-                                onTap: () {
+                                onTap: () async {
                                   if (controller.isEditMode.value) {
                                     switch (controller.pinnedServiceController.pinnedList.contains(itemId)) {
                                       case true:
@@ -118,9 +118,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                     }
                                   } else {
                                     if (itemId.item.destinationUrl.isNotEmpty) {
-                                      Get.toNamed(
-                                        TPRoute.webView,
-                                        arguments: itemId.item.destinationUrl,
+                                      await TPRoute.openUri(
+                                        uri: itemId.item.destinationUrl,
                                       );
                                     }
                                   }
