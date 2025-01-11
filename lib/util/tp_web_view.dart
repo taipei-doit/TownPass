@@ -1,16 +1,27 @@
 import 'dart:collection';
 
-import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
-import 'package:town_pass/util/tp_colors.dart';
-import 'package:town_pass/util/web_message_handler/tp_web_message_listener.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
+import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/web_message_handler/tp_web_message_listener.dart';
 
-/// App 內開網頁使用，請使用 `routing` 並以 `url` 為參數帶入開啟網頁：
+class WebViewArgument {
+  final String? url;
+  final String? forceTitle;
+
+  const WebViewArgument({
+    this.url,
+    this.forceTitle,
+  });
+}
+
+/// App 內開網頁使用，可使用 `openUrl` 並以 `url` 為參數帶入開啟網頁： \
+/// `forceTitle` 將會強制套用網頁標題為
 ///
 /// ```
 /// Get.toNamed(TPRoute.webView, arguments: url);
@@ -23,7 +34,9 @@ class TPWebView extends StatelessWidget {
     this.titleController,
   });
 
-  String get url => Get.arguments ?? '';
+  String get url => (Get.arguments as WebViewArgument?)?.url ?? '';
+
+  String? get forceTitle => (Get.arguments as WebViewArgument?)?.forceTitle;
 
   final TPAppBarController _defaultTitleController = TPAppBarController();
 
@@ -75,7 +88,12 @@ class TPWebView extends StatelessWidget {
         onUpdateVisitedHistory: (_, __, ___) async {
           canGoBack.value = await webViewController.value?.canGoBack() ?? false;
         },
-        onTitleChanged: (_, title) => appBarController.title.value = title,
+        onTitleChanged: (_, title) {
+          appBarController.title.value = switch (forceTitle == null) {
+            true => title,
+            false => forceTitle,
+          };
+        },
         onGeolocationPermissionsShowPrompt: (controller, origin) async {
           // should be deal individually (ask for user agreement)
           return GeolocationPermissionShowPromptResponse(origin: origin, allow: true, retain: true);

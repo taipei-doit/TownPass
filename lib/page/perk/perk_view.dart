@@ -28,9 +28,9 @@ class PerkView extends StatelessWidget {
               label: '票夾',
               child: Assets.svg.iconCouponTicket.svg(),
             ),
-            onPressed: () async {
-              await Get.toNamed(TPRoute.webView, arguments: 'https://taipei-pass-service.vercel.app/ticket-wallet');
-            },
+            onPressed: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/ticket-wallet',
+            ),
           ),
         ],
       ),

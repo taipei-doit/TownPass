@@ -1,17 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/bean/activity.dart';
 import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/gen/fonts.gen.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_bottom_sheet.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
-import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_duration.dart';
+import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 class ActivityDetailView extends StatelessWidget {
   const ActivityDetailView({super.key});
@@ -71,9 +70,9 @@ class ActivityDetailView extends StatelessWidget {
               children: [
                 TPButton.primary(
                   text: '網址連結',
-                  onPressed: () async {
-                    await Get.toNamed(TPRoute.webView, arguments: activity.webUrl);
-                  },
+                  onPressed: () async => await TPRoute.openUri(
+                    uri: activity.webUrl ?? '',
+                  ),
                 ),
               ],
             ),

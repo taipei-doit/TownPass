@@ -39,10 +39,9 @@ class SubscriptionWidget extends StatelessWidget {
                 const Spacer(),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.webView,
-                      arguments: 'https://taipei-pass-service.vercel.app/subscription',
+                  onTap: () async {
+                    await TPRoute.openUri(
+                      uri: 'https://taipei-pass-service.vercel.app/subscription',
                     );
                   },
                   child: Row(
@@ -67,10 +66,9 @@ class SubscriptionWidget extends StatelessWidget {
                 ),
                 GestureDetector(
                   behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.webView,
-                      arguments: 'https://taipei-pass-service.vercel.app/subscription/item-list',
+                  onTap: () async {
+                    await TPRoute.openUri(
+                      uri: 'https://taipei-pass-service.vercel.app/subscription/item-list',
                     );
                   },
                   child: Row(
@@ -116,10 +114,9 @@ class SubscriptionWidget extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
-                          onTap: () {
-                            Get.toNamed(
-                              TPRoute.webView,
-                              arguments: 'https://taipei-pass-service.vercel.app/subscription',
+                          onTap: () async {
+                            await TPRoute.openUri(
+                              uri: 'https://taipei-pass-service.vercel.app/subscription',
                             );
                           },
                           child: const TPText(

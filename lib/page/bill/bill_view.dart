@@ -1,6 +1,5 @@
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/bill/widget/bill_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
@@ -101,73 +100,64 @@ class BillView extends StatelessWidget {
           _BillType(
             icon: Assets.svg.iconBillCar.svg(),
             name: '停車費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-5/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-5/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillWater.svg(),
             name: '水費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-6/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-6/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillLocalTax.svg(),
             name: '地方稅',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/tax-1/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/tax-1/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillTuition.svg(),
             name: '學雜費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-7/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-7/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillPublicHousing.svg(),
             name: '國/社宅租金維管費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-8/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-8/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillHospital.svg(),
             name: '聯合醫院醫療費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-9/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-9/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillHousingMaintenance.svg(),
             name: '平價住宅維護費',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-10/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-10/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillClass.svg(),
             name: '公訓處自費課程',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-11/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-11/',
             ),
           ),
           _BillType(
             icon: Assets.svg.iconBillOther.svg(),
             name: '其他',
-            onTap: () => Get.toNamed(
-              TPRoute.webView,
-              arguments: 'https://taipei-pass-service.vercel.app/fee-payment/others/',
+            onTap: () async => await TPRoute.openUri(
+              uri: 'https://taipei-pass-service.vercel.app/fee-payment/others/',
             ),
           ),
         ],

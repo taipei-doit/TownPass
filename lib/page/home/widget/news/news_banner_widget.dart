@@ -54,7 +54,7 @@ class NewsBannerWidget extends StatelessWidget {
               items: controller.list?.data.map<Widget>(
                     (item) {
                       return GestureDetector(
-                        onTap: () => Get.toNamed(TPRoute.webView, arguments: item.webUrl),
+                        onTap: () async => await TPRoute.openUri(uri: item.webUrl),
                         child: Semantics(
                           label: item.title,
                           child: _BannerRectangle(

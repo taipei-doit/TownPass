@@ -11,8 +11,9 @@ abstract final class TrendingServiceModel {
       ),
       TrendingService(
         icon: Assets.svg.iconDashboardReports.svg(),
-        title: '市民儀表板',
+        title: '市政資訊儀表板',
         url: 'https://dashboard.gov.taipei/',
+        forceWebViewTitle: '市政資訊儀表板',
       ),
       TrendingService(
         icon: Assets.svg.iconLocationSearch.svg(),
@@ -29,10 +30,12 @@ class TrendingService {
   final Widget icon;
   final String title;
   final String url;
+  final String? forceWebViewTitle;
 
   const TrendingService({
     required this.icon,
     required this.title,
     required this.url,
+    this.forceWebViewTitle,
   });
 }

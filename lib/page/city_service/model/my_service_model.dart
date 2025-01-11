@@ -71,11 +71,12 @@ extension MyServiceIdExt on MyServiceItemId {
           destinationUrl: '',
         ),
       MyServiceItemId.dashboard => MyServiceItem(
-          title: '市民儀表板',
+          title: '市政資訊儀表板',
           description: '提供臺北市生活的重要數據',
           icon: Assets.svg.iconDashboardPerson.svg(),
           category: MyServiceCategory.cityService,
           destinationUrl: 'https://dashboard.gov.taipei/',
+          forceWebViewTitle: '市政資訊儀表板',
         ),
       MyServiceItemId.survey => MyServiceItem(
           title: '意見調查',
@@ -99,12 +100,12 @@ extension MyServiceIdExt on MyServiceItemId {
           destinationUrl: '',
         ),
       MyServiceItemId.disasterReport => MyServiceItem(
-        title: '災情通報',
-        description: '立即通報發生災情地點',
-        icon: Assets.svg.iconEarthquake.svg(),
-        category: MyServiceCategory.cityService,
-        destinationUrl: 'https://taipei-pass-service.vercel.app/disaster-report',
-      ),
+          title: '災情通報',
+          description: '立即通報發生災情地點',
+          icon: Assets.svg.iconEarthquake.svg(),
+          category: MyServiceCategory.cityService,
+          destinationUrl: 'https://taipei-pass-service.vercel.app/disaster-report',
+        ),
       MyServiceItemId.vaccineAppointment => MyServiceItem(
           title: '疫苗預約',
           description: '預約Covid-19、流感疫苗施打',
@@ -192,6 +193,7 @@ class MyServiceItem {
   final String description;
   final String destinationUrl;
   final MyServiceCategory category;
+  final String? forceWebViewTitle;
 
   const MyServiceItem({
     required this.icon,
@@ -199,6 +201,7 @@ class MyServiceItem {
     required this.description,
     required this.destinationUrl,
     required this.category,
+    this.forceWebViewTitle,
   });
 }
 
