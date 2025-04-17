@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 
 class TPBottomSheet extends StatelessWidget {
   final Widget child;
+  final bool useSafeArea;
 
   const TPBottomSheet({
     super.key,
     required this.child,
+    this.useSafeArea = true,
   });
 
   @override
@@ -22,9 +24,15 @@ class TPBottomSheet extends StatelessWidget {
           )
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [child],
+      child: SafeArea(
+        left: useSafeArea,
+        top: useSafeArea,
+        right: useSafeArea,
+        bottom: useSafeArea,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [child],
+        ),
       ),
     );
   }
