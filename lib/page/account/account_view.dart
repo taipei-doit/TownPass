@@ -36,6 +36,7 @@ class AccountView extends GetView<AccountViewController> {
                         color: TPColors.grayscale800,
                       ),
                       trailing: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () async => await Get.toNamed(TPRoute.setting)?.then((value) => controller.syncAccount()),
                         child: Semantics(
                           label: '設定',
@@ -53,6 +54,7 @@ class AccountView extends GetView<AccountViewController> {
                         color: TPColors.grayscale800,
                       ),
                       trailing: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
                         onTap: () async => await Get.toNamed(TPRoute.setting)?.then((value) => controller.syncAccount()),
                         child: Semantics(
                           label: '設定',
