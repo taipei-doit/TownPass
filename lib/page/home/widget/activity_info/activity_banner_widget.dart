@@ -52,6 +52,7 @@ class _Banner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => Get.toNamed(TPRoute.activityDetail, arguments: activity),
       child: SizedBox(
         width: 134,

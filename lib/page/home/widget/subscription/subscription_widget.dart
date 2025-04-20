@@ -114,6 +114,7 @@ class SubscriptionWidget extends StatelessWidget {
                           ),
                         ),
                         GestureDetector(
+                          behavior: HitTestBehavior.opaque,
                           onTap: () async {
                             await TPRoute.openUri(
                               uri: 'https://taipei-pass-service.vercel.app/subscription',

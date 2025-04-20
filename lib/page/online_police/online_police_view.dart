@@ -156,6 +156,7 @@ class _Card extends TPCard {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: () => onTap?.call(),
       child: TPCard(
         cornerRadius: 8,

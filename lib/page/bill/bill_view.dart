@@ -28,6 +28,7 @@ class BillView extends StatelessWidget {
                 ),
                 const Spacer(),
                 GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {},
                   child: Row(
                     children: [
@@ -60,6 +61,7 @@ class BillView extends StatelessWidget {
               separatorBuilder: (_, __) => const SizedBox(width: 12.0),
               itemBuilder: (_, index) {
                 return GestureDetector(
+                  behavior: HitTestBehavior.opaque,
                   onTap: () {},
                   child: SizedBox(
                     width: 120 * goldenRatio,
