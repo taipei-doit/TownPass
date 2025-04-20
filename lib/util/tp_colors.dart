@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-/// Color tokens used by City Pass Application.
+/// Color tokens used by Town Pass Application.
 abstract final class TPColors {
   // Brand Color / Primary
 

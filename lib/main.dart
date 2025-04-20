@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'City Pass',
+      title: 'Town Pass',
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: TPColors.grayscale50,
