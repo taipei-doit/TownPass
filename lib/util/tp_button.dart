@@ -95,7 +95,6 @@ final class TPButton extends StatelessWidget {
             return null;
           },
         ),
-        shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
         overlayColor: WidgetStateProperty.all(pressedBackgroundColor),
         foregroundColor: WidgetStateProperty.all(
           switch (enable) {

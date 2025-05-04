@@ -66,6 +66,11 @@ class MyApp extends StatelessWidget {
             child: Assets.svg.iconLeftArrow.svg(width: 24, height: 24),
           ),
         ),
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: TPRoute.holder,
