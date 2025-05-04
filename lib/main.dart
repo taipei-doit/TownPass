@@ -55,6 +55,8 @@ class MyApp extends StatelessWidget {
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: TPColors.primary500),
         appBarTheme: const AppBarTheme(
+          backgroundColor: TPColors.white,
+          foregroundColor: TPColors.grayscale700,
           centerTitle: true,
           elevation: 0.0,
           iconTheme: IconThemeData(size: 56),
