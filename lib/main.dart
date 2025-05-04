@@ -51,7 +51,20 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
         scaffoldBackgroundColor: TPColors.grayscale50,
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          showUnselectedLabels: true,
+          showSelectedLabels: true,
+          type: BottomNavigationBarType.fixed,
           backgroundColor: TPColors.white,
+          selectedItemColor: TPColors.primary500,
+          unselectedItemColor: TPColors.grayscale950,
+          selectedLabelStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
+          unselectedLabelStyle: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+          ),
         ),
         colorScheme: ColorScheme.fromSeed(seedColor: TPColors.primary500),
         appBarTheme: const AppBarTheme(

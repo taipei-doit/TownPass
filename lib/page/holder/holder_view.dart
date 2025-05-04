@@ -28,19 +28,7 @@ class HolderView extends GetView<HolderViewController> {
         ),
         child: Obx(
           () => BottomNavigationBar(
-            type: BottomNavigationBarType.fixed,
             items: controller.items,
-            selectedItemColor: TPColors.primary500,
-            unselectedItemColor: TPColors.grayscale950,
-            selectedLabelStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            unselectedLabelStyle: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w400,
-            ),
-            showUnselectedLabels: true,
             currentIndex: controller.index.value,
             onTap: (index) {
               controller.index.value = index;
