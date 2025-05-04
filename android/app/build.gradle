@@ -25,9 +25,10 @@ if (flutterVersionName == null) {
 android {
     namespace "com.example.townpass"
     compileSdk flutter.compileSdkVersion
-    ndkVersion "25.1.8937393"
+    ndkVersion "29.0.13113456"
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -64,4 +65,6 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
+}
