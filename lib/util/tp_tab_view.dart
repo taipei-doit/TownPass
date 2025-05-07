@@ -33,7 +33,16 @@ class TPTabView extends StatelessWidget {
           final TabController controller = DefaultTabController.of(context);
           return Column(
             children: [
-              _TPTabBar(titles: titles),
+              ColoredBox(
+                color: TPColors.white,
+                child: TabBar(
+                  tabs: titles
+                      .map(
+                        (title) => TPText(title),
+                      )
+                      .toList(),
+                ),
+              ),
               Expanded(
                 child: NotificationListener<ScrollNotification>(
                   onNotification: (notification) {
@@ -50,7 +59,6 @@ class TPTabView extends StatelessWidget {
                     return false;
                   },
                   child: TabBarView(
-                    controller: controller,
                     children: children,
                   ),
                 ),
@@ -58,40 +66,6 @@ class TPTabView extends StatelessWidget {
             ],
           );
         },
-      ),
-    );
-  }
-}
-
-class _TPTabBar extends StatelessWidget {
-  final List<String> titles;
-
-  const _TPTabBar({required this.titles});
-
-  @override
-  Widget build(BuildContext context) {
-    return ColoredBox(
-      color: TPColors.white,
-      child: TabBar(
-        indicatorSize: TabBarIndicatorSize.tab,
-        dividerHeight: 0,
-        indicatorPadding: const EdgeInsets.symmetric(horizontal: 16),
-        indicator: const UnderlineTabIndicator(
-          borderRadius: BorderRadius.all(Radius.circular(2)),
-          borderSide: BorderSide(color: TPColors.primary500, width: 4),
-        ),
-        labelColor: TPColors.primary500,
-        labelStyle: TPTextStyles.h3SemiBold,
-        unselectedLabelColor: TPColors.grayscale700,
-        unselectedLabelStyle: TPTextStyles.h3Regular,
-        tabs: titles.map(
-          (title) {
-            return Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              child: TPText(title),
-            );
-          },
-        ).toList(),
       ),
     );
   }

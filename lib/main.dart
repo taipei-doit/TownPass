@@ -11,6 +11,7 @@ import 'package:town_pass/service/shared_preferences_service.dart';
 import 'package:town_pass/service/subscription_service.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
+import 'package:town_pass/util/tp_text_styles.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -53,6 +54,21 @@ class MyApp extends StatelessWidget {
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: TPColors.white,
         ),
+        tabBarTheme: const TabBarTheme(
+          labelColor: TPColors.primary500,
+          labelStyle: TPTextStyles.h3SemiBold,
+          labelPadding: EdgeInsets.symmetric(vertical: 12),
+          unselectedLabelColor: TPColors.grayscale700,
+          unselectedLabelStyle: TPTextStyles.h3Regular,
+          indicatorSize: TabBarIndicatorSize.tab,
+          indicator: UnderlineTabIndicator(
+            borderRadius: BorderRadius.all(Radius.circular(2)),
+            borderSide: BorderSide(color: TPColors.primary500, width: 4),
+            insets: EdgeInsets.symmetric(horizontal: 16),
+          ),
+          indicatorAnimation: TabIndicatorAnimation.elastic,
+          dividerHeight: 0,
+        ),
         colorScheme: ColorScheme.fromSeed(seedColor: TPColors.primary500),
         appBarTheme: const AppBarTheme(
           centerTitle: true,
@@ -65,6 +81,9 @@ class MyApp extends StatelessWidget {
             excludeSemantics: true,
             child: Assets.svg.iconLeftArrow.svg(width: 24, height: 24),
           ),
+        ),
+        bottomSheetTheme: BottomSheetThemeData(
+          backgroundColor: TPColors.red50,
         ),
       ),
       debugShowCheckedModeBanner: false,
