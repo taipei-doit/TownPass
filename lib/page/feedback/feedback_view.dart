@@ -89,8 +89,8 @@ class FeedbackView extends GetView<FeedbackViewController> {
                         ),
                         Obx(
                           () => switch (controller.isDropdownOpened.value) {
-                            true => Assets.svg.iconArrowDown.svg(),
-                            false => Assets.svg.iconArrowUp.svg(),
+                            true => Assets.svg.iconArrowUp.svg(),
+                            false => Assets.svg.iconArrowDown.svg(),
                           },
                         ),
                       ],
