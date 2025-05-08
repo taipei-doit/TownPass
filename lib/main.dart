@@ -63,7 +63,7 @@ class MyApp extends StatelessWidget {
         actionIconTheme: ActionIconThemeData(
           backButtonIconBuilder: (_) => Semantics(
             excludeSemantics: true,
-            child: Assets.svg.iconLeftArrow.svg(width: 24, height: 24),
+            child: Assets.svg.iconArrowLeft.svg(width: 24, height: 24),
           ),
         ),
       ),

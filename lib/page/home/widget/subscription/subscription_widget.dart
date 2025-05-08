@@ -79,7 +79,7 @@ class SubscriptionWidget extends StatelessWidget {
                         color: TPColors.grayscale600,
                       ),
                       const SizedBox(width: 8),
-                      Assets.svg.iconRightArrow.svg(
+                      Assets.svg.iconArrowRight.svg(
                         width: 20,
                         height: 20,
                         colorFilter: const ColorFilter.mode(TPColors.grayscale600, BlendMode.srcIn),
