@@ -85,6 +85,11 @@ class MyApp extends StatelessWidget {
         bottomSheetTheme: BottomSheetThemeData(
           backgroundColor: TPColors.red50,
         ),
+        buttonTheme: ButtonThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
       ),
       debugShowCheckedModeBanner: false,
       initialRoute: TPRoute.holder,
