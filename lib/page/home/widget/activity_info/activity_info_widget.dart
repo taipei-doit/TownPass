@@ -48,7 +48,7 @@ class ActivityInfoWidget extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 8),
-                    Assets.svg.iconRightArrow.svg(width: 24, height: 24),
+                    Assets.svg.iconArrowRight.svg(width: 24, height: 24),
                   ],
                 ),
               ),
