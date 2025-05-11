@@ -42,8 +42,6 @@ class TPAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: actions ?? [const SizedBox(width: 56)],
       backgroundColor: backgroundColor,
       foregroundColor: foregroundColor,
-      elevation: 0,
-      centerTitle: true,
       bottom: bottom,
       surfaceTintColor: Colors.transparent,
     );
