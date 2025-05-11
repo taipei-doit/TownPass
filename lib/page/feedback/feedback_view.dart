@@ -1,13 +1,14 @@
+import 'package:flutter/gestures.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/feedback/feedback_view_controller.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_bottom_sheet.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/gestures.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class FeedbackView extends GetView<FeedbackViewController> {
@@ -15,42 +16,88 @@ class FeedbackView extends GetView<FeedbackViewController> {
 
   @override
   Widget build(BuildContext context) {
-    DropdownMenu(
-      dropdownMenuEntries: [],
-    );
     return Scaffold(
       appBar: const TPAppBar(title: '意見回饋'),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: DropdownMenu(
-              expandedInsets: const EdgeInsets.symmetric(horizontal: 16),
-              trailingIcon: Assets.svg.iconArrowDown.svg(),
-              selectedTrailingIcon: Assets.svg.iconArrowUp.svg(),
-              dropdownMenuEntries: controller.feedbackTypeList
-                  .map<DropdownMenuEntry<FeedbackType?>>(
-                    (type) => DropdownMenuEntry<FeedbackType?>(
-                      value: type,
-                      label: type.string,
-                      labelWidget: TPText(
-                        type.string,
-                        style: TPTextStyles.h3Regular,
-                        color: TPColors.grayscale700,
+            child: CompositedTransformTarget(
+              link: controller.dropdownMenuLayerLink,
+              child: GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: controller.toggleDropdownMenu,
+                child: OverlayPortal(
+                  controller: controller.overlayPortalController,
+                  overlayChildBuilder: (context) {
+                    return CompositedTransformFollower(
+                      link: controller.dropdownMenuLayerLink,
+                      targetAnchor: Alignment.bottomLeft,
+                      followerAnchor: Alignment.topLeft,
+                      child: Stack(
+                        children: [
+                          ModalBarrier(onDismiss: controller.toggleDropdownMenu),
+                          Align(
+                            alignment: Alignment.topCenter,
+                            child: ColoredBox(
+                              color: TPColors.grayscale50,
+                              child: ListView.separated(
+                                padding: const EdgeInsets.symmetric(horizontal: 16),
+                                shrinkWrap: true,
+                                itemCount: FeedbackType.values.length,
+                                separatorBuilder: (_, __) => const TPLine.horizontal(color: TPColors.grayscale200),
+                                itemBuilder: (context, index) {
+                                  final FeedbackType feedbackType = FeedbackType.values[index];
+                                  return GestureDetector(
+                                    behavior: HitTestBehavior.opaque,
+                                    onTap: () {
+                                      controller.feedbackType.value = feedbackType;
+                                      controller.toggleDropdownMenu();
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 12),
+                                      child: TPText(
+                                        feedbackType.string,
+                                        style: TPTextStyles.h3Regular,
+                                        color: TPColors.grayscale700,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      // style: ButtonStyle(padding: WidgetStateProperty.all(EdgeInsets.symmetric(horizontal: 16))),
+                    );
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Obx(
+                            () => TPText(
+                              switch (controller.feedbackType.value) {
+                                null => '請選擇建議類型',
+                                FeedbackType feedback => feedback.string,
+                              },
+                              style: TPTextStyles.h3SemiBold,
+                              color: TPColors.grayscale700,
+                            ),
+                          ),
+                        ),
+                        Obx(
+                          () => switch (controller.isDropdownOpened.value) {
+                            true => Assets.svg.iconArrowUp.svg(),
+                            false => Assets.svg.iconArrowDown.svg(),
+                          },
+                        ),
+                      ],
                     ),
-                  )
-                  .toList(),
-              hintText: '請選擇建議類型',
-              textStyle: TPTextStyles.h3SemiBold,
-              inputDecorationTheme: InputDecorationTheme(border: InputBorder.none),
-              menuStyle: MenuStyle(
-                backgroundColor: WidgetStateProperty.all(TPColors.grayscale50),
+                  ),
+                ),
               ),
-              onSelected: (type) {
-                controller.selectType = type;
-              },
             ),
           ),
           Expanded(

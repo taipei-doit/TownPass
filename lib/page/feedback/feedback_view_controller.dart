@@ -11,6 +11,9 @@ enum FeedbackType {
 }
 
 class FeedbackViewController extends GetxController {
+  final LayerLink dropdownMenuLayerLink = LayerLink();
+  final OverlayPortalController overlayPortalController = OverlayPortalController();
+
   final String contactPhoneNumber = '02-27208889';
 
   List<FeedbackType> get feedbackTypeList => [
@@ -21,16 +24,16 @@ class FeedbackViewController extends GetxController {
         FeedbackType.other,
       ];
 
-  FeedbackType? _selectType;
+  final RxBool isDropdownOpened = RxBool(false);
 
-  FeedbackType? get selectType => _selectType;
-
-  set selectType(FeedbackType? type) {
-    _selectType = type;
-    update();
-  }
+  final Rxn<FeedbackType> feedbackType = Rxn<FeedbackType>(null);
 
   TextEditingController controller = TextEditingController();
 
   Future<void> sendFeedback() async {}
+
+  void toggleDropdownMenu() {
+    overlayPortalController.toggle();
+    isDropdownOpened.value = !isDropdownOpened.value;
+  }
 }
