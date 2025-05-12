@@ -1,0 +1,56 @@
+name: '🤔 使用疑問'
+description: 尋求協助使用專案。
+body:
+  - type: markdown
+    attributes:
+      value: '在提交問題之前，請閱讀並遵循以下說明：'
+  - type: markdown
+    attributes:
+      value: |
+        - 閱讀我們的所有文件，特別是我們的 [guideline](https://tpe-guideline.web.app/)，裡面可能已經有資訊可以幫助您解決您遇到的問題。
+        - 確認您的 issue 尚未有人[回報](https://github.com/taipei-doit/TownPass-Services/issues)。
+        - 若您是要回報 bug，確認該問題在最新版的專案中尚未修復。
+  - type: textarea
+    id: description
+    attributes:
+      label: '描述這個問題'
+      description: 清楚且簡潔地描述問題。
+    validations:
+      required: true
+  - type: textarea
+    id: example
+    attributes:
+      label: '範例程式碼'
+      description: 解釋您疑問的程式碼片段
+      render: js
+    validations:
+      required: false
+  - type: textarea
+    id: expected
+    attributes:
+      label: '預期行為'
+      description: 清楚且簡潔地描述您預期應該發生的情況。
+    validations:
+      required: false
+  - type: markdown
+    attributes:
+      value: Environment
+  - type: input
+    id: flutter-version
+    attributes:
+      label: 'Flutter 版本'
+      description: 'flutter --version / fvm flutter --version'
+      placeholder: 'e.g. 3.29.3'
+  - type: input
+    id: os
+    attributes:
+      label: 'OS'
+      placeholder: 'e.g. iOS 16.0.2, OSX 12.6.0'
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: '額外資訊/截圖'
+      description: 額外有關問題的其他相關資訊。如果情況允許，請附上截圖以協助說明問題。
+      render: bash
+    validations:
+      required: false
