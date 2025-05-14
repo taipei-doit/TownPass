@@ -32,4 +32,7 @@ class TPBottomNavigationFactory {
         const PerkView(),
         const BillView(),
       ];
+
+  /// default to "Home" page (index = 1)
+  static int get defaultIndex => 1;
 }
