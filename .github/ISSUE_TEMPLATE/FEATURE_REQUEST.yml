@@ -1,0 +1,41 @@
+name: '🚀 新功能需求'
+description: 新點子或新功能建議。
+body:
+  - type: markdown
+    attributes:
+      value: '在提交問題之前，請閱讀並遵循以下說明：'
+  - type: markdown
+    attributes:
+      value: |
+        - 閱讀我們的所有文件，特別是我們的 [guideline](https://tpe-guideline.web.app/)，裡面可能已經有資訊可以幫助您解決您遇到的問題。
+        - 確認您的 issue 尚未有人[回報](https://github.com/taipei-doit/TownPass-Services/issues)。
+  - type: textarea
+    id: description
+    attributes:
+      label: '您要求的功能是否與某個問題有關？請描述一下。'
+      description: 請清楚簡明地描述問題是什麼。
+      placeholder: 當我...時我總是很困擾，所以我需要 xxx 新功能
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: 請描述您希望的解決方案。
+      description: 清楚簡潔地描述您希望達成的目標。
+    validations:
+      required: false
+  - type: textarea
+    id: alternative
+    attributes:
+      label: 描述您曾經考慮過的替代方案。
+      description: 清楚簡潔地描述您考慮過的任何替代解決方案或功能。
+    validations:
+      required: false
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: '額外資訊/截圖'
+      description: 額外的其他相關資訊。如果情況允許，請附上截圖以協助說明問題。
+      render: bash
+    validations:
+      required: false
