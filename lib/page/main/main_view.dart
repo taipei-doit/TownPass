@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:town_pass/page/holder/holder_view_controller.dart';
+import 'package:town_pass/page/main/main_view_controller.dart';
+import 'package:town_pass/service/shared_preferences_service.dart';
+import 'package:town_pass/util/tp_bottom_navigation_factory.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
-class HolderView extends GetView<HolderViewController> {
-  const HolderView({super.key});
+class MainView extends GetView<MainViewController> {
+  const MainView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
         () => IndexedStack(
-          index: controller.index.value,
-          children: controller.pageList,
+          index: controller.currentIndex.value,
+          children: TPBottomNavigationFactory.viewList,
         ),
       ),
       bottomNavigationBar: Container(
@@ -29,7 +31,7 @@ class HolderView extends GetView<HolderViewController> {
         child: Obx(
           () => BottomNavigationBar(
             type: BottomNavigationBarType.fixed,
-            items: controller.items,
+            items: TPBottomNavigationFactory.barItemList,
             selectedItemColor: TPColors.primary500,
             unselectedItemColor: TPColors.grayscale950,
             selectedLabelStyle: const TextStyle(
@@ -41,10 +43,8 @@ class HolderView extends GetView<HolderViewController> {
               fontWeight: FontWeight.w400,
             ),
             showUnselectedLabels: true,
-            currentIndex: controller.index.value,
-            onTap: (index) {
-              controller.index.value = index;
-            },
+            currentIndex: controller.currentIndex.value,
+            onTap: (index) => controller.currentIndex.value = index,
           ),
         ),
       ),
