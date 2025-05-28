@@ -1,8 +1,9 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:town_pass/util/tp_text_span.dart';
 
 export 'package:town_pass/util/tp_text_styles.dart';
 
-///
 class TPText extends StatelessWidget {
   /// The text to display.
   ///
@@ -113,6 +114,22 @@ class TPText extends StatelessWidget {
   /// The color to use on text.
   final Color? color;
 
+  /// A pointer has stopped contacting the screen, which is recognized as a tap
+  /// of a primary button.
+  ///
+  /// This triggers on the up event, if the recognizer wins the arena with it
+  /// or has previously won, immediately following [onTapUp].
+  ///
+  /// If this recognizer doesn't win the arena, [onTapCancel] is called instead.
+  ///
+  /// See also:
+  ///
+  ///  * [kPrimaryButton], the button this callback responds to.
+  ///  * [onSecondaryTap], a similar callback but for a secondary button.
+  ///  * [onTapUp], which has the same timing but with details.
+  ///  * [GestureDetector.onTap], which exposes this callback.
+  final GestureTapCallback? onTap;
+
   /// Creates a text widget.
   ///
   /// Recommend used with [TPTextStyle] and [TPColor] to make the App looks
@@ -149,6 +166,7 @@ class TPText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
     this.selectionColor,
+    this.onTap,
   }) : textSpan = null;
 
   const TPText.rich(
@@ -168,56 +186,78 @@ class TPText extends StatelessWidget {
     this.textHeightBehavior,
     this.selectionColor,
     this.color,
+    this.onTap,
   }) : data = null;
+
+  TapGestureRecognizer? get gestureRecognizer => switch (onTap) {
+        GestureTapCallback onTap => TapGestureRecognizer()..onTap = onTap,
+        null => null,
+      };
 
   @override
   Widget build(BuildContext context) {
-    final TextStyle styleWithColor = style?.copyWith(color: color) ?? TextStyle(color: color);
-
-    return switch (textSpan) {
-      null => Text(
-          data ?? '',
-          key: key,
-          style: styleWithColor,
-          strutStyle: strutStyle,
-          textAlign: textAlign,
-          textDirection: textDirection,
-          locale: locale,
-          softWrap: softWrap,
-          overflow: overflow,
-          textScaler: textScaler,
-          maxLines: maxLines,
-          semanticsLabel: semanticsLabel,
-          textWidthBasis: textWidthBasis,
-          textHeightBehavior: textHeightBehavior,
-          selectionColor: selectionColor,
-        ),
-      InlineSpan() => Text.rich(
-          textSpan!,
-          key: key,
-          style: styleWithColor,
-          strutStyle: strutStyle,
-          textAlign: textAlign,
-          textDirection: textDirection,
-          locale: locale,
-          softWrap: softWrap,
-          overflow: overflow,
-          textScaler: textScaler,
-          maxLines: maxLines,
-          semanticsLabel: semanticsLabel,
-          textWidthBasis: textWidthBasis,
-          textHeightBehavior: textHeightBehavior,
-          selectionColor: selectionColor,
-        ),
-    };
+    return Text.rich(
+      switch (textSpan) {
+        InlineSpan textSpan => TPTextSpan(
+            children: [textSpan],
+            recognizer: gestureRecognizer,
+          ),
+        null => TPTextSpan(
+            text: data,
+            recognizer: gestureRecognizer,
+          ),
+      },
+      key: key,
+      strutStyle: strutStyle,
+      textAlign: textAlign,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      overflow: overflow,
+      textScaler: textScaler,
+      maxLines: maxLines,
+      semanticsLabel: semanticsLabel,
+      textWidthBasis: textWidthBasis,
+      textHeightBehavior: textHeightBehavior,
+      selectionColor: selectionColor,
+      style: switch (style) {
+        TextStyle style => switch (color) {
+            Color color => style.copyWith(color: color),
+            null => style,
+          },
+        null => TextStyle(color: color),
+      },
+    );
   }
 }
 
-Size textSize(String text, TextStyle style) {
+Size textSize(
+  String text, {
+  TextStyle? style,
+  textAlign = TextAlign.start,
+  TextDirection? textDirection = TextDirection.ltr,
+  TextScaler textScaler = TextScaler.noScaling,
+  int? maxLines,
+  StrutStyle? strutStyle,
+  TextWidthBasis textWidthBasis = TextWidthBasis.parent,
+  TextHeightBehavior? textHeightBehavior,
+}) {
   final TextPainter textPainter = TextPainter(
-    text: TextSpan(text: text, style: style),
-    maxLines: 1,
-    textDirection: TextDirection.ltr,
-  )..layout(minWidth: 0, maxWidth: double.infinity);
+    text: TPTextSpan(
+      text: text,
+      style: style,
+    ),
+    textAlign: textAlign,
+    textDirection: textDirection,
+    textScaler: textScaler,
+    maxLines: maxLines,
+    strutStyle: strutStyle,
+    textWidthBasis: textWidthBasis,
+    textHeightBehavior: textHeightBehavior,
+  )..layout(
+      minWidth: 0,
+      maxWidth: double.infinity,
+    );
+
   return textPainter.size;
 }
