@@ -1,12 +1,12 @@
+import 'package:flutter/cupertino.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/gen/fonts.gen.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget_controller.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:get/get.dart';
+import 'package:town_pass/util/tp_text.dart';
 
 class ActivityInfoWidget extends StatelessWidget {
   const ActivityInfoWidget({super.key});
@@ -19,7 +19,7 @@ class ActivityInfoWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: Row(
             children: [
-              const Text(
+              const TPText(
                 '活動訊息',
                 style: TextStyle(
                   color: TPColors.grayscale800,
@@ -37,7 +37,7 @@ class ActivityInfoWidget extends StatelessWidget {
                 },
                 child: Row(
                   children: [
-                    const Text(
+                    const TPText(
                       '更多',
                       textAlign: TextAlign.right,
                       style: TextStyle(

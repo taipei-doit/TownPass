@@ -1,11 +1,12 @@
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:town_pass/bean/activity.dart';
 import 'package:town_pass/page/home/widget/activity_info/activity_banner_widget_controller.dart';
 import 'package:town_pass/util/tp_cached_network_image.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
+import 'package:town_pass/util/tp_text.dart';
 
 class ActivityBannerWidget extends StatelessWidget {
   const ActivityBannerWidget({super.key});
@@ -68,7 +69,7 @@ class _Banner extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Flexible(
-                  child: Text(
+                  child: TPText(
                     activity!.title,
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,

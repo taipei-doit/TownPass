@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/gen/fonts.gen.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_text.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 class CityNewsWidget extends StatelessWidget {
@@ -76,7 +77,7 @@ class _Button extends StatelessWidget {
           children: [
             icon,
             const SizedBox(width: 8),
-            Text(
+            TPText(
               text,
               textAlign: TextAlign.center,
               style: const TextStyle(
