@@ -65,20 +65,17 @@ class QRCodeScanView extends GetView<QRCodeScanController> {
                   style: TPTextStyles.h2SemiBold,
                   color: TPColors.white,
                 ),
-                TPText.rich(
-                  TextSpan(
-                    text: '從相片掃描',
-                    style: TPTextStyles.h2SemiBold.copyWith(
-                      color: TPColors.primary500,
-                      decoration: TextDecoration.underline,
-                      decorationColor: TPColors.primary500,
-                    ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () async => switch (await controller.scanFromImage()) {
-                            null => await TPDialog.showError(title: '錯誤', content: '無法辨識 QR Code'),
-                            String string => Get.back(result: string),
-                          },
+                TPText(
+                  '從相片掃描',
+                  style: TPTextStyles.h2SemiBold.copyWith(
+                    color: TPColors.primary500,
+                    decoration: TextDecoration.underline,
+                    decorationColor: TPColors.primary500,
                   ),
+                  onTap: () async => switch (await controller.scanFromImage()) {
+                    null => await TPDialog.showError(title: '錯誤', content: '無法辨識 QR Code'),
+                    String string => Get.back(result: string),
+                  },
                 ),
               ],
             ),
