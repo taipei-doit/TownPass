@@ -40,7 +40,7 @@ import 'package:town_pass/page/suspend_account/suspend_account_view.dart';
 import 'package:town_pass/util/tp_web_view.dart';
 
 abstract class TPRoute {
-  static const String holder = '/';
+  static const String main = '/';
   static const String account = '/account';
   static const String activityList = '/activity_list';
   static const String activityDetail = '/activity_detail';
@@ -66,7 +66,7 @@ abstract class TPRoute {
 
   static final List<GetPage> page = [
     GetPage(
-      name: holder,
+      name: main,
       page: () => const MainView(),
       binding: BindingsBuilder(() {
         Get

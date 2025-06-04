@@ -68,7 +68,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       debugShowCheckedModeBanner: false,
-      initialRoute: TPRoute.holder,
+      initialRoute: TPRoute.main,
       onInit: () {
         NotificationService.requestPermission();
       },
