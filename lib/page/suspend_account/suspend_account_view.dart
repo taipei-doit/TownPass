@@ -1,13 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/util/tp_setting_list.dart';
 import 'package:town_pass/page/suspend_account/suspend_account_controller.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_constant.dart';
+import 'package:town_pass/util/tp_setting_list.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SuspendAccountView extends GetView<SuspendAccountController> {
   const SuspendAccountView({super.key});
@@ -74,15 +76,25 @@ class SuspendAccountView extends GetView<SuspendAccountController> {
               style: TPTextStyles.bodyRegular,
               color: TPColors.grayscale800,
             ),
-            subtitle: TPText.rich(
-              TextSpan(
-                text: tpMailAddress,
-                style: TPTextStyles.bodyRegular.copyWith(
-                  color: TPColors.primary500,
-                  decoration: TextDecoration.underline,
-                  decorationColor: TPColors.primary500,
-                ),
+            subtitle: TPText(
+              tpMailAddress,
+              style: TPTextStyles.bodyRegular.copyWith(
+                color: TPColors.primary500,
+                decoration: TextDecoration.underline,
+                decorationColor: TPColors.primary500,
               ),
+              onTap: () async {
+                final Uri uri = Uri(
+                  scheme: tpLaunchMailScheme,
+                  path: tpMailAddress,
+                );
+
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                } else {
+                  Fluttertoast.showToast(msg: '無法開啟郵件 App');
+                }
+              },
             ),
           ),
         ],

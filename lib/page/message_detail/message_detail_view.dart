@@ -74,7 +74,7 @@ class _RichText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RichText(text: _rich(richText));
+    return TPText.rich(_rich(richText));
   }
 
   TextSpan _rich(List<TPRichText> richText) {

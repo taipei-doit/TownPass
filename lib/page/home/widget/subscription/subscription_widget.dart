@@ -113,24 +113,21 @@ class SubscriptionWidget extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        GestureDetector(
-                          behavior: HitTestBehavior.opaque,
+                        TPText(
+                          '訂閱設定',
+                          style: const TextStyle(
+                            color: TPColors.primary500,
+                            fontSize: 16,
+                            fontFamily: FontFamily.pingFangTC,
+                            fontWeight: FontWeight.w400,
+                            decoration: TextDecoration.underline,
+                            decorationColor: TPColors.primary500,
+                          ),
                           onTap: () async {
                             await TPRoute.openUri(
                               uri: 'https://taipei-pass-service.vercel.app/subscription',
                             );
                           },
-                          child: const TPText(
-                            '訂閱設定',
-                            style: TextStyle(
-                              color: TPColors.primary500,
-                              fontSize: 16,
-                              fontFamily: FontFamily.pingFangTC,
-                              fontWeight: FontWeight.w400,
-                              decoration: TextDecoration.underline,
-                              decorationColor: TPColors.primary500,
-                            ),
-                          ),
                         ),
                       ],
                     ),
