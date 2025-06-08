@@ -1,4 +1,3 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -228,11 +227,11 @@ class ScannerErrorWidget extends StatelessWidget {
               padding: EdgeInsets.only(bottom: 16),
               child: Icon(Icons.error, color: Colors.white),
             ),
-            Text(
+            TPText(
               errorMessage,
               style: const TextStyle(color: Colors.white),
             ),
-            Text(
+            TPText(
               error.errorDetails?.message ?? '',
               style: const TextStyle(color: Colors.white),
             ),

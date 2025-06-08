@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view_controller.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_text.dart';
 
 extension on ToggleTab {
   String get string {
@@ -43,15 +44,15 @@ class PortfolioAndAuthView extends StatelessWidget {
                       controller.selectIndex = index;
                     }
                   },
-                  children: controller.toggles.map<Widget>((e) => Text(e.string)).toList(),
+                  children: controller.toggles.map<Widget>((e) => TPText(e.string)).toList(),
                 ),
               ),
             ),
             body: IndexedStack(
               index: controller.selectIndex,
               children: const [
-                Center(child: Text('使用紀錄')),
-                Center(child: Text('授權管理')),
+                Center(child: TPText('使用紀錄')),
+                Center(child: TPText('授權管理')),
               ],
             ),
           );
