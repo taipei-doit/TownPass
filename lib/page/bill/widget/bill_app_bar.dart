@@ -9,7 +9,7 @@ import 'package:town_pass/util/tp_text.dart';
 class BillAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BillAppBar({super.key});
 
-  double get _bottomHeight => 64 + textSize('text', TPTextStyles.bodySemiBold).height + 12 * 2;
+  double get _bottomHeight => 64 + textSize('text', style: TPTextStyles.bodySemiBold).height + 12 * 2;
 
   @override
   Size get preferredSize => Size.fromHeight(kTPToolbarHeight + _bottomHeight);
