@@ -1,31 +1,53 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/material.dart';
+import 'package:town_pass/gen/assets.gen.dart';
 
-part 'mosaic_tile_service.g.dart';
-
-@JsonSerializable(explicitToJson: true)
 class MosaicTileService {
-  @JsonKey(name: 'data')
-  final List<MosaicTileServiceItem> contentList;
+  static final List<MosaicTileServiceItem> contentList = [
+    MosaicTileServiceItem(
+      mainText: '市政服務',
+      subText: 'Service',
+      icon: Assets.svg.illustrationsGov.svg(),
+      url: '',
+    ),
+    MosaicTileServiceItem(
+      mainText: '有話要說',
+      subText: '1999',
+      icon: Assets.svg.iconTalk.svg(),
+      url: 'https://taipei-pass-service.vercel.app/citizen-report/',
+    ),
+    MosaicTileServiceItem(
+      mainText: '警政報案',
+      subText: 'Police',
+      icon: Assets.svg.iconPolice.svg(),
+      url: 'local://online_police',
+    ),
+    MosaicTileServiceItem(
+      mainText: '防疫醫療',
+      subText: 'Health',
+      icon: Assets.svg.iconCovidMedical.svg(),
+      url: '',
+    ),
+    MosaicTileServiceItem(
+      mainText: '市政APP',
+      subText: 'More',
+      icon: Assets.svg.iconMore.svg(),
+      url: '',
+    ),
+    MosaicTileServiceItem(
+      mainText: '城市生活',
+      subText: 'City Life',
+      icon: Assets.svg.illustrationsChair.svg(),
+      url: '',
+    ),
+  ];
 
-  const MosaicTileService({required this.contentList});
-
-  factory MosaicTileService.fromJson(Map<String, dynamic> json) => _$MosaicTileServiceFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MosaicTileServiceToJson(this);
+  const MosaicTileService();
 }
 
-@JsonSerializable(explicitToJson: true)
 class MosaicTileServiceItem {
-  @JsonKey(name: 'main_text')
   final String mainText;
-
-  @JsonKey(name: 'sub_text')
   final String? subText;
-
-  @JsonKey(name: 'icon')
-  final String icon;
-
-  @JsonKey(name: 'destination_url')
+  final Widget icon;
   final String url;
 
   const MosaicTileServiceItem({
@@ -34,8 +56,4 @@ class MosaicTileServiceItem {
     required this.icon,
     required this.url,
   });
-
-  factory MosaicTileServiceItem.fromJson(Map<String, dynamic> json) => _$MosaicTileServiceItemFromJson(json);
-
-  Map<String, dynamic> toJson() => _$MosaicTileServiceItemToJson(this);
 }
