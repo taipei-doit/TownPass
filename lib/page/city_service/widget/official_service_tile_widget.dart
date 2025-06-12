@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:town_pass/bean/mosaic_tile_service.dart';
+import 'package:town_pass/page/city_service/model/official_service_model.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_constant.dart';
 import 'package:town_pass/util/tp_line.dart';
@@ -9,10 +9,10 @@ import 'package:town_pass/util/tp_text.dart';
 /// 服務頁面中段，四個卡牌的 UI 元件。
 ///
 /// 4-Card service widget, which can be located at the mid of [ServiceView].
-class MosaicTileWidget extends StatelessWidget {
-  const MosaicTileWidget({super.key});
+class OfficialServiceTileWidget extends StatelessWidget {
+  const OfficialServiceTileWidget({super.key});
 
-  List<MosaicTileServiceItem> get contentList => MosaicTileService.contentList;
+  List<OfficialServiceItem> get contentList => OfficialServiceModel.contentList;
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +320,7 @@ class _Card extends StatelessWidget {
 /// The button that split the card. See more in top-right and bottom-left
 /// cards.
 class _CardSplitButton extends StatelessWidget {
-  final MosaicTileServiceItem item;
+  final OfficialServiceItem item;
 
   final Size iconSize;
 
