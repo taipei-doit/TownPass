@@ -24,7 +24,7 @@ class TPThemeData {
           fontWeight: FontWeight.w400,
         ),
       ),
-      tabBarTheme: const TabBarTheme(
+      tabBarTheme: const TabBarThemeData(
         labelColor: TPColors.primary500,
         labelStyle: TPTextStyles.h3SemiBold,
         labelPadding: EdgeInsets.symmetric(vertical: 12),
