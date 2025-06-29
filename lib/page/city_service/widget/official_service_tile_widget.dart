@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:town_pass/bean/mosaic_tile_service.dart';
-import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/page/city_service/city_service_view_controller.dart';
+import 'package:town_pass/page/city_service/model/official_service_model.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_constant.dart';
 import 'package:town_pass/util/tp_line.dart';
@@ -12,10 +9,10 @@ import 'package:town_pass/util/tp_text.dart';
 /// 服務頁面中段，四個卡牌的 UI 元件。
 ///
 /// 4-Card service widget, which can be located at the mid of [ServiceView].
-class MosaicTileWidget extends StatelessWidget {
-  const MosaicTileWidget({super.key});
+class OfficialServiceTileWidget extends StatelessWidget {
+  const OfficialServiceTileWidget({super.key});
 
-  MosaicTileService get service => Get.find<CityServiceViewController>().staticService.value;
+  List<OfficialServiceItem> get contentList => OfficialServiceModel.contentList;
 
   @override
   Widget build(BuildContext context) {
@@ -64,9 +61,9 @@ class MosaicTileWidget extends StatelessWidget {
           height: constraint.maxWidth / goldenRatio,
           gradient: _backgroundGradient,
           onTap: () async {
-            if (service.contentList[0].url.isNotEmpty) {
+            if (contentList[0].url.isNotEmpty) {
               await TPRoute.openUri(
-                uri: service.contentList[0].url,
+                uri: contentList[0].url,
               );
             }
           },
@@ -79,7 +76,7 @@ class MosaicTileWidget extends StatelessWidget {
                   dimension: constraint.maxWidth * 0.67,
                   child: Align(
                     alignment: Alignment.bottomLeft,
-                    child: _icon(keyName: service.contentList[0].icon),
+                    child: contentList[0].icon,
                   ),
                 ),
               ),
@@ -92,13 +89,13 @@ class MosaicTileWidget extends StatelessWidget {
                     children: [
                       const SizedBox(height: 17.0),
                       TPText(
-                        service.contentList[0].mainText,
+                        contentList[0].mainText,
                         style: TPTextStyles.h3SemiBold,
                         color: TPColors.white,
                       ),
                       const SizedBox(height: 2.0),
                       TPText(
-                        service.contentList[0].subText,
+                        contentList[0].subText,
                         style: TPTextStyles.bodyRegular,
                         color: TPColors.white,
                       ),
@@ -127,12 +124,12 @@ class MosaicTileWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _CardSplitButton(
-                item: service.contentList[1],
+                item: contentList[1],
                 iconSize: const Size.square(24),
               ),
               const TPLine.horizontal(),
               _CardSplitButton(
-                item: service.contentList[2],
+                item: contentList[2],
                 iconSize: const Size.square(24),
               ),
             ],
@@ -156,12 +153,12 @@ class MosaicTileWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _CardSplitButton(
-                item: service.contentList[3],
+                item: contentList[3],
                 iconSize: const Size.square(48),
               ),
               const TPLine.horizontal(),
               _CardSplitButton(
-                item: service.contentList[4],
+                item: contentList[4],
                 iconSize: const Size.square(48),
               ),
             ],
@@ -182,7 +179,7 @@ class MosaicTileWidget extends StatelessWidget {
           padding: EdgeInsets.zero,
           gradient: _backgroundGradient,
           onTap: () async => await TPRoute.openUri(
-            uri: service.contentList[5].url,
+            uri: contentList[5].url,
           ),
           child: Stack(
             fit: StackFit.passthrough,
@@ -195,7 +192,7 @@ class MosaicTileWidget extends StatelessWidget {
                     dimension: constraint.maxWidth * 0.45,
                     child: Align(
                       alignment: Alignment.bottomLeft,
-                      child: _icon(keyName: service.contentList[5].icon),
+                      child: contentList[5].icon,
                     ),
                   ),
                 ),
@@ -209,13 +206,13 @@ class MosaicTileWidget extends StatelessWidget {
                     children: [
                       const SizedBox(height: 17.0),
                       TPText(
-                        service.contentList[5].mainText,
+                        contentList[5].mainText,
                         style: TPTextStyles.h3SemiBold,
                         color: TPColors.white,
                       ),
                       const SizedBox(height: 2.0),
                       TPText(
-                        service.contentList[5].subText,
+                        contentList[5].subText,
                         style: TPTextStyles.bodyRegular,
                         color: TPColors.white,
                       ),
@@ -323,7 +320,7 @@ class _Card extends StatelessWidget {
 /// The button that split the card. See more in top-right and bottom-left
 /// cards.
 class _CardSplitButton extends StatelessWidget {
-  final MosaicTileServiceItem item;
+  final OfficialServiceItem item;
 
   final Size iconSize;
 
@@ -365,21 +362,11 @@ class _CardSplitButton extends StatelessWidget {
             ),
           ),
           SizedBox.fromSize(
-              size: iconSize,
-              child: _icon(
-                keyName: item.icon,
-              )),
+            size: iconSize,
+            child: item.icon,
+          ),
         ],
       ),
     );
   }
-}
-
-Widget _icon({required String keyName}) {
-  return Assets.svg.values
-          .firstWhereOrNull(
-            (svg) => keyName == svg.keyName,
-          )
-          ?.svg() ??
-      const SizedBox.shrink();
 }
