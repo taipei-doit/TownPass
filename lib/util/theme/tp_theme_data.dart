@@ -57,9 +57,10 @@ class TPThemeData {
       bottomSheetTheme: const BottomSheetThemeData(
         backgroundColor: TPColors.red50,
       ),
-      buttonTheme: ButtonThemeData(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+      textButtonTheme: TextButtonThemeData(
+        style: ButtonStyle(
+          shape: WidgetStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
+          textStyle: WidgetStateProperty.all(TPTextStyles.h3Regular),
         ),
       ),
     );

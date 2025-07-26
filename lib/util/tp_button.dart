@@ -102,7 +102,6 @@ final class TPButton extends StatelessWidget {
             false => TPColors.grayscale500,
           },
         ),
-        textStyle: WidgetStateProperty.all(TPTextStyles.h3Regular),
       ),
       onPressed: switch (enable) {
         true || null => (() => onPressed?.call()),
