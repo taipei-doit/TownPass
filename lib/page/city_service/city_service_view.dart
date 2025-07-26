@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
-import 'package:town_pass/page/city_service/widget/official_service_tile_widget.dart';
+import 'package:town_pass/page/city_service/widget/official_service_card/official_service_card_widget.dart';
 import 'package:town_pass/page/city_service/widget/pinned_service_widget.dart';
 import 'package:town_pass/page/city_service/widget/trending_service_widget.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
@@ -38,7 +38,7 @@ class CityServiceView extends StatelessWidget {
             onMoreTap: () => Get.toNamed(TPRoute.serviceEdit),
           ),
           const SizedBox(height: 50),
-          const OfficialServiceTileWidget(),
+          const OfficialServiceCardWidget(),
           const SizedBox(height: 20),
           const TrendingServiceWidget(),
           const SizedBox(height: 20),
