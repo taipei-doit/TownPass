@@ -1,5 +1,6 @@
-import 'package:town_pass/util/json_converter/datetime_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:town_pass/util/json_converter/datetime_converter.dart';
+import 'package:town_pass/util/tp_duration.dart';
 
 part 'activity.g.dart';
 
@@ -42,6 +43,8 @@ class ActivityItem {
     required this.title,
     required this.imageUrl,
   });
+
+  TPDuration get duration => TPDuration(start: startDateTime, end: endDateTime);
 
   factory ActivityItem.fromJson(Map<String, dynamic> json) => _$ActivityItemFromJson(json);
 

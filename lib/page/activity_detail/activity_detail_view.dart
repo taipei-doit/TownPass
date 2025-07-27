@@ -41,8 +41,10 @@ class ActivityDetailView extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 11, vertical: 6),
                     child: _ActivityDurationWidget(
-                      startDate: activity.startDateTime,
-                      endDate: activity.endDateTime,
+                      duration: TPDuration(
+                        start: activity.startDateTime,
+                        end: activity.endDateTime,
+                      ),
                     ),
                   ),
                   const TPLine.horizontal(),
@@ -83,13 +85,11 @@ class ActivityDetailView extends StatelessWidget {
 }
 
 class _ActivityDurationWidget extends StatelessWidget {
-  const _ActivityDurationWidget({
-    required this.startDate,
-    this.endDate,
-  });
+  final TPDuration duration;
 
-  final DateTime startDate;
-  final DateTime? endDate;
+  const _ActivityDurationWidget({
+    required this.duration,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +98,7 @@ class _ActivityDurationWidget extends StatelessWidget {
         Assets.svg.iconCalender.svg(width: 24, height: 24),
         const SizedBox(width: 16),
         TPText(
-          TPDuration.string(start: startDate, end: endDate),
+          duration.format(),
           style: TPTextStyles.h3Regular,
           color: TPColors.grayscale800,
         ),
