@@ -68,7 +68,6 @@ abstract class TPRoute {
         Get
           ..put<MainViewController>(MainViewController())
           ..put<PinnedServiceWidgetController>(PinnedServiceWidgetController());
-        // ..put<BillViewController>(BillViewController())
       }),
     ),
     GetPage(
