@@ -14,7 +14,6 @@ import 'package:town_pass/page/city_service_edit/city_service_edit_view.dart';
 import 'package:town_pass/page/city_service_edit/city_service_edit_view_controller.dart';
 import 'package:town_pass/page/feedback/feedback_view.dart';
 import 'package:town_pass/page/feedback/feedback_view_controller.dart';
-import 'package:town_pass/page/home/home_view_controller.dart';
 import 'package:town_pass/page/invoice_receipt/invoice_receipt_view.dart';
 import 'package:town_pass/page/language/language_view.dart';
 import 'package:town_pass/page/language/language_view_controller.dart';
@@ -69,7 +68,6 @@ abstract class TPRoute {
       binding: BindingsBuilder(() {
         Get
           ..put<MainViewController>(MainViewController())
-          ..put<HomeViewController>(HomeViewController())
           ..put<PinnedServiceWidgetController>(PinnedServiceWidgetController());
         // ..put<BillViewController>(BillViewController())
       }),
