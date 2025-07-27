@@ -70,7 +70,7 @@ class _ActivityItemWidget extends StatelessWidget {
                   ),
                   const SizedBox(height: 8),
                   TPText(
-                    TPDuration.string(start: item.startDateTime, end: item.endDateTime),
+                    item.duration.format(),
                     style: TPTextStyles.bodySemiBold,
                     color: TPColors.grayscale400,
                   ),

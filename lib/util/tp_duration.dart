@@ -1,14 +1,18 @@
 import 'package:town_pass/util/extension/datetime.dart';
 
 class TPDuration {
-  static String string({
-    required DateTime start,
-    DateTime? end,
-    String pattern = 'yyyy/MM/dd',
-  }) {
-    if (end != null) {
-      return '${start.format(pattern)}~${end.format(pattern)}';
-    }
-    return start.format(pattern);
+  final DateTime start;
+  final DateTime? end;
+
+  const TPDuration({
+    required this.start,
+    required this.end,
+  });
+
+  String format([String pattern = 'yyyy/MM/dd']) {
+    return switch (end) {
+      DateTime end => '${start.format(pattern)}~${end.format(pattern)}',
+      null => start.format(pattern),
+    };
   }
 }
