@@ -70,7 +70,6 @@ abstract class TPRoute {
         Get
           ..put<MainViewController>(MainViewController())
           ..put<HomeViewController>(HomeViewController())
-          ..put<PerkViewController>(PerkViewController())
           ..put<PinnedServiceWidgetController>(PinnedServiceWidgetController());
         // ..put<BillViewController>(BillViewController())
       }),
