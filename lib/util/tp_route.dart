@@ -24,7 +24,6 @@ import 'package:town_pass/page/message/message_view.dart';
 import 'package:town_pass/page/message/message_view_controller.dart';
 import 'package:town_pass/page/message_detail/message_detail_view.dart';
 import 'package:town_pass/page/online_police/online_police_view.dart';
-import 'package:town_pass/page/perk/perk_view_controller.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view.dart';
 import 'package:town_pass/page/phone_call_user_agreement/phone_call_user_agreement_view_controller.dart';
 import 'package:town_pass/page/portfolioAndAuth/portfolio_auth_view.dart';
