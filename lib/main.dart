@@ -12,6 +12,10 @@ import 'package:town_pass/service/subscription_service.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 
+const _transparentStatusBar = SystemUiOverlayStyle(
+  statusBarColor: Colors.transparent,
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // FlutterNativeSplash.preserve(
@@ -20,11 +24,7 @@ void main() async {
 
   await initServices();
 
-  SystemChrome.setSystemUIOverlayStyle(
-    const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-    ),
-  );
+  SystemChrome.setSystemUIOverlayStyle(_transparentStatusBar);
 
   runApp(const MyApp());
 }
