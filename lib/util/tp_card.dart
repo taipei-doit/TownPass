@@ -23,7 +23,7 @@ class TPCard extends StatelessWidget {
         color: backgroundColor ?? TPColors.white,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cornerRadius ?? 3)),
         shadows: const [
-          BoxShadow(
+          const BoxShadow(
             color: Color(0x0A000000),
             blurRadius: 12,
             offset: Offset(0, 4),
