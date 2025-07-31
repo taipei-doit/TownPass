@@ -44,10 +44,16 @@ class MainView extends GetView<MainViewController> {
             ),
             showUnselectedLabels: true,
             currentIndex: controller.currentIndex.value,
-            onTap: (index) => controller.currentIndex.value = index,
+            onTap: controller.changeTabIndex,
           ),
         ),
       ),
     );
+  }
+}
+
+extension on MainViewController {
+  void changeTabIndex(int index) {
+    currentIndex.value = index;
   }
 }
