@@ -76,25 +76,21 @@ class TrendingServiceWidget extends StatelessWidget {
   ///
   /// Generate [Table.children] from [_list].
   static List<TableRow> get _tableRowList {
-    return List<TableRow>.generate(
-      _list.length ~/ 2 + _list.length % 2,
-      (index) => TableRow(
+    return _list.chunk(2).map((chunk) {
+      final children = chunk.map((button) => Expanded(child: button)).toList();
+      if (children.length == 1) {
+        children.add(const Expanded(child: SizedBox.shrink()));
+      }
+
+      return TableRow(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Expanded(child: _list[index * 2]),
-              Expanded(
-                child: switch (index * 2 + 1 < _list.length) {
-                  true => _list[index * 2 + 1],
-                  false => const SizedBox.shrink(),
-                },
-              ),
-            ].joinedAround(_columnSpacer),
+            children: children.joinedAround(_columnSpacer),
           ),
         ],
-      ),
-    ).joined(_rowSpacer);
+      );
+    }).toList().joined(_rowSpacer);
   }
 }
 
