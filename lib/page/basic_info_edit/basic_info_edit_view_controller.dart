@@ -1,22 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
-class BasicInfoEditArgument {
-  final String title;
-  final String currentValue;
-  final String? Function(String?)? validator;
-  final TextInputType? keyboardType;
-
-  const BasicInfoEditArgument({
-    required this.title,
-    required this.currentValue,
-    this.validator,
-    this.keyboardType,
-  });
-}
-
 class BasicInfoEditViewController extends GetxController {
-  final BasicInfoEditArgument arg = Get.arguments;
+  final String title = Get.parameters['title']!;
+  final String currentValue = Get.parameters['currentValue']!;
+  final String? Function(String?)? validator = Get.parameters['validator'] as String? Function(String?)?;
+  final TextInputType? keyboardType = Get.parameters['keyboardType'] as TextInputType?;
 
   final TextEditingController controller = TextEditingController();
 
@@ -27,7 +16,7 @@ class BasicInfoEditViewController extends GetxController {
     super.onInit();
 
     controller.addListener(() {
-      enableButton.value = (arg.validator?.call(controller.text) == null);
+      enableButton.value = (validator?.call(controller.text) == null);
     });
   }
 }
