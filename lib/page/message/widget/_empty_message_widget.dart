@@ -9,7 +9,7 @@ class _EmptyMessageWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Spacer(flex: 2),
-        SizedBox(
+        const SizedBox( // Add const here
           width: 160,
           height: 160,
           child: Center(child: Assets.svg.bookingL.svg()),
