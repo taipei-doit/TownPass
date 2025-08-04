@@ -1,3 +1,4 @@
+dart
 import 'package:town_pass/bean/message.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/message/message_view_controller.dart';
@@ -41,6 +42,7 @@ class MessageView extends GetView<MessageViewController> {
             IconButton(
               icon: Assets.svg.iconTrashClose.svg(),
               onPressed: () {},
+              // 使用 const constructor
             ),
           ],
         ),
