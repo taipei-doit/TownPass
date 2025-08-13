@@ -1,3 +1,4 @@
+dart
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -28,34 +29,7 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
       child: Scaffold(
         appBar: const TPAppBar(title: '我的服務'),
         bottomNavigationBar: TPBottomSheet(
-          child: Obx(() {
-            return switch (controller.isEditMode.value) {
-              true => Row(
-                  children: [
-                    Expanded(
-                      child: TPButton.secondary(
-                        enable: controller.pinnedServiceController.pinnedList.isNotEmpty,
-                        text: '取消',
-                        onPressed: () => controller.cancelEdit(),
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: TPButton.primary(
-                        text: '儲存',
-                        onPressed: () => controller.isEditMode.value = !controller.isEditMode.value,
-                      ),
-                    )
-                  ],
-                ),
-              false => TPButton.primary(
-                  text: '編輯',
-                  onPressed: () {
-                    controller.isEditMode.value = !controller.isEditMode.value;
-                  },
-                ),
-            };
-          }),
+          child: _BottomNavigationBarContent(controller: controller),
         ),
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -192,5 +166,43 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
         ),
       ),
     );
+  }
+}
+
+class _BottomNavigationBarContent extends StatelessWidget {
+  const _BottomNavigationBarContent({required this.controller});
+
+  final CityServiceEditViewController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return Obx(() {
+      return switch (controller.isEditMode.value) {
+        true => Row(
+            children: [
+              Expanded(
+                child: TPButton.secondary(
+                  enable: controller.pinnedServiceController.pinnedList.isNotEmpty,
+                  text: '取消',
+                  onPressed: () => controller.cancelEdit(),
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: TPButton.primary(
+                  text: '儲存',
+                  onPressed: () => controller.isEditMode.value = !controller.isEditMode.value,
+                ),
+              )
+            ],
+          ),
+        false => TPButton.primary(
+            text: '編輯',
+            onPressed: () {
+              controller.isEditMode.value = !controller.isEditMode.value;
+            },
+          ),
+      };
+    });
   }
 }
