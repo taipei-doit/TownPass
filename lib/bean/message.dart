@@ -1,3 +1,4 @@
+dart
 import 'package:town_pass/bean/tp_rich_text.dart';
 import 'package:town_pass/util/json_converter/datetime_converter.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -47,13 +48,17 @@ class MessageItem {
   Map<String, dynamic> toJson() => _$MessageItemToJson(this);
 }
 
+const String _personalType = 'PERSONAL';
+const String _tcgType = 'TCG';
+const String _systemType = 'SYSTEM';
+
 @JsonEnum()
 enum MessageType {
-  @JsonValue('PERSONAL')
+  @JsonValue(_personalType)
   personal,
-  @JsonValue('TCG')
+  @JsonValue(_tcgType)
   tcg,
-  @JsonValue('SYSTEM')
+  @JsonValue(_systemType)
   system,
   ;
 }
