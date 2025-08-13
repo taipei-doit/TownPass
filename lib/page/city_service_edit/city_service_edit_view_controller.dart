@@ -1,18 +1,23 @@
+dart
 import 'package:get/get.dart';
 import 'package:town_pass/page/city_service/model/my_service_model.dart';
 import 'package:town_pass/page/city_service/widget/pinned_service_widget_controller.dart';
 
 class CityServiceEditViewController extends GetxController {
-  final Map<MyServiceCategory, List<MyServiceItemId>> categoryMap = {
-    for (var category in MyServiceCategory.values)
-      category: MyServiceItemId.values
-          .where(
-            (itemId) => itemId.item.category == category,
-          )
-          .toList(),
-  }..removeWhere(
-      (category, serviceList) => serviceList.isEmpty,
-    );
+  static Map<MyServiceCategory, List<MyServiceItemId>> _createCategoryMap() {
+    final Map<MyServiceCategory, List<MyServiceItemId>> categoryMap = {
+      for (var category in MyServiceCategory.values)
+        category: MyServiceItemId.values
+            .where(
+              (itemId) => itemId.item.category == category,
+            )
+            .toList(),
+    };
+    categoryMap.removeWhere((category, serviceList) => serviceList.isEmpty);
+    return categoryMap;
+  }
+
+  final Map<MyServiceCategory, List<MyServiceItemId>> categoryMap = _createCategoryMap();
 
   final RxBool isEditMode = RxBool(false);
 
