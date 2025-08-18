@@ -1,3 +1,4 @@
+dart
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -23,24 +24,7 @@ class SuspendAccountView extends GetView<SuspendAccountController> {
       body: TPSettingList(
         children: [
           TPSettingListTile.header(title: '目前登入帳號'),
-          TPSettingListTile.listTile(
-            leading: Assets.svg.iconPerson.svg(),
-            title: TPText(
-              controller.name,
-              style: TPTextStyles.h2Regular,
-              color: TPColors.grayscale800,
-            ),
-          ),
-          TPSettingListTile.line(),
-          TPSettingListTile.listTile(
-            leading: Assets.svg.iconIdCard.svg(),
-            title: TPText(
-              controller.idNumber,
-              style: TPTextStyles.h2Regular,
-              color: TPColors.grayscale800,
-            ),
-          ),
-          TPSettingListTile.line(),
+          _buildAccountInfo(controller),
           TPSettingListTile(
             backgroundColor: TPColors.white,
             child: Column(
@@ -99,6 +83,31 @@ class SuspendAccountView extends GetView<SuspendAccountController> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildAccountInfo(SuspendAccountController controller) {
+    return Column(
+      children: [
+        TPSettingListTile.listTile(
+          leading: Assets.svg.iconPerson.svg(),
+          title: TPText(
+            controller.name,
+            style: TPTextStyles.h2Regular,
+            color: TPColors.grayscale800,
+          ),
+        ),
+        TPSettingListTile.line(),
+        TPSettingListTile.listTile(
+          leading: Assets.svg.iconIdCard.svg(),
+          title: TPText(
+            controller.idNumber,
+            style: TPTextStyles.h2Regular,
+            color: TPColors.grayscale800,
+          ),
+        ),
+        TPSettingListTile.line(),
+      ],
     );
   }
 }
