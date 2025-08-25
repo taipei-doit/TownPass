@@ -1,6 +1,5 @@
-
+dart
 import 'package:json_annotation/json_annotation.dart';
-
 
 part 'tp_rich_text.g.dart';
 
@@ -32,4 +31,8 @@ enum TPRichTextStyle {
   @JsonValue('UNDERLINE')
   underline,
   ;
+}
+
+extension TPRichTextExtension on TPRichText {
+  bool get hasStyle => style != null && style!.isNotEmpty;
 }
