@@ -1,4 +1,3 @@
-dart
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -35,7 +34,10 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                       arguments: BasicInfoEditArgument(
                         title: '身分證',
                         currentValue: controller.idNumber.value ?? '',
-                        validator: (idNumber) => idNumberValidator(idNumber: idNumber ?? '') ? null : '',
+                        validator: (idNumber) =>
+                            idNumberValidator(idNumber: idNumber ?? '')
+                                ? null
+                                : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -55,7 +57,11 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '生日',
                         currentValue: controller.birthday.value ?? '',
                         keyboardType: TextInputType.datetime,
-                        validator: (string) => DateFormat('yyyy/MM/dd').tryParseStrict(string ?? '') == null ? '' : null,
+                        validator: (string) => DateFormat('yyyy/MM/dd')
+                                    .tryParseStrict(string ?? '') ==
+                                null
+                            ? ''
+                            : null,
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -75,7 +81,8 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '電子信箱',
                         currentValue: controller.email.value ?? '',
                         keyboardType: TextInputType.emailAddress,
-                        validator: (email) => EmailValidator.validate(email ?? '') ? null : '',
+                        validator: (email) =>
+                            EmailValidator.validate(email ?? '') ? null : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -95,11 +102,15 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '手機門號',
                         currentValue: controller.phoneNumber.value ?? '',
                         keyboardType: TextInputType.phone,
-                        validator: (phoneNumber) => RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '') ? null : '',
+                        validator: (phoneNumber) =>
+                            RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '')
+                                ? null
+                                : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
-                        String() => controller.updateAccount(phoneNumber: value),
+                        String() =>
+                          controller.updateAccount(phoneNumber: value),
                         Object() || null => null,
                       },
                     );
@@ -114,7 +125,8 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                       arguments: BasicInfoEditArgument(
                         title: '通訊地址',
                         currentValue: controller.address.value ?? '',
-                        validator: (address) => (address != null && address.isNotEmpty) ? null : '',
+                        validator: (address) =>
+                            (address != null && address.isNotEmpty) ? null : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
