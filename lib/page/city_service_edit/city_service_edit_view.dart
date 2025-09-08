@@ -1,4 +1,3 @@
-dart
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -35,7 +34,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                 children: [
                   Expanded(
                     child: TPButton.secondary(
-                      enable: controller.pinnedServiceController.pinnedList.isNotEmpty,
+                      enable: controller
+                          .pinnedServiceController.pinnedList.isNotEmpty,
                       text: '取消',
                       onPressed: () => controller.cancelEdit(),
                     ),
@@ -44,7 +44,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                   Expanded(
                     child: TPButton.primary(
                       text: '儲存',
-                      onPressed: () => controller.isEditMode.value = !controller.isEditMode.value,
+                      onPressed: () => controller.isEditMode.value =
+                          !controller.isEditMode.value,
                     ),
                   )
                 ],
@@ -74,7 +75,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
               () {
                 return PinnedServiceWidget(
                   isEditMode: controller.isEditMode.value,
-                  onMoreTap: () => controller.isEditMode.value = !controller.isEditMode.value,
+                  onMoreTap: () => controller.isEditMode.value =
+                      !controller.isEditMode.value,
                   showAddInNewLine: true,
                 );
               },
@@ -86,12 +88,14 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                 physics: const BouncingScrollPhysics(),
                 itemCount: controller.categoryMap.keys.length,
                 itemBuilder: (_, index) {
-                  final MyServiceCategory category = controller.categoryMap.keys.toList()[index];
+                  final MyServiceCategory category =
+                      controller.categoryMap.keys.toList()[index];
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 13),
                         child: TPText(
                           category.title,
                           style: TPTextStyles.h3SemiBold,
@@ -103,19 +107,25 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                         physics: const NeverScrollableScrollPhysics(),
                         itemCount: controller.categoryMap[category]?.length,
                         itemBuilder: (_, index) {
-                          final MyServiceItemId itemId = controller.categoryMap[category]![index];
+                          final MyServiceItemId itemId =
+                              controller.categoryMap[category]![index];
                           return Obx(
                             () {
                               return GestureDetector(
                                 behavior: HitTestBehavior.opaque,
                                 onTap: () async {
                                   if (controller.isEditMode.value) {
-                                    switch (controller.pinnedServiceController.pinnedList.contains(itemId)) {
+                                    switch (controller
+                                        .pinnedServiceController.pinnedList
+                                        .contains(itemId)) {
                                       case true:
-                                        controller.pinnedServiceController.remove(itemId);
+                                        controller.pinnedServiceController
+                                            .remove(itemId);
                                       case false:
-                                        if (!controller.pinnedServiceController.push(itemId)) {
-                                          Fluttertoast.showToast(msg: '置頂服務已達上限(12個)');
+                                        if (!controller.pinnedServiceController
+                                            .push(itemId)) {
+                                          Fluttertoast.showToast(
+                                              msg: '置頂服務已達上限(12個)');
                                         }
                                     }
                                   } else {
@@ -127,7 +137,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                   }
                                 },
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16),
                                   child: Row(
                                     children: [
                                       SizedBox.square(
@@ -137,13 +148,16 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                       const SizedBox(width: 16),
                                       Expanded(
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8.0),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 10, vertical: 8.0),
                                           child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
                                             children: [
                                               TPText(
                                                 itemId.item.title,
-                                                style: TPTextStyles.bodySemiBold,
+                                                style:
+                                                    TPTextStyles.bodySemiBold,
                                                 color: TPColors.grayscale900,
                                                 overflow: TextOverflow.ellipsis,
                                               ),
@@ -159,11 +173,14 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                         ),
                                       ),
                                       if (controller.isEditMode.value) ...[
-                                        switch (controller.pinnedServiceController.pinnedList.contains(itemId)) {
+                                        switch (controller
+                                            .pinnedServiceController.pinnedList
+                                            .contains(itemId)) {
                                           true => Stack(
                                               children: [
                                                 Assets.svg.iconUnchecked.svg(
-                                                  colorFilter: const ColorFilter.mode(
+                                                  colorFilter:
+                                                      const ColorFilter.mode(
                                                     TPColors.primary500,
                                                     BlendMode.srcIn,
                                                   ),
@@ -174,7 +191,8 @@ class CityServiceEditView extends GetView<CityServiceEditViewController> {
                                                 ),
                                               ],
                                             ),
-                                          false => Assets.svg.iconUnchecked.svg(),
+                                          false =>
+                                            Assets.svg.iconUnchecked.svg(),
                                         },
                                       ],
                                     ],
