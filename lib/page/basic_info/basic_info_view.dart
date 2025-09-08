@@ -34,10 +34,10 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                       arguments: BasicInfoEditArgument(
                         title: '身分證',
                         currentValue: controller.idNumber.value ?? '',
-                        validator: (idNumber) => switch (idNumberValidator(idNumber: idNumber ?? '')) {
-                          true => null,
-                          false => '',
-                        },
+                        validator: (idNumber) =>
+                            idNumberValidator(idNumber: idNumber ?? '')
+                                ? null
+                                : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -57,10 +57,11 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '生日',
                         currentValue: controller.birthday.value ?? '',
                         keyboardType: TextInputType.datetime,
-                        validator: (string) => switch (DateFormat('yyyy/MM/dd').tryParseStrict(string ?? '')) {
-                          null => '',
-                          _ => null,
-                        },
+                        validator: (string) => DateFormat('yyyy/MM/dd')
+                                    .tryParseStrict(string ?? '') ==
+                                null
+                            ? ''
+                            : null,
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -80,10 +81,8 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '電子信箱',
                         currentValue: controller.email.value ?? '',
                         keyboardType: TextInputType.emailAddress,
-                        validator: (email) => switch (EmailValidator.validate(email ?? '')) {
-                          true => null,
-                          false => '',
-                        },
+                        validator: (email) =>
+                            EmailValidator.validate(email ?? '') ? null : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
@@ -103,14 +102,15 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                         title: '手機門號',
                         currentValue: controller.phoneNumber.value ?? '',
                         keyboardType: TextInputType.phone,
-                        validator: (phoneNumber) => switch (RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '')) {
-                          true => null,
-                          false => '',
-                        },
+                        validator: (phoneNumber) =>
+                            RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '')
+                                ? null
+                                : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
-                        String() => controller.updateAccount(phoneNumber: value),
+                        String() =>
+                          controller.updateAccount(phoneNumber: value),
                         Object() || null => null,
                       },
                     );
@@ -125,10 +125,8 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                       arguments: BasicInfoEditArgument(
                         title: '通訊地址',
                         currentValue: controller.address.value ?? '',
-                        validator: (address) => switch (address != null && address.isNotEmpty) {
-                          true => null,
-                          false => '',
-                        },
+                        validator: (address) =>
+                            (address != null && address.isNotEmpty) ? null : '',
                       ),
                     )?.then(
                       (value) => switch (value) {
