@@ -1,3 +1,4 @@
+dart
 import 'package:flutter/material.dart';
 
 class TPTextSpan extends TextSpan {
@@ -42,25 +43,22 @@ class TPTextSpan extends TextSpan {
   }) : super(
           text: null,
           children: [
-            ...?text?.split(_splitRegExp).map(
-                  (text) => switch (text.contains(_wordCharacter)) {
-                    true => TextSpan(
-                        text: text,
-                        style: switch (style) {
-                          TextStyle style => style.copyWith(fontFamily: 'Roboto'),
-                          null => const TextStyle(fontFamily: 'Roboto'),
-                        },
-                      ),
-                    false => TextSpan(
-                        text: text,
-                        style: switch (style) {
-                          TextStyle style => style.copyWith(fontFamily: 'PingFangTC'),
-                          null => const TextStyle(fontFamily: 'PingFangTC'),
-                        },
-                      ),
-                  },
-                ),
+            ...?text?.split(_splitRegExp).map(_buildTextSpanWithFont),
             ...?children,
           ],
         );
+
+  TextSpan _buildTextSpanWithFont(String text) {
+    TextStyle? targetStyle;
+    if (text.contains(_wordCharacter)) {
+      targetStyle = style?.copyWith(fontFamily: 'Roboto') ?? const TextStyle(fontFamily: 'Roboto');
+    } else {
+      targetStyle = style?.copyWith(fontFamily: 'PingFangTC') ?? const TextStyle(fontFamily: 'PingFangTC');
+    }
+
+    return TextSpan(
+      text: text,
+      style: targetStyle,
+    );
+  }
 }
