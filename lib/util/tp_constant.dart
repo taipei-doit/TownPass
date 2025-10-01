@@ -1,13 +1,22 @@
+dart
 import 'dart:ui';
 
-const double kTPToolbarHeight = 56;
+class TPConstants {
+  /// Toolbar height
+  static const double toolbarHeight = 56;
 
-const double kTPToolbarBottomHeight = 46;
+  /// Toolbar bottom height
+  static const double toolbarBottomHeight = 46;
 
-const String tpLaunchMailScheme = 'mailto';
+  /// Launch mail scheme
+  static const String launchMailScheme = 'mailto';
 
-const String tpMailAddress = 'CodeFestTaipei@gov.taipei';
+  /// Mail address
+  static const String mailAddress = 'CodeFestTaipei@gov.taipei';
 
-const Size tpSwitchSize = Size(48, 32);
+  /// Switch size
+  static const Size switchSize = Size(48, 32);
 
-const double goldenRatio = 1.618;
+  /// Golden ratio
+  static const double goldenRatio = 1.618;
+}
