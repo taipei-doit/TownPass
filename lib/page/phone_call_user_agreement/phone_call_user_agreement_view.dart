@@ -1,4 +1,3 @@
-dart
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
@@ -11,7 +10,8 @@ import 'package:town_pass/util/tp_checkbox_list_tile.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 
-class PhoneCallUserAgreementView extends GetView<PhoneCallUserAgreementViewController> {
+class PhoneCallUserAgreementView
+    extends GetView<PhoneCallUserAgreementViewController> {
   const PhoneCallUserAgreementView({super.key});
 
   @override
