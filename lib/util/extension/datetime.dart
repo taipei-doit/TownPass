@@ -1,7 +1,11 @@
 import 'package:intl/intl.dart';
 
+final Map<String, DateFormat> _dateFormatCache = {};
+
 extension TPDateTime on DateTime {
   String format([String pattern = 'yyyy/MM/dd']) {
-    return DateFormat(pattern).format(this);
+    final formatter =
+        _dateFormatCache.putIfAbsent(pattern, () => DateFormat(pattern));
+    return formatter.format(this);
   }
 }
