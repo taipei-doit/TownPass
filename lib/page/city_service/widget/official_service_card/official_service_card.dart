@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 abstract class OfficialServiceCard extends StatelessWidget {
-  const OfficialServiceCard({super.key});
+  const OfficialServiceCard({super.key, this.borderColor = Colors.transparent});
 
-  Color get borderColor => Colors.transparent;
+  final Color borderColor;
 
   @override
   @nonVirtual
