@@ -10,7 +10,8 @@ class MessageList {
 
   const MessageList({required this.data});
 
-  factory MessageList.fromJson(Map<String, dynamic> json) => _$MessageListFromJson(json);
+  factory MessageList.fromJson(Map<String, dynamic> json) =>
+      _$MessageListFromJson(json);
 
   Map<String, dynamic> toJson() => _$MessageListToJson(this);
 }
@@ -42,18 +43,23 @@ class MessageItem {
     this.richText,
   });
 
-  factory MessageItem.fromJson(Map<String, dynamic> json) => _$MessageItemFromJson(json);
+  factory MessageItem.fromJson(Map<String, dynamic> json) =>
+      _$MessageItemFromJson(json);
 
   Map<String, dynamic> toJson() => _$MessageItemToJson(this);
 }
 
+const String _personalType = 'PERSONAL';
+const String _tcgType = 'TCG';
+const String _systemType = 'SYSTEM';
+
 @JsonEnum()
 enum MessageType {
-  @JsonValue('PERSONAL')
+  @JsonValue(_personalType)
   personal,
-  @JsonValue('TCG')
+  @JsonValue(_tcgType)
   tcg,
-  @JsonValue('SYSTEM')
+  @JsonValue(_systemType)
   system,
   ;
 }
