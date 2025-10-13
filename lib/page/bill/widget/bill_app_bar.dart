@@ -1,15 +1,21 @@
+```
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/tp_colors.dart';
-import 'package:town_pass/util/tp_constant.dart';
+import 'package:town_pass/util/tp_constant.dart'; // 引入 TPConstant
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 
 class BillAppBar extends StatelessWidget implements PreferredSizeWidget {
   const BillAppBar({super.key});
 
-  double get _bottomHeight => 64 + textSize('text', style: TPTextStyles.bodySemiBold).height + 12 * 2;
+  // 將底欄高度計算中的魔術數字抽取為具名常數，提升可讀性與維護性。
+  // 保持原有計算邏輯，確保高度不變。
+  double get _bottomHeight =>
+      TPConstant.billAppBarBottomBaseHeight +
+      textSize('text', style: TPTextStyles.bodySemiBold).height +
+      TPConstant.billAppBarBottomPaddingVertical * 2;
 
   @override
   Size get preferredSize => Size.fromHeight(kTPToolbarHeight + _bottomHeight);
@@ -133,3 +139,18 @@ class _BottomItem extends StatelessWidget {
     );
   }
 }
+
+// ========== 新增或修改檔案：util/tp_constant.dart ==========
+// 請確保此檔案已存在或建立。
+// 假設 TPConstant 檔案內容如下，並在其中新增以下常數：
+/*
+// 原始内容可能包含其他常數
+class TPConstant {
+  // AppBar Bottom 部分的高度相關常數
+  static const double billAppBarBottomBaseHeight = 64.0;
+  static const double billAppBarBottomPaddingVertical = 12.0;
+
+  // 其他常數...
+}
+*/
+```
