@@ -34,6 +34,7 @@ import 'package:town_pass/page/subscription/subscription_view.dart';
 import 'package:town_pass/page/suspend_account/suspend_account_controller.dart';
 import 'package:town_pass/page/suspend_account/suspend_account_view.dart';
 import 'package:town_pass/util/tp_web_view.dart';
+import 'package:flutter/material.dart'; // 導入 flutter/material.dart 以使用 Widget 類型
 
 abstract class TPRoute {
   static const String main = '/';
@@ -60,7 +61,24 @@ abstract class TPRoute {
   static const String suspendAccount = '/suspend_account';
   static const String webView = '/web_view';
 
+  /// Helper method to create a GetPage with a single GetxController binding.
+  /// This reduces boilerplate for common GetPage definitions.
+  static GetPage _buildGetPageWithController<T extends GetxController>(
+    String name,
+    Widget Function() pageBuilder,
+    T Function() controllerBuilder,
+  ) {
+    return GetPage(
+      name: name,
+      page: pageBuilder,
+      binding: BindingsBuilder(() {
+        Get.put<T>(controllerBuilder());
+      }),
+    );
+  }
+
   static final List<GetPage> page = [
+    // Main route has multiple controllers, so keep the original verbose binding.
     GetPage(
       name: main,
       page: () => const MainView(),
@@ -70,117 +88,102 @@ abstract class TPRoute {
           ..put<PinnedServiceWidgetController>(PinnedServiceWidgetController());
       }),
     ),
-    GetPage(
-      name: account,
-      page: () => const AccountView(),
-      binding: BindingsBuilder(() {
-        Get.put<AccountViewController>(AccountViewController());
-      }),
+    _buildGetPageWithController(
+      account,
+      () => const AccountView(),
+      () => AccountViewController(),
     ),
-    GetPage(
-      name: basicInfo,
-      page: () => const BasicInfoView(),
-      binding: BindingsBuilder(() {
-        Get.put<BasicInfoViewController>(BasicInfoViewController());
-      }),
+    _buildGetPageWithController(
+      basicInfo,
+      () => const BasicInfoView(),
+      () => BasicInfoViewController(),
     ),
-    GetPage(
-      name: basicInfoEdit,
-      page: () => const BasicInfoEditView(),
-      binding: BindingsBuilder(() {
-        Get.put<BasicInfoEditViewController>(BasicInfoEditViewController());
-      }),
+    _buildGetPageWithController(
+      basicInfoEdit,
+      () => const BasicInfoEditView(),
+      () => BasicInfoEditViewController(),
     ),
-    GetPage(
-        name: feedback,
-        page: () => const FeedbackView(),
-        binding: BindingsBuilder(() {
-          Get.put<FeedbackViewController>(FeedbackViewController());
-        })),
+    _buildGetPageWithController(
+      feedback,
+      () => const FeedbackView(),
+      () => FeedbackViewController(),
+    ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: invoiceReceipt,
       page: () => const InvoiceReceiptView(),
     ),
-    GetPage(
-      name: language,
-      page: () => const LanguageView(),
-      binding: BindingsBuilder(() {
-        Get.put<LanguageViewController>(LanguageViewController());
-      }),
+    _buildGetPageWithController(
+      language,
+      () => const LanguageView(),
+      () => LanguageViewController(),
     ),
-    GetPage(
-      name: message,
-      page: () => const MessageView(),
-      binding: BindingsBuilder(() {
-        Get.put<MessageViewController>(MessageViewController());
-      }),
+    _buildGetPageWithController(
+      message,
+      () => const MessageView(),
+      () => MessageViewController(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: messageDetail,
       page: () => const MessageDetailView(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: onlinePolice,
       page: () => const OnlinePoliceView(),
     ),
-    GetPage(
-      name: phoneCallUserAgreement,
-      page: () => const PhoneCallUserAgreementView(),
-      binding: BindingsBuilder(() {
-        Get.put<PhoneCallUserAgreementViewController>(PhoneCallUserAgreementViewController());
-      }),
+    _buildGetPageWithController(
+      phoneCallUserAgreement,
+      () => const PhoneCallUserAgreementView(),
+      () => PhoneCallUserAgreementViewController(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: portfolioAndAuth,
       page: () => const PortfolioAndAuthView(),
     ),
-    GetPage(
-      name: qrCodeScan,
-      page: () => const QRCodeScanView(),
-      binding: BindingsBuilder(() {
-        Get.put<QRCodeScanController>(QRCodeScanController());
-      }),
+    _buildGetPageWithController(
+      qrCodeScan,
+      () => const QRCodeScanView(),
+      () => QRCodeScanController(),
     ),
-    GetPage(
-      name: serviceEdit,
-      page: () => const CityServiceEditView(),
-      binding: BindingsBuilder(() {
-        Get.put<CityServiceEditViewController>(CityServiceEditViewController());
-      }),
+    _buildGetPageWithController(
+      serviceEdit,
+      () => const CityServiceEditView(),
+      () => CityServiceEditViewController(),
     ),
-    GetPage(
-      name: setting,
-      page: () => const SettingView(),
-      binding: BindingsBuilder(() {
-        Get.put<SettingViewController>(SettingViewController());
-      }),
+    _buildGetPageWithController(
+      setting,
+      () => const SettingView(),
+      () => SettingViewController(),
     ),
-    GetPage(
-      name: settingStartPage,
-      page: () => const AppHomePageView(),
-      binding: BindingsBuilder(() {
-        Get.put<AppHomePageController>(AppHomePageController());
-      }),
+    _buildGetPageWithController(
+      settingStartPage,
+      () => const AppHomePageView(),
+      () => AppHomePageController(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: subscription,
       page: () => const SubscriptionView(),
     ),
-    GetPage(
-      name: suspendAccount,
-      page: () => const SuspendAccountView(),
-      binding: BindingsBuilder(() {
-        Get.put<SuspendAccountController>(SuspendAccountController());
-      }),
+    _buildGetPageWithController(
+      suspendAccount,
+      () => const SuspendAccountView(),
+      () => SuspendAccountController(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: webView,
       page: () => TPWebView(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: activityList,
       page: () => const ActivityListView(),
     ),
+    // Pages without controllers remain in their original GetPage format.
     GetPage(
       name: activityDetail,
       page: () => const ActivityDetailView(),
