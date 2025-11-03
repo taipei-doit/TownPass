@@ -49,17 +49,13 @@ class MessageItem {
   Map<String, dynamic> toJson() => _$MessageItemToJson(this);
 }
 
-const String _personalType = 'PERSONAL';
-const String _tcgType = 'TCG';
-const String _systemType = 'SYSTEM';
-
 @JsonEnum()
 enum MessageType {
-  @JsonValue(_personalType)
+  @JsonValue('PERSONAL')
   personal,
-  @JsonValue(_tcgType)
+  @JsonValue('TCG')
   tcg,
-  @JsonValue(_systemType)
+  @JsonValue('SYSTEM')
   system,
   ;
 }
