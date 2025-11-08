@@ -89,3 +89,10 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# foodsafety-site (Vue.js project)
+foodsafety-site/node_modules/
+foodsafety-site/dist/
+foodsafety-site/.env
+foodsafety-site/.env.local
+foodsafety-site/.env.*.local

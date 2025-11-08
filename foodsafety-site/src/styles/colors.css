@@ -1,0 +1,44 @@
+:root {
+  /* Primary Colors */
+  --primary-50: #EDF8FA;
+  --primary-100: #DBF1F5;
+  --primary-200: #B4E2EA;
+  --primary-300: #93D4DF;
+  --primary-400: #71C5D5;
+  --primary-500: #5AB4C5;
+  --primary-600: #468D9B;
+  --primary-700: #356C77;
+  --primary-800: #22474E;
+  --primary-900: #112629;
+
+  /* Grayscale Colors */
+  --grayscale-50: #F1F3F4;
+  --grayscale-100: #E3E7E9;
+  --grayscale-200: #CAD1D5;
+  --grayscale-300: #ADB8BE;
+  --grayscale-400: #91A0A8;
+  --grayscale-500: #738995;
+  --grayscale-600: #5E6D76;
+  --grayscale-700: #475259;
+  --grayscale-800: #30383D;
+  --grayscale-900: #171B1D;
+  --grayscale-950: #0B0D0E;
+
+  /* Red Colors */
+  --red-50: #FAEEEE;
+  --red-100: #F5DCDD;
+  --red-200: #EBB6B6;
+  --red-300: #E29494;
+  --red-400: #D45251;
+  --red-500: #D45251;
+  --red-600: #C2332F;
+
+  /* Secondary Colors */
+  --secondary-500: #F5BA4B;
+  --secondary-600: #E7A43C;
+
+  /* Basic Colors */
+  --white: #FFFFFF;
+  --black: #000000;
+  --transparent: transparent;
+}

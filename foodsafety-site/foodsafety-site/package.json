@@ -1,0 +1,22 @@
+{
+  "name": "foodsafety-site",
+  "version": "1.0.0",
+  "description": "A Vue.js project for food safety information and activities.",
+  "main": "src/main.js",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint"
+  },
+  "dependencies": {
+    "vue": "^2.6.14",
+    "vue-router": "^3.5.3",
+    "axios": "^0.21.1"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "^4.5.15",
+    "@vue/cli-plugin-babel": "^4.5.15",
+    "babel-eslint": "^10.1.0"
+  },
+  "license": "MIT"
+}
