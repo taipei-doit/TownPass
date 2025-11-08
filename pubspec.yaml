@@ -42,6 +42,7 @@ dependencies:
   flutter_native_splash: ^2.4.1
   flutter_svg: ^2.0.10+1
   fluttertoast: ^8.2.8
+  csv: 
   get: ^4.6.6
   geolocator: ^13.0.1
   intl: any
@@ -100,7 +101,7 @@ flutter:
     - assets/svg/jiaobei/
     - assets/image/lots.png
     - assets/lottie_json/
-
+    - assets/coords.csv
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
 
