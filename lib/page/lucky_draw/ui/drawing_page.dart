@@ -59,9 +59,7 @@ class _DrawingPageState extends State<DrawingPage>
 
     _streamSubscription.add(
       userAccelerometerEventStream().listen((event) {
-        final shook = event.x.abs() > threshold ||
-            event.y.abs() > threshold ||
-            event.z.abs() > threshold;
+        final shook = event.x.abs() > threshold || event.y.abs() > threshold;
 
         if (shook) {
           _playAnimationOnce();
