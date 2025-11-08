@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
+import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
@@ -35,24 +36,26 @@ class _WelcomePageState extends State<WelcomePage> {
         title: '城心誠靈',
         backgroundColor: TPColors.secondary50,
       ),
-      backgroundColor: TPColors.secondary50,
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          spacing: 16,
-          children: [
-            _button(
-              title: '抽籤',
-              subtitle: '尋求數位神諭',
-              onPressed: () => Get.toNamed('/lucky_draw/drawing'),
-            ),
-            _button(
-              title: '拜拜',
-              subtitle: '點亮雲端香火',
-              onPressed: () {},
-            )
-          ],
+      body: AnimatedLightFlowBackground(
+        backgroundColor: TPColors.secondary50,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            spacing: 16,
+            children: [
+              _button(
+                title: '抽籤',
+                subtitle: '尋求數位神諭',
+                onPressed: () => Get.toNamed('/lucky_draw/drawing'),
+              ),
+              _button(
+                title: '拜拜',
+                subtitle: '點亮雲端香火',
+                onPressed: () {},
+              )
+            ],
+          ),
         ),
       ),
     );
