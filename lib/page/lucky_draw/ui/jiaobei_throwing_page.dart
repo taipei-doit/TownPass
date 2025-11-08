@@ -61,6 +61,9 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   get _shakingThreshold => Platform.isIOS ? 10.0 : 5.0;
   bool _canDetectShake = true;
 
+  // 作弊神器
+  bool _forceShengJiaoNextThrow = false;
+
   @override
   void initState() {
     super.initState();
@@ -268,10 +271,16 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
         });
         _startRandomFlipping();
       } else if (_flipCount >= _totalFlips) {
-        // 變換結束，確定最終結果
+        // 翻轉結束，設定最終狀態
         setState(() {
-          _isThrowingLeft = _random.nextBool();
-          _isThrowingRight = _random.nextBool();
+          if (_forceShengJiaoNextThrow) {
+            _isThrowingLeft = true;
+            _isThrowingRight = false;
+            _forceShengJiaoNextThrow = false; // 用過一次就清除
+          } else {
+            _isThrowingLeft = _random.nextBool();
+            _isThrowingRight = _random.nextBool();
+          }
         });
       }
     });
@@ -319,20 +328,39 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const LuckyDrawAppBar(subtitle: '搖一搖擲筊'),
-      body: AnimatedLightFlowBackground(
-        backgroundColor: TPColors.secondary50,
-        child: Column(
-          children: [
-            _jiaobeiAnimation,
-            const SizedBox(height: 72),
-            _instructionText,
-            const SizedBox(height: 24),
-            _result != null && !_isAnimating
-                ? _nextStepButton
-                : const SizedBox.shrink(),
-          ],
+      body: Stack(children: [
+        AnimatedLightFlowBackground(
+          backgroundColor: TPColors.secondary50,
+          child: Column(
+            children: [
+              _jiaobeiAnimation,
+              const SizedBox(height: 72),
+              _instructionText,
+              const SizedBox(height: 24),
+              _result != null && !_isAnimating
+                  ? _nextStepButton
+                  : const SizedBox.shrink(),
+            ],
+          ),
         ),
-      ),
+        // 右下角作弊按鈕
+        Positioned(
+          right: 0,
+          bottom: 0,
+          child: GestureDetector(
+            onTap: () {
+              setState(() {
+                _forceShengJiaoNextThrow = true;
+              });
+            },
+            child: Container(
+              width: 150,
+              height: 150,
+              color: TPColors.transparent,
+            ),
+          ),
+        ),
+      ]),
     );
   }
 
