@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -11,11 +13,14 @@ import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
+import 'package:town_pass/util/tp_text_styles.dart';
 enum _GamePhase { landing, loading, playing, error }
 
 enum GameLanguage { zh, en }
 
 typedef _StringFormatter = String Function(String value);
+typedef _IntFormatter = String Function(int value);
+typedef _DoubleFormatter = String Function(double value);
 
 class _GameStrings {
   const _GameStrings(this.language);
@@ -67,6 +72,9 @@ class _GameStrings {
   List<String> get landingBullets => List.unmodifiable(_copy.landingBullets);
   String get landingStart => _copy.landingStart;
   String get languageToggleLabel => language == GameLanguage.zh ? 'English' : '中文';
+  String correctAnswersLabel(int count) => _copy.correctAnswersLabel(count);
+  String distanceToTargetLabel(double km) => _copy.distanceToTargetLabel(km);
+  String get finalSummaryTitle => _copy.finalSummaryTitle;
 }
 
 class _GameCopy {
@@ -103,6 +111,9 @@ class _GameCopy {
     required this.landingDescription,
     required this.landingBullets,
     required this.landingStart,
+    required this.correctAnswersLabel,
+    required this.distanceToTargetLabel,
+    required this.finalSummaryTitle,
   });
 
   final String appTitle;
@@ -137,6 +148,9 @@ class _GameCopy {
   final String landingDescription;
   final List<String> landingBullets;
   final String landingStart;
+  final _IntFormatter correctAnswersLabel;
+  final _DoubleFormatter distanceToTargetLabel;
+  final String finalSummaryTitle;
 }
 
 const Map<GameLanguage, _GameCopy> _localizedCopies = {
@@ -179,6 +193,9 @@ const Map<GameLanguage, _GameCopy> _localizedCopies = {
       '選出最近鄰居，考驗你對臺北的認識',
     ],
     landingStart: '開始遊戲',
+    correctAnswersLabel: _correctAnswersLabelZh,
+    distanceToTargetLabel: _distanceLabelZh,
+    finalSummaryTitle: '遊戲結算',
   ),
   GameLanguage.en: _GameCopy(
     appTitle: 'Taipei Guessr',
@@ -219,6 +236,9 @@ const Map<GameLanguage, _GameCopy> _localizedCopies = {
       'Pick the closest neighbor and prove how well you know Taipei.',
     ],
     landingStart: 'Start game',
+    correctAnswersLabel: _correctAnswersLabelEn,
+    distanceToTargetLabel: _distanceLabelEn,
+    finalSummaryTitle: 'Round Summary',
   ),
 };
 
@@ -230,6 +250,14 @@ String _resultBannerSubtitleCorrectZh(String target) => '你成功選對最靠�
 String _resultBannerSubtitleCorrectEn(String target) => 'You picked the attraction closest to $target.';
 String _resultBannerSubtitleWrongZh(String answer) => '正確答案：$answer';
 String _resultBannerSubtitleWrongEn(String answer) => 'Correct answer: $answer';
+String _correctAnswersLabelZh(int count) => '答對：$count';
+String _correctAnswersLabelEn(int count) => 'Correct: $count';
+String _distanceLabelZh(double km) => km < 1
+    ? '距離題目：約${(km * 1000).round()} 公尺'
+    : '距離題目：約${km.toStringAsFixed(1)} 公里';
+String _distanceLabelEn(double km) => km < 1
+    ? 'Distance: ~${(km * 1000).round()} m'
+    : 'Distance: ~${km.toStringAsFixed(1)} km';
 
 class GameView extends StatefulWidget {
   const GameView({super.key});
@@ -247,6 +275,7 @@ class _GameViewState extends State<GameView> {
   GameLanguage _language = GameLanguage.zh;
   GameQuestion? _currentQuestion;
   int _lives = 3;
+  int _correctAnswers = 0;
   int? _selectedIndex;
   String? _errorMessage;
 
@@ -340,6 +369,7 @@ class _GameViewState extends State<GameView> {
             onOptionTap: _handleOptionSelected,
             onNext: _handleNextPressed,
             strings: strings,
+            correctAnswers: _correctAnswers,
           );
         }
         break;
@@ -382,8 +412,39 @@ class _GameViewState extends State<GameView> {
   }
 
   void _startGame() {
+    setState(() {
+      _correctAnswers = 0;
+    });
     _loadNextQuestion(resetLives: true);
   }
+
+  void _returnToLanding() {
+    setState(() {
+      _phase = _GamePhase.landing;
+      _currentQuestion = null;
+      _hasGuessed = false;
+      _isCorrectGuess = false;
+      _selectedIndex = null;
+      _lives = 3;
+      _errorMessage = null;
+      _correctAnswers = 0;
+    });
+  }
+
+  double _distanceBetweenKm(Attraction a, Attraction b) {
+    const double earthRadiusKm = 6371;
+    final double dLat = _degToRad(b.latitude - a.latitude);
+    final double dLon = _degToRad(b.longitude - a.longitude);
+    final double lat1 = _degToRad(a.latitude);
+    final double lat2 = _degToRad(b.latitude);
+    final double sinLat = math.sin(dLat / 2);
+    final double sinLon = math.sin(dLon / 2);
+    final double h = sinLat * sinLat + math.cos(lat1) * math.cos(lat2) * sinLon * sinLon;
+    final double c = 2 * math.atan2(math.sqrt(h), math.sqrt(1 - h));
+    return earthRadiusKm * c;
+  }
+
+  double _degToRad(double deg) => deg * math.pi / 180;
 
   void _toggleLanguage() {
     setState(() {
@@ -433,6 +494,9 @@ class _GameViewState extends State<GameView> {
       _selectedIndex = index;
       _hasGuessed = true;
       _isCorrectGuess = isCorrect;
+      if (isCorrect) {
+        _correctAnswers++;
+      }
       if (!isCorrect) {
         _lives = (_lives - 1).clamp(0, 3);
       }
@@ -549,6 +613,7 @@ class _GameViewState extends State<GameView> {
                               title: strings.resultDialogTargetTitle,
                               attraction: question.target,
                               highlight: accentColor,
+                              distanceLabel: strings.distanceToTargetLabel(0),
                             ),
                             const SizedBox(height: 24),
                             // Additional spacing or future widgets can go here
@@ -575,6 +640,9 @@ class _GameViewState extends State<GameView> {
                                   ),
                                   attraction: option.attraction,
                                   highlight: isOptionCorrect ? TPColors.primary500 : TPColors.grayscale300,
+                                  distanceLabel: strings.distanceToTargetLabel(
+                                    _distanceBetweenKm(question.target, option.attraction),
+                                  ),
                                 ),
                                 const SizedBox(height: 24),
                                 // If the attraction has more fields to show, they can be added below
@@ -621,13 +689,131 @@ class _GameViewState extends State<GameView> {
                 padding: const EdgeInsets.all(12),
                 child: SizedBox(
                   height: 44,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Get.back<void>();
+                        if (gameOver) {
+                          Future.microtask(_showFinalSummaryDialog);
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: accentColor,
+                      ),
+                      child: TPText(
+                        strings.closeLabel,
+                        style: TPTextStyles.h3SemiBold,
+                        color: TPColors.white,
+                      ),
+                    ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  void _showFinalSummaryDialog() {
+    final _GameStrings strings = _strings;
+    final Color accent = TPColors.primary500;
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(24),
+            gradient: const LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFFEEF2FF),
+                Color(0xFFFFFFFF),
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+                decoration: BoxDecoration(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                  gradient: LinearGradient(
+                    colors: [
+                      accent.withOpacity(0.95),
+                      accent.withOpacity(0.85),
+                    ],
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.emoji_events, color: TPColors.white, size: 28),
+                        const SizedBox(width: 8),
+                        TPText(
+                          strings.finalSummaryTitle,
+                          style: TPTextStyles.h2SemiBold,
+                          color: TPColors.white,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(color: accent.withOpacity(0.2)),
+                    boxShadow: const [
+                      BoxShadow(
+                        color: Color(0x14000000),
+                        blurRadius: 18,
+                        offset: Offset(0, 6),
+                      ),
+                    ],
+                    color: TPColors.white,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      TPText(
+                        strings.correctAnswersLabel(_correctAnswers),
+                        style: TPTextStyles.h1SemiBold,
+                        color: accent,
+                      ),
+                      const SizedBox(height: 4),
+                      TPText(
+                        strings.challengeSubtitle,
+                        style: TPTextStyles.bodyRegular,
+                        color: TPColors.grayscale600,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+                child: SizedBox(
+                  height: 48,
                   child: ElevatedButton(
-                    onPressed: () => Get.back<void>(),
+                    onPressed: () {
+                      Get.back<void>();
+                      _returnToLanding();
+                    },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: accentColor,
+                      backgroundColor: accent,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                     ),
                     child: TPText(
-                      strings.closeLabel,
+                      strings.restartCta,
                       style: TPTextStyles.h3SemiBold,
                       color: TPColors.white,
                     ),
@@ -638,6 +824,7 @@ class _GameViewState extends State<GameView> {
           ),
         ),
       ),
+      barrierDismissible: false,
     );
   }
 }
@@ -652,6 +839,7 @@ class _GameBoard extends StatelessWidget {
     required this.onOptionTap,
     required this.onNext,
     required this.strings,
+    required this.correctAnswers,
   });
 
   final GameQuestion question;
@@ -662,6 +850,7 @@ class _GameBoard extends StatelessWidget {
   final void Function(int index) onOptionTap;
   final VoidCallback onNext;
   final _GameStrings strings;
+  final int correctAnswers;
 
   @override
   Widget build(BuildContext context) {
@@ -675,6 +864,7 @@ class _GameBoard extends StatelessWidget {
                 _LivesIndicator(
                   lives: lives,
                   label: strings.livesLabel,
+                  correctLabel: strings.correctAnswersLabel(correctAnswers),
                 ),
                 const SizedBox(height: 16),
                 _QuestionCard(
@@ -728,10 +918,11 @@ class _GameBoard extends StatelessWidget {
 }
 
 class _LivesIndicator extends StatelessWidget {
-  const _LivesIndicator({required this.lives, required this.label});
+  const _LivesIndicator({required this.lives, required this.label, required this.correctLabel});
 
   final int lives;
   final String label;
+  final String correctLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -751,6 +942,19 @@ class _LivesIndicator extends StatelessWidget {
               index < lives ? Icons.favorite : Icons.favorite_border,
               color: index < lives ? TPColors.red400 : TPColors.grayscale300,
             ),
+          ),
+        ),
+        const Spacer(),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          decoration: BoxDecoration(
+            color: TPColors.primary50,
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: TPText(
+            correctLabel,
+            style: TPTextStyles.bodySemiBold,
+            color: TPColors.primary500,
           ),
         ),
       ],
@@ -877,12 +1081,16 @@ class _OptionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color borderColor = Colors.transparent;
+    double borderWidth = 0;
     if (showResult && isCorrect) {
       borderColor = TPColors.primary500;
+      borderWidth = 4;
     } else if (showResult && isSelected && !isCorrect) {
       borderColor = TPColors.red400;
+      borderWidth = 4;
     } else if (!showResult && isSelected) {
       borderColor = TPColors.primary400;
+      borderWidth = 3;
     }
 
     return GestureDetector(
@@ -893,7 +1101,7 @@ class _OptionTile extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(
             color: borderColor,
-            width: borderColor == Colors.transparent ? 0 : 3,
+            width: borderWidth,
           ),
           boxShadow: const [
             BoxShadow(
@@ -1059,11 +1267,13 @@ class _AttractionDetailCard extends StatelessWidget {
     required this.title,
     required this.attraction,
     required this.highlight,
+    this.distanceLabel,
   });
 
   final String title;
   final Attraction attraction;
   final Color highlight;
+  final String? distanceLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -1097,10 +1307,24 @@ class _AttractionDetailCard extends StatelessWidget {
                   color: highlight,
                 ),
                 const SizedBox(height: 4),
-                TPText(
-                  attraction.displayName,
-                  style: TPTextStyles.h3SemiBold,
-                  color: TPColors.grayscale900,
+                Row(
+                  children: [
+                    Expanded(
+                      child: TPText(
+                        attraction.displayName,
+                        style: TPTextStyles.h3SemiBold,
+                        color: TPColors.grayscale900,
+                      ),
+                    ),
+                    if (distanceLabel != null) ...[
+                      const SizedBox(width: 8),
+                      TPText(
+                        distanceLabel!,
+                        style: TPTextStyles.bodyRegular,
+                        color: highlight,
+                      ),
+                    ],
+                  ],
                 ),
                 if (attraction.address.isNotEmpty) ...[
                   const SizedBox(height: 4),
