@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
@@ -44,13 +43,6 @@ class GameLanding extends StatelessWidget {
                   color: TPColors.white,
                 ),
                 const Spacer(),
-                Align(
-                  alignment: Alignment.bottomRight,
-                  child: SizedBox(
-                    height: 160,
-                    child: Assets.svg.iconMunicipalNavigation.svg(),
-                  ),
-                ),
               ],
             ),
           ),
