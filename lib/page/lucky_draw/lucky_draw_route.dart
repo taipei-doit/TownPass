@@ -2,6 +2,8 @@ import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:town_pass/page/lucky_draw/ui/draw_result_page.dart';
 import 'package:town_pass/page/lucky_draw/ui/attractions_page.dart';
 import 'package:town_pass/page/lucky_draw/ui/drawing_page.dart';
+import 'package:town_pass/page/lucky_draw/ui/jiaobei_throwing_page.dart';
+import 'package:town_pass/page/lucky_draw/ui/temple_page.dart';
 import 'package:town_pass/page/lucky_draw/ui/welcome_page.dart';
 import 'package:town_pass/page/lucky_draw/ui/incense_burning_page.dart';
 
@@ -14,6 +16,9 @@ abstract class LuckyDrawRoute {
           GetPage(name: '/draw_result', page: () => const DrawResultPage()),
           GetPage(name: '/attractions', page: () => const AttractionListPage()),
           GetPage(name: '/welcome', page: () => const WelcomePage()),
+          GetPage(name: '/jiaobei_throwing', page: () => const JiaobeiThrowingPage()),
+          GetPage(name: '/temple', page: () => const TemplePage()),
+          GetPage(name: '/incense_burning', page: () => const IncenseBurningPage()),
         ],
       );
 }

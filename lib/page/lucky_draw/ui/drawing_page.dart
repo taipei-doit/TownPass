@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:lottie/lottie.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:get/route_manager.dart';
 
@@ -24,7 +24,9 @@ class _DrawingPageState extends State<DrawingPage>
   late final AnimationController _floatingController;
   late final Animation<double> _floatingAnimation;
 
-  get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 5.0;
+
+  bool _isAnimating = false;
 
   @override
   void initState() {
@@ -47,6 +49,8 @@ class _DrawingPageState extends State<DrawingPage>
     // Lottie controller
     _lottieController = AnimationController(vsync: this);
     _lottieController.addStatusListener((status) {
+      setState(() => _isAnimating = status == AnimationStatus.forward);
+
       if (status == AnimationStatus.completed) {
         _navigateOnce();
       }
@@ -86,7 +90,8 @@ class _DrawingPageState extends State<DrawingPage>
 
   void _navigateOnce() async {
     _unsubscribeShaking();
-    await Get.toNamed('/lucky_draw/draw_result');
+    // await Get.toNamed('/lucky_draw/draw_result');
+    await Get.toNamed('/lucky_draw/jiaobei_throwing');
     _floatingController.repeat(reverse: true);
     _listenShaking();
   }
@@ -102,10 +107,7 @@ class _DrawingPageState extends State<DrawingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈  |  搖一搖抽籤',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(subtitle: '搖一搖求籤'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Center(
@@ -114,7 +116,7 @@ class _DrawingPageState extends State<DrawingPage>
             children: [
               _lottieAnimation,
               const SizedBox(height: 56),
-              _title,
+              _instructionText,
             ],
           ),
         ),
@@ -151,28 +153,41 @@ class _DrawingPageState extends State<DrawingPage>
         ),
       );
 
-  Widget get _title => const Text.rich(TextSpan(
+  Widget get _instructionText {
+    if (_isAnimating) {
+      return const Text(
+        "抽籤中...",
         style: TextStyle(
           fontSize: 24,
-          color: TPColors.secondary700,
+          fontWeight: FontWeight.bold,
+          color: TPColors.secondary800,
         ),
-        children: [
-          TextSpan(
-            text: "搖動手機 ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: TPColors.secondary800,
-            ),
+      );
+    }
+
+    return const Text.rich(TextSpan(
+      style: TextStyle(
+        fontSize: 24,
+        color: TPColors.secondary700,
+      ),
+      children: [
+        TextSpan(
+          text: "搖動手機 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
           ),
-          TextSpan(text: "或"),
-          TextSpan(
-            text: " 點擊籤筒 ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: TPColors.secondary800,
-            ),
+        ),
+        TextSpan(text: "或"),
+        TextSpan(
+          text: " 點擊籤筒 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
           ),
-          TextSpan(text: "開始抽籤"),
-        ],
-      ));
+        ),
+        TextSpan(text: "開始抽籤"),
+      ],
+    ));
+  }
 }

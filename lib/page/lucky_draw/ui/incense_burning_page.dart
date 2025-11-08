@@ -3,10 +3,9 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart'; // 如果你使用 GetX 進行導航
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:sensors_plus/sensors_plus.dart';
-
 
 class IncenseBurningPage extends StatefulWidget {
   const IncenseBurningPage({super.key});
@@ -24,7 +23,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   bool _isAnimating = false; // 判斷是否正在動畫中，避免重複點擊
   bool _handIsFolding = false; // 紀錄手部是否已切換為雙手合十
   bool _isAnimationSequenceCompleted = false; // 紀錄整個動畫序列是否已完成 (手已回到初始位置)
-
 
   // 動畫相關
   late AnimationController _animationController;
@@ -44,9 +42,11 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
       }),
     );
   }
+
   @override
   void initState() {
     super.initState();
+    _listenShaking();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700), // 單向動畫持續時間
@@ -79,12 +79,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
           _isAnimating = false; // 動畫結束
           _isAnimationSequenceCompleted = true; // 標記整個動畫序列已完成
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('誠心奉香儀式已完成！'),
-            backgroundColor: Colors.blueGrey,
-          ),
-        );
       }
     });
   }
@@ -99,15 +93,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
       });
       _animationController.forward(); // 啟動手部移動動畫
     } else {
-      // 動畫已完成，現在按鈕是「完成並返回」，點擊後離開頁面
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('功德圓滿，返回上一頁。'),
-          backgroundColor: Colors.green,
-        ),
-      );
-      Navigator.pop(context); // 返回上一頁
-      // 如果使用 GetX: Get.back();
+      Get.offAllNamed('/lucky_draw/welcome');
     }
   }
 
@@ -120,10 +106,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈 - 誠心奉香',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(subtitle: '誠心奉香'),
       backgroundColor: TPColors.secondary50,
       body: SafeArea(
         child: Column(
