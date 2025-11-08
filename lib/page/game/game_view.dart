@@ -11,7 +11,6 @@ import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
 enum _GamePhase { landing, loading, playing, error }
 
 enum GameLanguage { zh, en }
@@ -252,6 +251,7 @@ class _GameViewState extends State<GameView> {
   String? _errorMessage;
 
   _GameStrings get _strings => _GameStrings(_language);
+  String get _apiLanguageCode => _language == GameLanguage.zh ? 'zh-tw' : 'en';
   
   @override
   void initState() {
@@ -405,7 +405,7 @@ class _GameViewState extends State<GameView> {
     });
 
     try {
-      final GameQuestion question = await _service.fetchQuestion();
+      final GameQuestion question = await _service.fetchQuestion(languageCode: _apiLanguageCode);
       if (!mounted) {
         return;
       }

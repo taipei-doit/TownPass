@@ -46,28 +46,32 @@ class GameLanding extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Align(
-                  alignment: Alignment.topRight,
-                  child: TextButton(
-                    onPressed: onToggleLanguage,
-                    style: TextButton.styleFrom(
-                      foregroundColor: TPColors.white,
-                      backgroundColor: Colors.black.withOpacity(0.25),
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: TPText(
+                        title,
+                        style: TPTextStyles.h1SemiBold,
+                        color: TPColors.white,
+                      ),
                     ),
-                    child: TPText(
-                      languageToggleLabel,
-                      style: TPTextStyles.caption,
-                      color: TPColors.white,
+                    const SizedBox(width: 12),
+                    TextButton(
+                      onPressed: onToggleLanguage,
+                      style: TextButton.styleFrom(
+                        foregroundColor: TPColors.white,
+                        backgroundColor: Colors.black.withOpacity(0.25),
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                      child: TPText(
+                        languageToggleLabel,
+                        style: TPTextStyles.caption,
+                        color: TPColors.white,
+                      ),
                     ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-                TPText(
-                  title,
-                  style: TPTextStyles.h1SemiBold,
-                  color: TPColors.white,
+                  ],
                 ),
                 const SizedBox(height: 12),
                 TPText(
