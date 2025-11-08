@@ -1,4 +1,6 @@
 import 'dart:math';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,7 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> {
   final Random _random = Random();
+  late final AudioPlayer _bgmPlayer;
   int _currentIndex = 0;
   bool _hasStartedGame = false;
   bool _hasGuessed = false;
@@ -27,6 +30,37 @@ class _GameViewState extends State<GameView> {
   void initState() {
     super.initState();
     _currentIndex = _random.nextInt(_locations.length);
+    _bgmPlayer = AudioPlayer();
+    _startBgm();
+    // Log player state changes to help debug emulator audio issues
+    _bgmPlayer.onPlayerStateChanged.listen((state) {
+      debugPrint('BGM player state: $state');
+    });
+    _bgmPlayer.onPlayerComplete.listen((_) {
+      debugPrint('BGM playback completed');
+    });
+  }
+
+  Future<void> _startBgm() async {
+    try {
+      // Quick check: try loading the asset bytes to ensure it's packaged
+      try {
+        final data = await rootBundle.load('audio/bgm.mp3');
+        debugPrint('BGM asset loaded, size=${data.lengthInBytes} bytes');
+      } catch (err) {
+        debugPrint('BGM asset load failed: $err');
+      }
+      // Loop the background music
+      await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+  // Play asset. Path must match pubspec asset entry (no leading slash).
+  // The asset is declared as `lib/page/game/audio/` in pubspec.yaml
+      debugPrint('Attempting to play BGM asset...');
+      await _bgmPlayer.play(AssetSource('audio/bgm.mp3'), volume: 0.6);
+      debugPrint('BGM play() awaited without exception');
+    } catch (e) {
+      // ignore audio errors silently for now
+      debugPrint('BGM play error: $e');
+    }
   }
 
   @override
@@ -130,6 +164,12 @@ class _GameViewState extends State<GameView> {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _bgmPlayer.dispose();
+    super.dispose();
   }
 
   static const List<_GeoLocation> _locations = [
