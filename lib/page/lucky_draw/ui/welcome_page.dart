@@ -55,7 +55,7 @@ class _WelcomePageState extends State<WelcomePage> {
                 title: '拜拜',
                 subtitle: '點亮雲端香火',
                 imagePath: 'assets/image/incense_burner.png',
-                onPressed: () => Get.toNamed('/lucky_draw/incense_burning'),
+                onPressed: () => Get.toNamed('/lucky_draw/temple'),
               )
             ],
           ),
