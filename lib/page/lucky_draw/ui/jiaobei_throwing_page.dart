@@ -294,7 +294,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
         child: Column(
           children: [
             _jiaobeiAnimation,
-            const SizedBox(height: 56),
+            const SizedBox(height: 72),
             _instructionText,
             const SizedBox(height: 24),
             _result != null && !_isAnimating
@@ -411,13 +411,13 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
               backgroundColor: TPColors.secondary200,
               foregroundColor: TPColors.secondary800,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                isSuccessful ? '前往解籤' : '返回再抽一支籤',
+                isSuccessful ? '前往解籤' : '返回重新求籤',
                 style: const TextStyle(fontSize: 16),
               ),
             ),

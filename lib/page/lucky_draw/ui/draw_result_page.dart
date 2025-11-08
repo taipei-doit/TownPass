@@ -174,13 +174,13 @@ class _DrawResultPageState extends State<DrawResultPage> {
                   backgroundColor: TPColors.secondary200,
                   foregroundColor: TPColors.secondary800,
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
+                    borderRadius: BorderRadius.circular(16),
                   ),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Text(
-                    'Next',
+                    '前往宮廟進香參拜',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),
