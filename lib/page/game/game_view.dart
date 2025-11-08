@@ -52,6 +52,12 @@ class _GameViewState extends State<GameView> {
     super.dispose();
   }
 
+  @override
+  void dispose() {
+    _service.dispose();
+    super.dispose();
+  }
+
   Future<void> _startBgm() async {
     try {
       // Quick check: try loading the asset bytes to ensure it's packaged
