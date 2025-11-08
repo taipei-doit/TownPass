@@ -86,7 +86,8 @@ class _DrawingPageState extends State<DrawingPage>
 
   void _navigateOnce() async {
     _unsubscribeShaking();
-    await Get.toNamed('/lucky_draw/draw_result');
+    // await Get.toNamed('/lucky_draw/draw_result');
+    await Get.toNamed('/lucky_draw/jiaobei_throwing');
     _floatingController.repeat(reverse: true);
     _listenShaking();
   }
