@@ -8,6 +8,14 @@ import 'package:town_pass/util/tp_card.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'dart:convert';
+import 'dart:io';
+import 'package:csv/csv.dart';
+import 'package:flutter/services.dart' show rootBundle;
+
+import 'package:town_pass/service/attraction_service.dart';
+import 'package:town_pass/models/attraction.dart';
+
 
 class AttractionListPage extends StatelessWidget {
   const AttractionListPage({super.key});
@@ -172,7 +180,7 @@ class AttractionListPage extends StatelessWidget {
                                                       await launchUrl(uri,
                                                           mode: LaunchMode
                                                               .externalApplication);
-                                                    } 
+                                                    }
                                                   },
                                                 ),
                                               ),

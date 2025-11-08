@@ -14,7 +14,6 @@ abstract class LuckyDrawRoute {
           GetPage(name: '/draw_result', page: () => const DrawResultPage()),
           GetPage(name: '/attractions', page: () => const AttractionListPage()),
           GetPage(name: '/welcome', page: () => const WelcomePage()),
-          GetPage(name: '/incense_burning', page: () => const IncenseBurningPage()),
         ],
       );
 }
