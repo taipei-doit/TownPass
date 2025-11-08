@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
 class Temple {
   final int id;
@@ -72,7 +73,8 @@ class _TemplePageState extends State<TemplePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(subtitle: '雲端寺廟'),
+      appBar: const LuckyDrawAppBar(subtitle: '選擇參拜宮廟'),
+      backgroundColor: TPColors.secondary50,
       body: FutureBuilder<List<Temple>>(
         future: templesFuture,
         builder: (context, snapshot) {
@@ -86,101 +88,121 @@ class _TemplePageState extends State<TemplePage> {
 
           final temples = snapshot.data!;
 
-          return ListView.builder(
+          return ListView.separated(
+            padding: const EdgeInsets.all(16),
             itemCount: temples.length,
             itemBuilder: (context, index) {
               final temple = temples[index];
-
-              return Card(
-                margin: const EdgeInsets.all(10),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                elevation: 5,
-                child: InkWell(
-                  onTap: () {
-                    showDialog(
-                      context: context,
-                      builder: (_) => AlertDialog(
-                        title: Text(temple.name),
-                        content: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "${temple.city} ${temple.district}",
-                                style: const TextStyle(color: Colors.grey),
-                              ),
-                              const SizedBox(height: 8),
-                              const SizedBox(height: 8),
-                              if (temple.introduction.isNotEmpty)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10),
-                                  child: Text(temple.introduction),
-                                ),
-                            ],
-                          ),
-                        ),
-                        actions: [
-                          TextButton(
-                            onPressed: () => Navigator.pop(context),
-                            child: const Text('Close'),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ClipRRect(
-                        borderRadius: const BorderRadius.only(
-                          topLeft: Radius.circular(15),
-                          topRight: Radius.circular(15),
-                        ),
-                        child: temple.imageUrl.isNotEmpty
-                            ? Image.network(
-                                temple.imageUrl,
-                                height: 200,
-                                width: double.infinity,
-                                fit: BoxFit.cover,
-                              )
-                            : Container(
-                                height: 200,
-                                color: Colors.grey[300],
-                                child: const Center(
-                                  child: Text('No Image'),
-                                ),
-                              ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              temple.name,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "${temple.city} ${temple.district}",
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              );
+              return _templeTile(temple);
             },
+            separatorBuilder: (_, __) => const SizedBox(height: 16),
           );
         },
       ),
+    );
+  }
+
+  Widget _templeTile(Temple temple) {
+    return Material(
+      color: TPColors.secondary100,
+      borderRadius: BorderRadius.circular(12),
+      child: Theme(
+        data: ThemeData(
+          splashColor: TPColors.secondary200.withAlpha(128),
+          highlightColor: TPColors.secondary200.withAlpha(128),
+        ),
+        child: InkWell(
+          onTap: () {
+            showDialog(
+              context: context,
+              builder: (context) => _templeInfoDialog(context, temple),
+            );
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                ),
+                child: temple.imageUrl.isNotEmpty
+                    ? Image.network(
+                        temple.imageUrl,
+                        height: 200,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(
+                        height: 200,
+                        color: TPColors.grayscale300,
+                        child: const Center(
+                          child: Text('No Image'),
+                        ),
+                      ),
+              ),
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.all(12.0),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      temple.name,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${temple.city} ${temple.district}",
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  AlertDialog _templeInfoDialog(BuildContext context, Temple temple) {
+    return AlertDialog(
+      title: Text(temple.name),
+      content: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "${temple.city} ${temple.district}",
+              style: const TextStyle(color: TPColors.grayscale400),
+            ),
+            const SizedBox(height: 8),
+            const SizedBox(height: 8),
+            if (temple.introduction.isNotEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 10),
+                child: Text(temple.introduction),
+              ),
+          ],
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text('Close'),
+        ),
+      ],
     );
   }
 }
