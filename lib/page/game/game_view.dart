@@ -237,11 +237,6 @@ class _GameViewState extends State<GameView> {
     );
   }
 
-  @override
-  void dispose() {
-    _bgmPlayer.dispose();
-    super.dispose();
-  }
 
   static const List<_GeoLocation> _locations = [
     _GeoLocation(
