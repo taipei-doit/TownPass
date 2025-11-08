@@ -8,14 +8,7 @@ import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:convert';
-import 'dart:io';
-import 'package:csv/csv.dart';
-import 'package:flutter/services.dart' show rootBundle;
-
-import 'package:town_pass/service/attraction_service.dart';
-import 'package:town_pass/models/attraction.dart';
-
+import 'package:shimmer/shimmer.dart';
 
 class AttractionListPage extends StatelessWidget {
   const AttractionListPage({super.key});
@@ -44,7 +37,8 @@ class AttractionListPage extends StatelessWidget {
         future: _loadAttractions(), // fetch with GPS
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
+            // show shimmer skeletons for image + text while loading
+            return _loadingPlaceholder;
           } else if (snapshot.hasError) {
             return Center(
               child: Text('Error: ${snapshot.error}'),
@@ -97,6 +91,105 @@ class AttractionListPage extends StatelessWidget {
       ),
     );
   }
+
+  Widget get _loadingPlaceholder => ListView(
+        padding: const EdgeInsets.all(16),
+        children: [
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              height: 24,
+              width: 180,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12.0),
+              child: Container(
+                height: 140,
+                width: double.infinity,
+                color: Colors.grey.shade300,
+              ),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                    height: 12,
+                    width: double.infinity,
+                    color: Colors.grey.shade300),
+                const SizedBox(height: 6),
+                Container(
+                    height: 12,
+                    width: double.infinity,
+                    color: Colors.grey.shade300),
+                const SizedBox(height: 6),
+                Container(
+                    height: 12,
+                    width: double.infinity,
+                    color: Colors.grey.shade300),
+              ],
+            ),
+          ),
+          const SizedBox(height: 24),
+          Shimmer.fromColors(
+            baseColor: Colors.grey.shade300,
+            highlightColor: Colors.grey.shade100,
+            child: Container(
+              height: 20,
+              width: 120,
+              color: Colors.grey.shade300,
+            ),
+          ),
+          const SizedBox(height: 12),
+          // placeholder list tiles
+          for (int i = 0; i < 5; i++)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Shimmer.fromColors(
+                baseColor: Colors.grey.shade300,
+                highlightColor: Colors.grey.shade100,
+                child: Row(
+                  children: [
+                    Container(
+                        width: 80,
+                        height: 80,
+                        decoration: BoxDecoration(
+                            color: Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(8))),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              height: 12,
+                              width: double.infinity,
+                              color: Colors.grey.shade300),
+                          const SizedBox(height: 6),
+                          Container(
+                              height: 12,
+                              width: 200,
+                              color: Colors.grey.shade300),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+        ],
+      );
 
   Widget _squareImage(String? src) => SizedBox.square(
         dimension: 80,
