@@ -15,8 +15,6 @@ import 'package:town_pass/page/city_service_edit/city_service_edit_view_controll
 import 'package:town_pass/page/feedback/feedback_view.dart';
 import 'package:town_pass/page/feedback/feedback_view_controller.dart';
 import 'package:town_pass/page/game/game_view.dart';
-import 'package:town_pass/page/game/metro_challenge_game_view.dart';
-import 'package:town_pass/page/game/snake_game_view.dart';
 import 'package:town_pass/page/invoice_receipt/invoice_receipt_view.dart';
 import 'package:town_pass/page/language/language_view.dart';
 import 'package:town_pass/page/language/language_view_controller.dart';
@@ -63,8 +61,6 @@ abstract class TPRoute {
   static const String subscription = '/subscription';
   static const String suspendAccount = '/suspend_account';
   static const String webView = '/web_view';
-  static const String gameSnake = '/game/snake';
-  static const String gameMetroChallenge = '/game/metro_challenge';
 
   static final List<GetPage> page = [
     GetPage(
@@ -106,14 +102,6 @@ abstract class TPRoute {
     GetPage(
       name: game,
       page: () => const GameView(),
-    ),
-    GetPage(
-      name: gameSnake,
-      page: () => const SnakeGameView(),
-    ),
-    GetPage(
-      name: gameMetroChallenge,
-      page: () => const MetroChallengeGameView(),
     ),
     GetPage(
       name: invoiceReceipt,
