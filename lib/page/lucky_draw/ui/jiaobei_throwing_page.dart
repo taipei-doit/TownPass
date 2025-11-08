@@ -1,8 +1,11 @@
+import 'dart:async';
+import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
+import 'package:sensors_plus/sensors_plus.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
 import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
@@ -53,6 +56,11 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   late double _leftFinalRotation;
   late double _rightFinalRotation;
 
+  // 用於控制搖晃手勢的計時器及其閾值等
+  late final List<StreamSubscription> _streamSubscription = [];
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 5.0;
+  bool _canDetectShake = true;
+
   @override
   void initState() {
     super.initState();
@@ -88,6 +96,24 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
         });
       }
     });
+
+    _setupShakeDetection();
+  }
+
+  void _setupShakeDetection() {
+    _streamSubscription.add(
+      userAccelerometerEventStream().listen((event) {
+        if (event.z > _shakingThreshold && _canDetectShake && !_isAnimating) {
+          _canDetectShake = false;
+          _throwJiaobei();
+
+          // 為避免連續觸發，加上短暫冷卻時間
+          Future.delayed(const Duration(seconds: 2), () {
+            _canDetectShake = true;
+          });
+        }
+      }),
+    );
   }
 
   void _initializeAnimations() {
@@ -188,10 +214,17 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
     ]).animate(_rightController);
   }
 
+  void _unsubscribeShaking() {
+    for (var sub in _streamSubscription) {
+      sub.cancel();
+    }
+  }
+
   @override
   void dispose() {
     _leftController.dispose();
     _rightController.dispose();
+    _unsubscribeShaking();
     super.dispose();
   }
 
