@@ -190,9 +190,9 @@ extension MyServiceIdExt on MyServiceItemId {
           destinationUrl: '',
         ),
       MyServiceItemId.luckyDraw => MyServiceItem(
-        title: 'Lucky Draw',
-        description: 'Lucky Draw',
-        icon: Assets.svg.iconZoo.svg(),
+        title: '城心誠靈',
+        description: '科技解惑，心誠則靈，您的未來城市數位神壇',
+        icon: Assets.svg.iconJiaobei24.svg(),
         category: MyServiceCategory.cityLife,
         destinationUrl: 'local://lucky_draw',
       ),
