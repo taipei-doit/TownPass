@@ -98,7 +98,7 @@ flutter:
     - assets/image/
     - assets/svg/
     - assets/image/lots.png
-    - assets/lottie_json/draw_lots.json
+    - assets/lottie_json/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
