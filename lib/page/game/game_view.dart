@@ -253,11 +253,11 @@ String _resultBannerSubtitleWrongEn(String answer) => 'Correct answer: $answer';
 String _correctAnswersLabelZh(int count) => '答對：$count';
 String _correctAnswersLabelEn(int count) => 'Correct: $count';
 String _distanceLabelZh(double km) => km < 1
-    ? '距離題目：約${(km * 1000).round()} 公尺'
-    : '距離題目：約${km.toStringAsFixed(1)} 公里';
+    ? '距離題目：約 ${(km * 1000).round()} 公尺'
+    : '距離題目：約 ${km.toStringAsFixed(1)} 公里';
 String _distanceLabelEn(double km) => km < 1
-    ? 'Distance: ~${(km * 1000).round()} m'
-    : 'Distance: ~${km.toStringAsFixed(1)} km';
+    ? 'Distance: ~ ${(km * 1000).round()} m'
+    : 'Distance: ~ ${km.toStringAsFixed(1)} km';
 
 class GameView extends StatefulWidget {
   const GameView({super.key});
