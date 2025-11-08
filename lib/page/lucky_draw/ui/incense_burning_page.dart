@@ -55,7 +55,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
 
     // 定義手從起始位置移動到中間（香爐上方）的動畫
     _handMovementAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.5), // 起始位置 (下方)
+      begin: const Offset(0, -0.2), // 起始位置 (下方)
       end: const Offset(0, -1.5), // 結束位置 (香爐中心略上方) - 根據UI調整
     ).animate(CurvedAnimation(
       parent: _animationController,
@@ -129,6 +129,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   }
 
   Widget get _burnerAnimation => Column(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           // 香爐圖片 (根據狀態切換)
@@ -147,10 +148,10 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
             animation: _animationController,
             builder: (context, child) {
               return Transform.translate(
-                // 如果動畫序列已完成，手部保持在原始位置 (下方)
+                // 如果動畫序列已完成，手部保持在原始位置 (不偏移)
                 // 否則，手部根據動畫進度移動
                 offset: _isAnimationSequenceCompleted
-                    ? const Offset(0, -0.5) * 200 // 固定在下方
+                    ? const Offset(0, -0.2) * 200
                     : _handMovementAnimation.value * 200, // 動畫移動
                 child: Opacity(
                   opacity: _isAnimating ? 1.0 : 1.0, // 動畫時和靜止時都顯示
