@@ -112,36 +112,7 @@ class _DrawingPageState extends State<DrawingPage>
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Lottie Animation
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 24.0),
-                child: GestureDetector(
-                  onTap: _playAnimationOnce,
-                  child: AnimatedBuilder(
-                    animation: _floatingAnimation,
-                    builder: (context, child) {
-                      return Transform.translate(
-                        offset: Offset(0, _floatingAnimation.value),
-                        child: child,
-                      );
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Lottie.asset(
-                        'assets/lottie_json/draw_lots.json',
-                        controller: _lottieController,
-                        width: 300,
-                        height: 300,
-                        fit: BoxFit.fill,
-                        onLoaded: (composition) {
-                          _lottieController.duration = composition.duration;
-                        },
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-
+              _lottieAnimation,
               const SizedBox(height: 56),
               _title,
             ],
@@ -150,6 +121,35 @@ class _DrawingPageState extends State<DrawingPage>
       ),
     );
   }
+
+  Widget get _lottieAnimation => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: GestureDetector(
+          onTap: _playAnimationOnce,
+          child: AnimatedBuilder(
+            animation: _floatingAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _floatingAnimation.value),
+                child: child,
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Lottie.asset(
+                'assets/lottie_json/draw_lots.json',
+                controller: _lottieController,
+                width: 300,
+                height: 300,
+                fit: BoxFit.fill,
+                onLoaded: (composition) {
+                  _lottieController.duration = composition.duration;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
 
   Widget get _title => const Text.rich(TextSpan(
         style: TextStyle(
