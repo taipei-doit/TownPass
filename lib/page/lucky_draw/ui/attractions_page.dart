@@ -1,24 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:town_pass/models/attraction.dart';
 import 'package:town_pass/service/attraction_service.dart';
-
+import 'package:town_pass/service/geo_locator_service.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AttractionListPage extends StatelessWidget {
   const AttractionListPage({super.key});
 
+  Future<ApiResponse> _loadAttractions() async {
+    final geoService = Get.find<GeoLocatorService>(); // find the service
+    final position = await geoService.position();
+
+    final service = AttractionService();
+    return await service.fetchAttractions(
+      nlat: position.latitude,
+      elong: position.longitude,
+      page: 1,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final service = AttractionService();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Nearby Attractions')),
       body: FutureBuilder<ApiResponse>(
-        future: service.fetchAttractions(
-          nlat: 25.058972,
-          elong: 121.513278,
-          page: 1,
-        ),
+        future: _loadAttractions(), // fetch with GPS
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -36,7 +43,7 @@ class AttractionListPage extends StatelessWidget {
             itemCount: attractions.length,
             itemBuilder: (context, index) {
               final attraction = attractions[index];
-              final coverImage = attraction.images.length > 0
+              final coverImage = attraction.images.isNotEmpty
                   ? attraction.images.first.src
                   : null;
 
@@ -94,22 +101,21 @@ class AttractionListPage extends StatelessWidget {
                           topLeft: Radius.circular(15),
                           topRight: Radius.circular(15),
                         ),
-                        child: coverImage != null ? Image.network(
-                          coverImage,
-                          height: 200,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        ) : Container(
-                          height: 200,
-                          width: double.infinity,
-                          color: Colors.grey[300],
-                          child: const Center(
-                            child: Text(
-                              '',
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ),
-                        ),
+                        child: coverImage != null
+                            ? Image.network(
+                                coverImage,
+                                height: 200,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(
+                                height: 200,
+                                width: double.infinity,
+                                color: Colors.grey[300],
+                                child: const Center(
+                                  child: Text('No Image'),
+                                ),
+                              ),
                       ),
                     ),
                     Padding(

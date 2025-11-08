@@ -9,7 +9,7 @@ abstract class LuckyDrawRoute {
         name: '/lucky_draw',
         page: () => const WelcomePage(),
         children: [
-          GetPage(name: '/drawing', page: () => const DrawingPage()),
+          GetPage(name: '/drawing', page: () => const AttractionListPage()),
           GetPage(name: '/draw_result', page: () => const DrawResultPage()),
           GetPage(name: '/attractions', page: () => const AttractionListPage()),
           GetPage(name: '/welcome', page: () => const WelcomePage()),
