@@ -51,6 +51,12 @@ class _LuckyDrawPage extends StatefulWidget {
 class _LuckyDrawPageState extends State<_LuckyDrawPage> {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
 
+  @override
+  void initState() {
+    super.initState();
+    _shakeListen();
+  }
+
   _shakeListen() {
     const threshold = 10.0;
 
@@ -62,8 +68,6 @@ class _LuckyDrawPageState extends State<_LuckyDrawPage> {
 
         if (shook) {
           // print("Device shaken!");
-
-          // prevent multiple rapid triggers
           _navigateOnce();
         }
       }),
@@ -289,13 +293,16 @@ class _StickResultPageState extends State<_StickResultPage> {
     );
   }
 
-  Widget _buildTabButton(String label, int index) {
-    bool isSelected = selectedTab == index;
+ Widget _buildTabButton(String label, int index) {
+  bool isSelected = selectedTab == index;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() => selectedTab = index);
-      },
+  return GestureDetector(
+    behavior: HitTestBehavior.translucent,  // ✅ catches taps even outside child
+    onTap: () {
+      setState(() => selectedTab = index);
+    },
+    child: Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // ✅ bigger hitbox
       child: Column(
         children: [
           Text(
@@ -315,11 +322,13 @@ class _StickResultPageState extends State<_StickResultPage> {
               color: const Color(0xFFB07A3F),
               borderRadius: BorderRadius.circular(2),
             ),
-          )
+          ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   /// --- TAB CONTENT BASED ON SELECTED TAB ---
   Widget _buildTabContent() {
