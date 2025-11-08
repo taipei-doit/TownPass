@@ -3,6 +3,7 @@ import 'package:town_pass/gen/assets.gen.dart';
 import 'package:town_pass/page/city_service/widget/official_service_card/official_service_card.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
+import 'package:town_pass/page/food_safety/food_safety_view.dart';
 
 class OfficialServiceCardBottomRight extends OfficialServiceCard {
   const OfficialServiceCardBottomRight({super.key});
@@ -12,7 +13,12 @@ class OfficialServiceCardBottomRight extends OfficialServiceCard {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
-        // TODO: add url
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const FoodSafetyInfoSection(),
+          ),
+        );
       },
       child: Container(
         height: constraint.maxWidth,
@@ -49,12 +55,12 @@ class OfficialServiceCardBottomRight extends OfficialServiceCard {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   TPText(
-                    '城市生活',
+                    '食品安全',
                     style: TPTextStyles.h3SemiBold,
                     color: TPColors.white,
                   ),
                   TPText(
-                    'City Life',
+                    'Food Safety',
                     style: TPTextStyles.bodyRegular,
                     color: TPColors.white,
                   ),
