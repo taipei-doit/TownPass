@@ -23,6 +23,11 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
+  late final AudioPlayer _bgmPlayer;
+  int _currentIndex = 0;
+  bool _hasGuessed = false;
+  bool _isCorrectGuess = false;
+  String? _selectedOption;
 
   _GamePhase _phase = _GamePhase.landing;
   
