@@ -1,6 +1,4 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:town_pass/models/attraction.dart';
 import 'package:town_pass/page/lucky_draw/data/temple.dart';
 import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
@@ -22,16 +20,7 @@ class _TemplePageState extends State<TemplePage> {
   @override
   void initState() {
     super.initState();
-    templesFuture = _loadTemples();
-  }
-
-  Future<List<Temple>> _loadTemples() async {
-    final String jsonString = await rootBundle.loadString('assets/temple.json');
-    final List<dynamic> jsonData = json.decode(jsonString);
-
-    final temples = jsonData.map((item) => Temple.fromJson(item)).toList();
-
-    return temples;
+    templesFuture = TempleDataService.instance.temples;
   }
 
   @override

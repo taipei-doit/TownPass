@@ -1,3 +1,23 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
+
+class TempleDataService {
+  static final TempleDataService instance = TempleDataService._();
+  static Future<List<Temple>>? _temples;
+
+  Future<List<Temple>> get temples => _temples ??= _loadTemples();
+
+  TempleDataService._();
+
+  Future<List<Temple>> _loadTemples() async {
+    final String jsonString = await rootBundle.loadString('assets/temple.json');
+    final List<dynamic> jsonData = json.decode(jsonString);
+
+    return jsonData.map((item) => Temple.fromJson(item)).toList();
+  }
+}
+
 class Temple {
   final int id;
   final String city;
