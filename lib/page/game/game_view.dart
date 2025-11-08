@@ -11,6 +11,7 @@ import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
+import 'dart:math'
 
 enum _GamePhase { landing, loading, playing, error }
 
@@ -23,6 +24,7 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
+  final Random _random = Random();
   late final AudioPlayer _bgmPlayer;
   int _currentIndex = 0;
   bool _hasGuessed = false;
