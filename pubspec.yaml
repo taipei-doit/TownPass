@@ -97,6 +97,7 @@ flutter:
   assets:
     - assets/mock_data/
     - assets/image/
+    - assets/image/offering/
     - assets/svg/
     - assets/svg/jiaobei/
     - assets/image/lots.png

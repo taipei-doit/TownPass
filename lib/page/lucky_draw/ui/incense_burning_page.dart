@@ -44,13 +44,19 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
     );
   }
 
+  void _unsubscribeShaking() {
+    for (final subscription in _streamSubscription) {
+      subscription.cancel();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
     _listenShaking();
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 700), // 單向動畫持續時間
+      duration: const Duration(milliseconds: 1400), // 單向動畫持續時間
     );
 
     // 定義手從起始位置移動到中間（香爐上方）的動畫
@@ -84,7 +90,13 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
     });
   }
 
-  void _onActionButtonPressed() {
+  void _reset() {
+    _unsubscribeShaking();
+    _isAnimating = false;
+    _isAnimationSequenceCompleted = false;
+  }
+
+  Future<void> _onActionButtonPressed() async {
     if (_isAnimating) return; // 動畫中禁用按鈕
 
     if (!_isAnimationSequenceCompleted) {
@@ -93,8 +105,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
         _isAnimating = true; // 啟動動畫標誌
       });
       _animationController.forward(); // 啟動手部移動動畫
-    } else {
-      Get.offAllNamed('/lucky_draw/welcome');
     }
   }
 
@@ -220,7 +230,11 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
       child: Row(children: [
         Expanded(
           child: TextButton(
-            onPressed: () {},
+            onPressed: () async {
+              _reset();
+              await Get.offAndToNamed('/lucky_draw/offering');
+              _listenShaking();
+            },
             style: TextButton.styleFrom(
               backgroundColor: TPColors.secondary200,
               foregroundColor: TPColors.secondary800,
