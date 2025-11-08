@@ -12,6 +12,7 @@ import 'package:town_pass/page/game/service/attraction_service.dart';
 import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 enum _GamePhase { landing, loading, playing, error }
 
