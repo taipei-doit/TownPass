@@ -9,12 +9,12 @@ class PinnedServiceWidgetController extends GetxController {
       // MyServiceItemId.dashboard,
       MyServiceItemId.luckyDraw,
     ],
-  );
+  );    
 
   RxList<MyServiceItemId> get pinnedList => _pinnedList;
 
   bool remove(MyServiceItemId itemId) {
-    return _pinnedList.remove(itemId);
+    return _pinnedList.remove(itemId); 
   }
 
   bool replaceWith(List<MyServiceItemId> list) {
