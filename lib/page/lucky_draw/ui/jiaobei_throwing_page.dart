@@ -289,7 +289,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
     }
   }
 
-  String _getResultText() {
+  String get _resultText {
     switch (_result) {
       case JiaobeiResult.shengJiao:
         return '聖筊';
@@ -302,7 +302,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
     }
   }
 
-  String _getResultDescription() {
+  String get _resultDescription {
     switch (_result) {
       case JiaobeiResult.shengJiao:
         return '一陽一陰，神明同意';
@@ -477,13 +477,13 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
         ),
         children: [
           TextSpan(
-            text: _getResultText(),
+            text: _resultText,
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: TPColors.secondary800,
             ),
           ),
-          TextSpan(text: '  ${_getResultDescription()}'),
+          TextSpan(text: '  $_resultDescription'),
         ],
       ));
     }
