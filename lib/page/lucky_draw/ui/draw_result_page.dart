@@ -13,7 +13,7 @@ class DrawResultPage extends StatefulWidget {
 }
 
 class _DrawResultPageState extends State<DrawResultPage> {
-  int selectedTab = 0; // 0 = 白話文, 1 = 解籤, 2 = 指引
+  int selectedTab = 0; // 0 = 解籤, 1 = 白話文, 2 = 指引
 
   late int drawNumber;
   late Map<String, String> drawItem;
@@ -47,7 +47,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
       'grade': p.overall_score,
       'poem': p.oracle_poetry,
       'white_text': p.modern_white_text,
-      'shengyi': p.core_interpretation,
+      'explanation': p.core_interpretation,
       'guide': p.action_advice,
     };
   }
@@ -137,8 +137,8 @@ class _DrawResultPageState extends State<DrawResultPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildTabButton("白話文", 0),
-                        _buildTabButton("解籤", 1),
+                        _buildTabButton("解籤", 0),
+                        _buildTabButton("白話文", 1),
                         _buildTabButton("指引", 2),
                       ],
                     ),
@@ -221,7 +221,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
   Widget _buildTabContent() {
     switch (selectedTab) {
       case 1:
-        return _buildShengYiText();
+        return _buildWhiteText();
       case 2:
         return _buildGuideText();
       default:
@@ -231,7 +231,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
 
   Widget _buildExplanationText() {
     return Text(
-      drawItem['white_text'] ?? '',
+      drawItem['explanation'] ?? '',
       style: const TextStyle(
         fontSize: 16,
         height: 1.6,
@@ -240,9 +240,9 @@ class _DrawResultPageState extends State<DrawResultPage> {
     );
   }
 
-  Widget _buildShengYiText() {
+  Widget _buildWhiteText() {
     return Text(
-      drawItem['shengyi'] ?? '',
+      drawItem['white_text'] ?? '',
       style: const TextStyle(
         fontSize: 16,
         height: 1.6,

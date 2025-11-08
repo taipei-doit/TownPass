@@ -19,7 +19,7 @@ class LotPoems {
 
   static List<LotPoems> lotPoemsList = [
     LotPoems._(
-        lot_number: 1, // 假設 lot_number 是數字
+        lot_number: 1, 
         sexagenary_cycle: r'''甲子''',
         oracle_poetry: r'''日出便見風雲散、光明清淨照世間、一向前途通大道、萬事清吉保平安。''',
         overall_score: r'''大吉''',
@@ -29,7 +29,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 2, // 假設 lot_number 是數字
+        lot_number: 2, 
         sexagenary_cycle: r'''甲寅''',
         oracle_poetry: r'''於今此景正當時、看看欲吐百花魁、若能遇得春色到、一灑清吉脫塵埃。''',
         overall_score: r'''吉''',
@@ -39,7 +39,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 3, // 假設 lot_number 是數字
+        lot_number: 3, 
         sexagenary_cycle: r'''甲辰''',
         oracle_poetry: r'''勸君把定心莫虛、天注衣祿自有餘、和合重重常吉慶、時來終遇得明珠。''',
         overall_score: r'''吉''',
@@ -49,7 +49,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 4, // 假設 lot_number 是數字
+        lot_number: 4, 
         sexagenary_cycle: r'''甲午''',
         oracle_poetry: r'''風恬浪靜可行舟、恰是中秋月一輪、凡事不須多憂慮、福祿自有慶家門。''',
         overall_score: r'''大吉''',
@@ -59,7 +59,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 5, // 假設 lot_number 是數字
+        lot_number: 5, 
         sexagenary_cycle: r'''甲申''',
         oracle_poetry: r'''只恐前途命有變、勸君作急可宜先、且守長江無大事、命逢太白守身邊。''',
         overall_score: r'''中平''',
@@ -69,7 +69,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 6, // 假設 lot_number 是數字
+        lot_number: 6, 
         sexagenary_cycle: r'''甲戌''',
         oracle_poetry: r'''風雲致雨落洋洋、天災時氣必有傷、命內此事難和合、更逢一足出外鄉。''',
         overall_score: r'''凶''',
@@ -79,7 +79,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 7, // 假設 lot_number 是數字
+        lot_number: 7, 
         sexagenary_cycle: r'''乙丑''',
         oracle_poetry: r'''雲開月出正分明、不須進退問前程、婚姻皆由天注定、和合清吉萬事成。''',
         overall_score: r'''大吉''',
@@ -89,7 +89,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 8, // 假設 lot_number 是數字
+        lot_number: 8, 
         sexagenary_cycle: r'''乙卯''',
         oracle_poetry: r'''禾稻看看結成完、此事必定兩相全、回到家中寬心坐、妻兒鼓舞樂團圓。''',
         overall_score: r'''大吉''',
@@ -99,7 +99,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 9, // 假設 lot_number 是數字
+        lot_number: 9, 
         sexagenary_cycle: r'''乙巳''',
         oracle_poetry: r'''龍虎相隨在深山、君爾何須背後看、不知此去相愛誤、他日與我卻無干。''',
         overall_score: r'''凶''',
@@ -109,7 +109,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 10, // 假設 lot_number 是數字
+        lot_number: 10, 
         sexagenary_cycle: r'''乙未''',
         oracle_poetry: r'''花開結子一半枯、可惜今年汝虛度、漸漸日落西山去、勸君不用向前途。''',
         overall_score: r'''凶''',
@@ -119,7 +119,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 11, // 假設 lot_number 是數字
+        lot_number: 11, 
         sexagenary_cycle: r'''乙酉''',
         oracle_poetry: r'''靈雞漸漸見分明、凡事且看子丑寅、雲開月出照天下、郎君即便見太平。''',
         overall_score: r'''吉''',
@@ -129,7 +129,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 12, // 假設 lot_number 是數字
+        lot_number: 12, 
         sexagenary_cycle: r'''乙亥''',
         oracle_poetry: r'''長江風浪漸漸靜、於今得進可安寧、必有貴人相扶助、凶事脫出見太平。''',
         overall_score: r'''吉''',
@@ -139,7 +139,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 13, // 假設 lot_number 是數字
+        lot_number: 13, 
         sexagenary_cycle: r'''丙子''',
         oracle_poetry: r'''命中正逢羅孛關、用盡心機總未休、作福問神難得過、恰是行舟上高灘。''',
         overall_score: r'''中平''',
@@ -149,7 +149,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 14, // 假設 lot_number 是數字
+        lot_number: 14, 
         sexagenary_cycle: r'''丙寅''',
         oracle_poetry: r'''財中漸漸見分明、花開花謝結子成、寬心且看月中桂、郎君即便見太平。''',
         overall_score: r'''大吉''',
@@ -159,7 +159,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 15, // 假設 lot_number 是數字
+        lot_number: 15, 
         sexagenary_cycle: r'''丙辰''',
         oracle_poetry: r'''八十原來是太公、看看晚景遇文王、目下緊事休相問、勸君且守待運通。''',
         overall_score: r'''吉''',
@@ -169,7 +169,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 16, // 假設 lot_number 是數字
+        lot_number: 16, 
         sexagenary_cycle: r'''丙午''',
         oracle_poetry: r'''不須作福不須求、用盡心機總未休、陽世不知陰世事、官法如爐不自由。''',
         overall_score: r'''凶''',
@@ -179,7 +179,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 17, // 假設 lot_number 是數字
+        lot_number: 17, 
         sexagenary_cycle: r'''丙申''',
         oracle_poetry: r'''舊恨重重未改為、家中禍患不臨身、須當謹防宜作福、龍蛇交會得和合。''',
         overall_score: r'''吉''',
@@ -189,7 +189,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 18, // 假設 lot_number 是數字
+        lot_number: 18, 
         sexagenary_cycle: r'''丙戌''',
         oracle_poetry: r'''君問中間此言因、看看祿馬拱前程、求得貴人多得利、和合自有兩分明。''',
         overall_score: r'''大吉''',
@@ -199,7 +199,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 19, // 假設 lot_number 是數字
+        lot_number: 19, 
         sexagenary_cycle: r'''丁丑''',
         oracle_poetry: r'''富貴由命天注定、心高必然誤君期、不然且回依舊路、雲開月出自分明。''',
         overall_score: r'''中平''',
@@ -209,7 +209,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 20, // 假設 lot_number 是數字
+        lot_number: 20, 
         sexagenary_cycle: r'''丁卯''',
         oracle_poetry: r'''前途功名未得意、只恐命內有交加、兩家必定防損失、勸君且退莫咨嗟。''',
         overall_score: r'''凶''',
@@ -219,7 +219,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 21, // 假設 lot_number 是數字
+        lot_number: 21, 
         sexagenary_cycle: r'''丁巳''',
         oracle_poetry: r'''十方佛法有靈通、大難禍患不相同、紅日當空常照耀、還有貴人到家堂。''',
         overall_score: r'''吉''',
@@ -229,7 +229,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 22, // 假設 lot_number 是數字
+        lot_number: 22, 
         sexagenary_cycle: r'''丁未''',
         oracle_poetry: r'''太公八十家業成、月出光輝四海明、命內自然逢大吉、茅屋中間百事亨。''',
         overall_score: r'''吉''',
@@ -239,7 +239,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 23, // 假設 lot_number 是數字
+        lot_number: 23, 
         sexagenary_cycle: r'''丁酉''',
         oracle_poetry: r'''欲去長江水闊茫、前途未遂運未通、如今絲綸常在手、只恐魚水不相逢。''',
         overall_score: r'''中平''',
@@ -249,7 +249,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 24, // 假設 lot_number 是數字
+        lot_number: 24, 
         sexagenary_cycle: r'''丁亥''',
         oracle_poetry: r'''月出光輝四海明、前途祿位見太平、浮雲掃退終無事、可保禍患不臨身。''',
         overall_score: r'''大吉''',
@@ -259,7 +259,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 25, // 假設 lot_number 是數字
+        lot_number: 25, 
         sexagenary_cycle: r'''戊子''',
         oracle_poetry: r'''總是前途莫心勞、求神問聖枉是多、但看雞犬日過後、不須作福事如何。''',
         overall_score: r'''中平''',
@@ -269,7 +269,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 26, // 假設 lot_number 是數字
+        lot_number: 26, 
         sexagenary_cycle: r'''戊寅''',
         oracle_poetry: r'''選出牡丹第一枝、勸君折取莫遲疑、世間若問相知處、萬事逢春正及時。''',
         overall_score: r'''大吉''',
@@ -279,7 +279,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 27, // 假設 lot_number 是數字
+        lot_number: 27, 
         sexagenary_cycle: r'''戊辰''',
         oracle_poetry: r'''君爾寬心且自由、門庭清吉家無憂、財寶自然終吉利、凡事無傷不用求。''',
         overall_score: r'''吉''',
@@ -289,7 +289,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 28, // 假設 lot_number 是數字
+        lot_number: 28, 
         sexagenary_cycle: r'''戊午''',
         oracle_poetry: r'''於今莫作此當時、虎落平陽被犬欺、世間凡事何難定、千山萬水也遲疑。''',
         overall_score: r'''凶''',
@@ -299,7 +299,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 29, // 假設 lot_number 是數字
+        lot_number: 29, 
         sexagenary_cycle: r'''戊申''',
         oracle_poetry: r'''枯木可惜未逢春、如今還在暗中藏、寬心且守風霜退、還君依舊作乾坤。''',
         overall_score: r'''中上''',
@@ -309,7 +309,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 30, // 假設 lot_number 是數字
+        lot_number: 30, 
         sexagenary_cycle: r'''戊戌''',
         oracle_poetry: r'''漸漸看此月中和、過後須防未得高、改變顏色前途去、凡事必定見重勞。''',
         overall_score: r'''中平''',
@@ -319,7 +319,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 31, // 假設 lot_number 是數字
+        lot_number: 31, 
         sexagenary_cycle: r'''己丑''',
         oracle_poetry: r'''綠柳蒼蒼正當時、任君此去作乾坤、花果結實無殘謝、福祿自有慶家門。''',
         overall_score: r'''大吉''',
@@ -329,7 +329,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 32, // 假設 lot_number 是數字
+        lot_number: 32, 
         sexagenary_cycle: r'''己卯''',
         oracle_poetry: r'''龍虎相交在門前、此事必定兩相連、黃金忽然變成鐵、何用作福問神仙。''',
         overall_score: r'''凶''',
@@ -339,7 +339,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 33, // 假設 lot_number 是數字
+        lot_number: 33, 
         sexagenary_cycle: r'''己巳''',
         oracle_poetry: r'''欲去長江水闊茫、行舟把定未遭風、戶內用心再作福、看看魚水得相逢。''',
         overall_score: r'''中上''',
@@ -349,7 +349,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 34, // 假設 lot_number 是數字
+        lot_number: 34, 
         sexagenary_cycle: r'''己未''',
         oracle_poetry: r'''危險高山行過盡、莫嫌此路有重重、若見蘭桂漸漸發、長蛇反轉變成龍。''',
         overall_score: r'''吉''',
@@ -359,7 +359,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 35, // 假設 lot_number 是數字
+        lot_number: 35, 
         sexagenary_cycle: r'''己酉''',
         oracle_poetry: r'''此事何須用心機、前途變怪自然知、看看此去得和合、漸漸脫出見太平。''',
         overall_score: r'''中上''',
@@ -369,7 +369,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 36, // 假設 lot_number 是數字
+        lot_number: 36, 
         sexagenary_cycle: r'''己亥''',
         oracle_poetry: r'''福如東海壽如山、君爾何須歎苦難、命內自然逢大吉、祈保分明得自安。''',
         overall_score: r'''大吉''',
@@ -379,7 +379,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 37, // 假設 lot_number 是數字
+        lot_number: 37, 
         sexagenary_cycle: r'''庚子''',
         oracle_poetry: r'''運逢得意身顯變、君爾身中皆有益、一向前途無難事、決意之中保清吉。''',
         overall_score: r'''大吉''',
@@ -389,7 +389,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 38, // 假設 lot_number 是數字
+        lot_number: 38, 
         sexagenary_cycle: r'''庚寅''',
         oracle_poetry: r'''名顯有意在中央、不須祈禱心自安、看看早晚日過後、即時得意在其間。''',
         overall_score: r'''吉''',
@@ -399,7 +399,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 39, // 假設 lot_number 是數字
+        lot_number: 39, 
         sexagenary_cycle: r'''庚辰''',
         oracle_poetry: r'''意中若問神仙路、勸爾且退望高樓、寬心且守寬心坐、必然遇得貴人扶。''',
         overall_score: r'''中平''',
@@ -409,7 +409,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 40, // 假設 lot_number 是數字
+        lot_number: 40, 
         sexagenary_cycle: r'''庚午''',
         oracle_poetry: r'''平生富貴成祿位、君家門戶定光輝、此中必定無損失、夫妻百歲喜相隨。''',
         overall_score: r'''大吉''',
@@ -419,7 +419,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 41, // 假設 lot_number 是數字
+        lot_number: 41, 
         sexagenary_cycle: r'''庚申''',
         oracle_poetry: r'''今行到此實難推、歌歌暢飲自徘徊、雞犬相聞消息近、婚姻夙世結成雙。''',
         overall_score: r'''吉''',
@@ -429,7 +429,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 42, // 假設 lot_number 是數字
+        lot_number: 42, 
         sexagenary_cycle: r'''庚戌''',
         oracle_poetry: r'''一重江水一重山、誰知此去路又難、任他改求終不過、是非終久未得安。''',
         overall_score: r'''凶''',
@@ -439,7 +439,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 43, // 假設 lot_number 是數字
+        lot_number: 43, 
         sexagenary_cycle: r'''辛丑''',
         oracle_poetry: r'''一年作事急如飛、君爾寬心莫遲疑、貴人還在千里外、音信月中漸漸知。''',
         overall_score: r'''中上''',
@@ -449,7 +449,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 44, // 假設 lot_number 是數字
+        lot_number: 44, 
         sexagenary_cycle: r'''辛卯''',
         oracle_poetry: r'''客到前途多得利、君爾何故兩相疑、雖是中間防進退、月出光輝得運時。''',
         overall_score: r'''吉''',
@@ -459,7 +459,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 45, // 假設 lot_number 是數字
+        lot_number: 45, 
         sexagenary_cycle: r'''辛巳''',
         oracle_poetry: r'''花開今已結成果、富貴榮華終到老、君子小人相會合、萬事清吉莫煩惱。''',
         overall_score: r'''大吉''',
@@ -469,7 +469,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 46, // 假設 lot_number 是數字
+        lot_number: 46, 
         sexagenary_cycle: r'''辛未''',
         oracle_poetry: r'''功名得意與君顯、前途富貴喜安然、若遇一輪明月照、十五團圓光滿天。''',
         overall_score: r'''大吉''',
@@ -479,7 +479,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 47, // 假設 lot_number 是數字
+        lot_number: 47, 
         sexagenary_cycle: r'''辛酉''',
         oracle_poetry: r'''君爾何須問聖跡、自己心中皆有益、於今且看月中旬、凶事脫出化成吉。''',
         overall_score: r'''吉''',
@@ -489,7 +489,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 48, // 假設 lot_number 是數字
+        lot_number: 48, 
         sexagenary_cycle: r'''辛亥''',
         oracle_poetry: r'''陽世作事未和同、雲遮月色正朦朧、心中意欲前途去、只恐前途運未通。''',
         overall_score: r'''凶''',
@@ -499,7 +499,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 49, // 假設 lot_number 是數字
+        lot_number: 49, 
         sexagenary_cycle: r'''壬子''',
         oracle_poetry: r'''言語雖多不可從、風雲靜處未行龍、暗中終得明消息、君爾何須問重重。''',
         overall_score: r'''中上''',
@@ -509,7 +509,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 50, // 假設 lot_number 是數字
+        lot_number: 50, 
         sexagenary_cycle: r'''壬寅''',
         oracle_poetry: r'''佛前發誓無異心、且看前途得好音、此物原來本是鐵、也能變化得成金。''',
         overall_score: r'''大吉''',
@@ -519,7 +519,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 51, // 假設 lot_number 是數字
+        lot_number: 51, 
         sexagenary_cycle: r'''壬辰''',
         oracle_poetry: r'''東西南北不堪行、前途此事正可當、勸君把定莫煩惱、家門自有保安康。''',
         overall_score: r'''中平''',
@@ -529,7 +529,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 52, // 假設 lot_number 是數字
+        lot_number: 52, 
         sexagenary_cycle: r'''壬午''',
         oracle_poetry: r'''功名事業本由天、不須掛念意懸懸、若問中間遲與速、風雲際會在眼前。''',
         overall_score: r'''吉''',
@@ -539,7 +539,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 53, // 假設 lot_number 是數字
+        lot_number: 53, 
         sexagenary_cycle: r'''壬申''',
         oracle_poetry: r'''看君來問心中事、積善之家慶有餘、運亨財子雙雙至、指日喜氣溢門閭。''',
         overall_score: r'''大吉''',
@@ -549,7 +549,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 54, // 假設 lot_number 是數字
+        lot_number: 54, 
         sexagenary_cycle: r'''壬戌''',
         oracle_poetry: r'''孤燈寂寂夜沉沉、萬事清吉萬事成、若逢陰中有善果、燒得好香達神明。''',
         overall_score: r'''中上''',
@@ -559,7 +559,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 55, // 假設 lot_number 是數字
+        lot_number: 55, 
         sexagenary_cycle: r'''癸丑''',
         oracle_poetry: r'''須知進退總言虛、看看發暗未必全、珠玉深藏還未變、心中但得枉徒然。''',
         overall_score: r'''中平''',
@@ -569,7 +569,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 56, // 假設 lot_number 是數字
+        lot_number: 56, 
         sexagenary_cycle: r'''癸卯''',
         oracle_poetry: r'''病中若得苦心勞、到底完全總未遭、去後不須回頭問、心中事務盡消磨。''',
         overall_score: r'''中平''',
@@ -579,7 +579,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 57, // 假設 lot_number 是數字
+        lot_number: 57, 
         sexagenary_cycle: r'''癸巳''',
         oracle_poetry: r'''勸君把定心莫虛、前途清吉得運時、到底中間無大事、又遇神仙守安居。''',
         overall_score: r'''吉''',
@@ -589,7 +589,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 58, // 假設 lot_number 是數字
+        lot_number: 58, 
         sexagenary_cycle: r'''癸未''',
         oracle_poetry: r'''蛇身意欲變成龍、只恐命內運未通、久病且作寬心座、言語雖多不可從。''',
         overall_score: r'''中平''',
@@ -599,7 +599,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 59, // 假設 lot_number 是數字
+        lot_number: 59, 
         sexagenary_cycle: r'''癸酉''',
         oracle_poetry: r'''有心作福莫遲疑、求名清吉正當時、此事必能成會合、財寶自然喜相隨。''',
         overall_score: r'''大吉''',
@@ -609,7 +609,7 @@ class LotPoems {
     ),
 
     LotPoems._(
-        lot_number: 60, // 假設 lot_number 是數字
+        lot_number: 60, 
         sexagenary_cycle: r'''癸亥''',
         oracle_poetry: r'''月出光輝本清吉、浮雲總是蔽蔭色、戶內用心再作福、當官分理便有益。''',
         overall_score: r'''中平''',
