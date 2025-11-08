@@ -39,7 +39,7 @@ class GameLanding extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 const TPText(
-                  '在城市的光影中，每一處風景都有它的座標。我們會為您呈上一張臺北的剪影， 請在下方四個選項中，憑著您對這座城市的記憶與直覺， 尋找出「地理位置」上，與它最相近的那一隅風景。點選您心中的答案， 看看您與臺北的連結，有多深刻。',
+                  '每幅光影，皆有其座標。憑一張臺北的剪影，在記憶的街角，尋訪那最相近的一隅。',
                   style: TPTextStyles.bodyRegular,
                   color: TPColors.white,
                 ),
