@@ -196,7 +196,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   }
 
   void _throwJiaobei() {
-    if (_isAnimating) return;
+    if (_isAnimating || _result != null) return;
 
     setState(() {
       _isAnimating = true;
