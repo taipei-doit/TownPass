@@ -23,25 +23,28 @@ class GameView extends StatefulWidget {
 
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
-
-  _GamePhase _phase = _GamePhase.landing;
   late final AudioPlayer _bgmPlayer;
-  GameQuestion? _currentQuestion;
-  int _lives = 3;
+  int _currentIndex = 0;
   bool _hasGuessed = false;
   bool _isCorrectGuess = false;
-  int? _selectedIndex;
-  String? _errorMessage;
+  String? _selectedOption;
 
-  _bgmPlayer = AudioPlayer();
-  _startBgm();
-  // Log player state changes to help debug emulator audio issues
-  _bgmPlayer.onPlayerStateChanged.listen((state) {
-    debugPrint('BGM player state: $state');
-  });
-  _bgmPlayer.onPlayerComplete.listen((_) {
-    debugPrint('BGM playback completed');
-  });
+  _GamePhase _phase = _GamePhase.landing;
+  
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = _random.nextInt(_locations.length);
+    _bgmPlayer = AudioPlayer();
+    _startBgm();
+    // Log player state changes to help debug emulator audio issues
+    _bgmPlayer.onPlayerStateChanged.listen((state) {
+      debugPrint('BGM player state: $state');
+    });
+    _bgmPlayer.onPlayerComplete.listen((_) {
+      debugPrint('BGM playback completed');
+    });
+  }
 
   @override
   void dispose() {
