@@ -12,9 +12,225 @@ import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
-
 enum _GamePhase { landing, loading, playing, error }
+
+enum GameLanguage { zh, en }
+
+typedef _StringFormatter = String Function(String value);
+
+class _GameStrings {
+  const _GameStrings(this.language);
+
+  final GameLanguage language;
+
+  static const Map<GameLanguage, _GameCopy> _localizedValues = _localizedCopies;
+
+  _GameCopy get _copy => _localizedValues[language]!;
+
+  String get appTitle => _copy.appTitle;
+  String get backSemantics => _copy.backSemantics;
+  String get infoButtonSemantics => _copy.infoButtonSemantics;
+  String get infoDialogTitle => _copy.infoDialogTitle;
+  String get infoDialogBody => _copy.infoDialogBody;
+  String get infoDialogConfirm => _copy.infoDialogConfirm;
+  String get loadingError => _copy.loadingError;
+  String get livesLabel => _copy.livesLabel;
+  String questionPrompt(String target) => _copy.questionPrompt(target);
+  String get challengeSubtitle => _copy.challengeSubtitle;
+  String get nextCta => _copy.nextCta;
+  String get restartCta => _copy.restartCta;
+  String get resultDialogTitleCorrect => _copy.resultDialogTitleCorrect;
+  String get resultDialogTitleWrong => _copy.resultDialogTitleWrong;
+  String get resultDialogTitleGameOver => _copy.resultDialogTitleGameOver;
+  String resultDialogTargetLine(String name) => _copy.resultDialogTargetLine(name);
+  String get resultDialogTargetTitle => _copy.resultDialogTargetTitle;
+  String optionTitle(int index, {required bool isCorrect, required bool showSelectedTag}) {
+    final StringBuffer buffer = StringBuffer('${_copy.optionTitlePrefix} $index');
+    if (isCorrect) {
+      buffer.write(_copy.optionTagCorrect);
+    }
+    if (showSelectedTag) {
+      buffer.write(_copy.optionTagSelected);
+    }
+    return buffer.toString();
+  }
+
+  String get closeLabel => _copy.closeLabel;
+  String get resultBannerTitleCorrect => _copy.resultBannerTitleCorrect;
+  String get resultBannerTitleWrong => _copy.resultBannerTitleWrong;
+  String get resultBannerTitleGameOver => _copy.resultBannerTitleGameOver;
+  String resultBannerSubtitleCorrect(String target) => _copy.resultBannerSubtitleCorrect(target);
+  String resultBannerSubtitleWrong(String answer) => _copy.resultBannerSubtitleWrong(answer);
+  String get resultBannerFooter => _copy.resultBannerFooter;
+  String get reloadLabel => _copy.reloadLabel;
+  String get landingTitle => _copy.landingTitle;
+  String get landingDescription => _copy.landingDescription;
+  List<String> get landingBullets => List.unmodifiable(_copy.landingBullets);
+  String get landingStart => _copy.landingStart;
+  String get languageToggleLabel => language == GameLanguage.zh ? 'English' : '中文';
+}
+
+class _GameCopy {
+  const _GameCopy({
+    required this.appTitle,
+    required this.backSemantics,
+    required this.infoButtonSemantics,
+    required this.infoDialogTitle,
+    required this.infoDialogBody,
+    required this.infoDialogConfirm,
+    required this.loadingError,
+    required this.livesLabel,
+    required this.questionPrompt,
+    required this.challengeSubtitle,
+    required this.nextCta,
+    required this.restartCta,
+    required this.resultDialogTitleCorrect,
+    required this.resultDialogTitleWrong,
+    required this.resultDialogTitleGameOver,
+    required this.resultDialogTargetLine,
+    required this.resultDialogTargetTitle,
+    required this.optionTitlePrefix,
+    required this.optionTagCorrect,
+    required this.optionTagSelected,
+    required this.closeLabel,
+    required this.resultBannerTitleCorrect,
+    required this.resultBannerTitleWrong,
+    required this.resultBannerTitleGameOver,
+    required this.resultBannerSubtitleCorrect,
+    required this.resultBannerSubtitleWrong,
+    required this.resultBannerFooter,
+    required this.reloadLabel,
+    required this.landingTitle,
+    required this.landingDescription,
+    required this.landingBullets,
+    required this.landingStart,
+  });
+
+  final String appTitle;
+  final String backSemantics;
+  final String infoButtonSemantics;
+  final String infoDialogTitle;
+  final String infoDialogBody;
+  final String infoDialogConfirm;
+  final String loadingError;
+  final String livesLabel;
+  final _StringFormatter questionPrompt;
+  final String challengeSubtitle;
+  final String nextCta;
+  final String restartCta;
+  final String resultDialogTitleCorrect;
+  final String resultDialogTitleWrong;
+  final String resultDialogTitleGameOver;
+  final _StringFormatter resultDialogTargetLine;
+  final String resultDialogTargetTitle;
+  final String optionTitlePrefix;
+  final String optionTagCorrect;
+  final String optionTagSelected;
+  final String closeLabel;
+  final String resultBannerTitleCorrect;
+  final String resultBannerTitleWrong;
+  final String resultBannerTitleGameOver;
+  final _StringFormatter resultBannerSubtitleCorrect;
+  final _StringFormatter resultBannerSubtitleWrong;
+  final String resultBannerFooter;
+  final String reloadLabel;
+  final String landingTitle;
+  final String landingDescription;
+  final List<String> landingBullets;
+  final String landingStart;
+}
+
+const Map<GameLanguage, _GameCopy> _localizedCopies = {
+  GameLanguage.zh: _GameCopy(
+    appTitle: 'Taipei Guessr',
+    backSemantics: '返回上一頁',
+    infoButtonSemantics: '遊戲介紹',
+    infoDialogTitle: 'Taipei Guessr 遊戲說明',
+    infoDialogBody:
+        '遊戲開始後會出現一張景點圖片，並告訴你該景點的名稱。\n你的任務：從四張圖片中挑出實際距離最接近該景點的位置。'
+        '\n\n每局擁有三條命，答錯會扣一條命；命用完就得重新開始。',
+    infoDialogConfirm: '了解',
+    loadingError: '載入題目時發生問題，請稍後再試。',
+    livesLabel: '剩餘生命',
+    questionPrompt: _questionPromptZh,
+    challengeSubtitle: '挑戰：找出距離最近的景點',
+    nextCta: '下一題',
+    restartCta: '重新開始',
+    resultDialogTitleCorrect: '太厲害！答對了',
+    resultDialogTitleWrong: '答錯了，再接再厲',
+    resultDialogTitleGameOver: '答錯了，遊戲結束',
+    resultDialogTargetLine: _resultDialogTargetLineZh,
+    resultDialogTargetTitle: '題目景點',
+    optionTitlePrefix: '選項',
+    optionTagCorrect: '（正確）',
+    optionTagSelected: '（你選擇）',
+    closeLabel: '關閉',
+    resultBannerTitleCorrect: '答對了！',
+    resultBannerTitleWrong: '可惜，再試試看',
+    resultBannerTitleGameOver: '三條命用完了',
+    resultBannerSubtitleCorrect: _resultBannerSubtitleCorrectZh,
+    resultBannerSubtitleWrong: _resultBannerSubtitleWrongZh,
+    resultBannerFooter: '按下重新開始，會重置三條命並抽出全新的題組。',
+    reloadLabel: '重新載入',
+    landingTitle: 'Taipei Guessr',
+    landingDescription: '每幅光影，皆有其座標。憑一張臺北的剪影，在記憶的街角，尋訪那最相近的一隅。',
+    landingBullets: [
+      '觀察上方景點，回想所在區域',
+      '推敲下方四圖，判斷相對位置',
+      '選出最近鄰居，考驗你對臺北的認識',
+    ],
+    landingStart: '開始遊戲',
+  ),
+  GameLanguage.en: _GameCopy(
+    appTitle: 'Taipei Guessr',
+    backSemantics: 'Go back',
+    infoButtonSemantics: 'How to play',
+    infoDialogTitle: 'Taipei Guessr - How to Play',
+    infoDialogBody:
+        'Each round shows a landmark photo along with its name.\nYour mission: pick the option that is physically closest to it.'
+        '\n\nYou have three lives per session. Every wrong guess costs one life; lose them all and the game restarts.',
+    infoDialogConfirm: 'Got it',
+    loadingError: 'We could not load the next question. Please try again later.',
+    livesLabel: 'Lives left',
+    questionPrompt: _questionPromptEn,
+    challengeSubtitle: 'Challenge: find the closest attraction',
+    nextCta: 'Next question',
+    restartCta: 'Restart',
+    resultDialogTitleCorrect: 'Great job! You got it',
+    resultDialogTitleWrong: 'Incorrect, try again',
+    resultDialogTitleGameOver: 'Wrong answer, game over',
+    resultDialogTargetLine: _resultDialogTargetLineEn,
+    resultDialogTargetTitle: 'Target attraction',
+    optionTitlePrefix: 'Option',
+    optionTagCorrect: ' (Correct)',
+    optionTagSelected: ' (Your pick)',
+    closeLabel: 'Close',
+    resultBannerTitleCorrect: 'Correct!',
+    resultBannerTitleWrong: 'Close, try again',
+    resultBannerTitleGameOver: 'All lives used',
+    resultBannerSubtitleCorrect: _resultBannerSubtitleCorrectEn,
+    resultBannerSubtitleWrong: _resultBannerSubtitleWrongEn,
+    resultBannerFooter: 'Press Restart to reset three lives and draw a fresh set of questions.',
+    reloadLabel: 'Reload',
+    landingTitle: 'Taipei Guessr',
+    landingDescription: 'Every beam of light has its coordinates. With one snapshot of Taipei, rediscover the corner that feels closest.',
+    landingBullets: [
+      'Study the featured attraction and recall where it is.',
+      'Compare the four photos below to judge their relative positions.',
+      'Pick the closest neighbor and prove how well you know Taipei.',
+    ],
+    landingStart: 'Start game',
+  ),
+};
+
+String _questionPromptZh(String target) => '哪個景點離 $target 最近？';
+String _questionPromptEn(String target) => 'Which spot is closest to $target?';
+String _resultDialogTargetLineZh(String name) => '題目景點：$name';
+String _resultDialogTargetLineEn(String name) => 'Target attraction: $name';
+String _resultBannerSubtitleCorrectZh(String target) => '你成功選對最靠近 $target 的景點。';
+String _resultBannerSubtitleCorrectEn(String target) => 'You picked the attraction closest to $target.';
+String _resultBannerSubtitleWrongZh(String answer) => '正確答案：$answer';
+String _resultBannerSubtitleWrongEn(String answer) => 'Correct answer: $answer';
 
 class GameView extends StatefulWidget {
   const GameView({super.key});
@@ -22,15 +238,20 @@ class GameView extends StatefulWidget {
   @override
   State<GameView> createState() => _GameViewState();
 }
-
+// class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
   late final AudioPlayer _bgmPlayer;
   bool _hasGuessed = false;
   bool _isCorrectGuess = false;
-  String? _selectedOption;
-
   _GamePhase _phase = _GamePhase.landing;
+  GameLanguage _language = GameLanguage.zh;
+  GameQuestion? _currentQuestion;
+  int _lives = 3;
+  int? _selectedIndex;
+  String? _errorMessage;
+
+  _GameStrings get _strings => _GameStrings(_language);
   
   @override
   void initState() {
@@ -48,12 +269,11 @@ class _GameViewState extends State<GameView> {
 
   @override
   void dispose() {
-    _service.dispose();
-    super.dispose();
-  }
-
-  @override
-  void dispose() {
+    // stop and dispose bgm player when the view is disposed
+    try {
+      _bgmPlayer.stop();
+      _bgmPlayer.dispose();
+    } catch (_) {}
     _service.dispose();
     super.dispose();
   }
@@ -82,17 +302,28 @@ class _GameViewState extends State<GameView> {
 
   @override
   Widget build(BuildContext context) {
+    final _GameStrings strings = _strings;
+
     Widget child;
     switch (_phase) {
       case _GamePhase.landing:
-        child = GameLanding(onStart: _startGame);
+        child = GameLanding(
+          onStart: _startGame,
+          title: strings.landingTitle,
+          description: strings.landingDescription,
+          bulletPoints: strings.landingBullets,
+          startLabel: strings.landingStart,
+          languageToggleLabel: strings.languageToggleLabel,
+          onToggleLanguage: _toggleLanguage,
+        );
         break;
       case _GamePhase.loading:
         child = const Center(child: CircularProgressIndicator());
         break;
       case _GamePhase.error:
         child = _ErrorState(
-          message: _errorMessage ?? '載入題目時發生問題，請稍後再試。',
+          message: _errorMessage ?? strings.loadingError,
+          actionLabel: strings.reloadLabel,
           onRetry: () => _loadNextQuestion(),
         );
         break;
@@ -108,6 +339,7 @@ class _GameViewState extends State<GameView> {
             selectedIndex: _selectedIndex,
             onOptionTap: _handleOptionSelected,
             onNext: _handleNextPressed,
+            strings: strings,
           );
         }
         break;
@@ -117,10 +349,10 @@ class _GameViewState extends State<GameView> {
       backgroundColor: TPColors.white,
       appBar: TPAppBar(
         showLogo: true,
-        title: 'Taipei Guessr',
+        title: strings.appTitle,
         leading: IconButton(
           icon: Semantics(
-            label: '返回上一頁',
+            label: strings.backSemantics,
             child: Assets.svg.iconRemove.svg(),
           ),
           onPressed: () => Get.back<void>(),
@@ -129,7 +361,7 @@ class _GameViewState extends State<GameView> {
           if (_phase == _GamePhase.playing)
             IconButton(
               icon: Semantics(
-                label: '遊戲介紹',
+                label: strings.infoButtonSemantics,
                 child: const Icon(
                   Icons.info_outline,
                   size: 26,
@@ -151,6 +383,12 @@ class _GameViewState extends State<GameView> {
 
   void _startGame() {
     _loadNextQuestion(resetLives: true);
+  }
+
+  void _toggleLanguage() {
+    setState(() {
+      _language = _language == GameLanguage.zh ? GameLanguage.en : GameLanguage.zh;
+    });
   }
 
   Future<void> _loadNextQuestion({bool resetLives = false}) async {
@@ -226,25 +464,25 @@ class _GameViewState extends State<GameView> {
   }
 
   void _showGameInfo() {
+    final _GameStrings strings = _strings;
     Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-        title: const TPText(
-          'Taipei Guessr 遊戲說明',
+        title: TPText(
+          strings.infoDialogTitle,
           style: TPTextStyles.h3SemiBold,
           color: TPColors.grayscale900,
         ),
-        content: const TPText(
-          '遊戲開始後會出現一張景點圖片，並告訴你該景點的名稱。\n你的任務：從四張圖片中挑出實際距離最接近該景點的位置。'
-          '\n\n每局擁有三條命，答錯會扣一條命；命用完就得重新開始。',
+        content: TPText(
+          strings.infoDialogBody,
           color: TPColors.grayscale700,
         ),
         actionsPadding: const EdgeInsets.only(right: 12, bottom: 8),
         actions: [
           TextButton(
             onPressed: () => Get.back<void>(),
-            child: const TPText(
-              '了解',
+            child: TPText(
+              strings.infoDialogConfirm,
               style: TPTextStyles.h3SemiBold,
               color: TPColors.primary500,
             ),
@@ -255,7 +493,10 @@ class _GameViewState extends State<GameView> {
   }
 
   void _showResultDetailDialog(GameQuestion question, bool isCorrect) {
-    final String title = isCorrect ? '太厲害！答對了' : (_lives == 0 ? '答錯了，遊戲結束' : '答錯了，再接再厲');
+    final _GameStrings strings = _strings;
+    final bool gameOver = _lives == 0;
+    final String title =
+        isCorrect ? strings.resultDialogTitleCorrect : (gameOver ? strings.resultDialogTitleGameOver : strings.resultDialogTitleWrong);
     final Color accentColor = isCorrect ? TPColors.primary500 : (_lives == 0 ? TPColors.red400 : TPColors.orange500);
 
     Get.dialog(
@@ -284,7 +525,7 @@ class _GameViewState extends State<GameView> {
                     ),
                     const SizedBox(height: 4),
                     TPText(
-                      '題目景點：${question.target.displayName}',
+                      strings.resultDialogTargetLine(question.target.displayName),
                       style: TPTextStyles.bodyRegular,
                       color: TPColors.grayscale800,
                     ),
@@ -297,7 +538,7 @@ class _GameViewState extends State<GameView> {
                   child: Column(
                     children: [
                       _AttractionDetailCard(
-                        title: '題目景點',
+                        title: strings.resultDialogTargetTitle,
                         attraction: question.target,
                         highlight: accentColor,
                       ),
@@ -311,7 +552,11 @@ class _GameViewState extends State<GameView> {
                           return Padding(
                             padding: const EdgeInsets.only(bottom: 12),
                             child: _AttractionDetailCard(
-                              title: '選項 ${index + 1}${isOptionCorrect ? '（正確）' : ''}${isSelected && !isOptionCorrect ? '（你選擇）' : ''}',
+                              title: strings.optionTitle(
+                                index + 1,
+                                isCorrect: isOptionCorrect,
+                                showSelectedTag: isSelected && !isOptionCorrect,
+                              ),
                               attraction: option.attraction,
                               highlight: isOptionCorrect ? TPColors.primary500 : TPColors.grayscale300,
                             ),
@@ -331,8 +576,8 @@ class _GameViewState extends State<GameView> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: accentColor,
                     ),
-                    child: const TPText(
-                      '關閉',
+                    child: TPText(
+                      strings.closeLabel,
                       style: TPTextStyles.h3SemiBold,
                       color: TPColors.white,
                     ),
@@ -356,6 +601,7 @@ class _GameBoard extends StatelessWidget {
     required this.selectedIndex,
     required this.onOptionTap,
     required this.onNext,
+    required this.strings,
   });
 
   final GameQuestion question;
@@ -365,6 +611,7 @@ class _GameBoard extends StatelessWidget {
   final int? selectedIndex;
   final void Function(int index) onOptionTap;
   final VoidCallback onNext;
+  final _GameStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -375,12 +622,18 @@ class _GameBoard extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _LivesIndicator(lives: lives),
+                _LivesIndicator(
+                  lives: lives,
+                  label: strings.livesLabel,
+                ),
                 const SizedBox(height: 16),
-                _QuestionCard(question: question),
+                _QuestionCard(
+                  question: question,
+                  challengeText: strings.challengeSubtitle,
+                ),
                 const SizedBox(height: 16),
                 TPText(
-                  '哪個景點離 ${question.target.displayName} 最近？',
+                  strings.questionPrompt(question.target.displayName),
                   style: TPTextStyles.h3SemiBold,
                   color: TPColors.grayscale900,
                 ),
@@ -397,6 +650,7 @@ class _GameBoard extends StatelessWidget {
                     question: question,
                     isCorrect: isCorrect,
                     livesRemaining: lives,
+                    strings: strings,
                   ),
               ],
             ),
@@ -412,7 +666,7 @@ class _GameBoard extends StatelessWidget {
               disabledBackgroundColor: TPColors.grayscale200,
             ),
             child: TPText(
-              lives == 0 ? '重新開始' : '下一題',
+              lives == 0 ? strings.restartCta : strings.nextCta,
               style: TPTextStyles.h3SemiBold,
               color: TPColors.white,
             ),
@@ -424,16 +678,17 @@ class _GameBoard extends StatelessWidget {
 }
 
 class _LivesIndicator extends StatelessWidget {
-  const _LivesIndicator({required this.lives});
+  const _LivesIndicator({required this.lives, required this.label});
 
   final int lives;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        const TPText(
-          '剩餘生命',
+        TPText(
+          label,
           style: TPTextStyles.h3SemiBold,
           color: TPColors.grayscale900,
         ),
@@ -454,9 +709,10 @@ class _LivesIndicator extends StatelessWidget {
 }
 
 class _QuestionCard extends StatelessWidget {
-  const _QuestionCard({required this.question});
+  const _QuestionCard({required this.question, required this.challengeText});
 
   final GameQuestion question;
+  final String challengeText;
 
   @override
   Widget build(BuildContext context) {
@@ -495,8 +751,8 @@ class _QuestionCard extends StatelessWidget {
                     color: TPColors.white,
                   ),
                   const SizedBox(height: 4),
-                  const TPText(
-                    '挑戰：找出距離最近的景點',
+                  TPText(
+                    challengeText,
                     style: TPTextStyles.bodyRegular,
                     color: TPColors.white,
                   ),
@@ -646,11 +902,13 @@ class _ResultBanner extends StatelessWidget {
     required this.question,
     required this.isCorrect,
     required this.livesRemaining,
+    required this.strings,
   });
 
   final GameQuestion question;
   final bool isCorrect;
   final int livesRemaining;
+  final _GameStrings strings;
 
   @override
   Widget build(BuildContext context) {
@@ -659,13 +917,11 @@ class _ResultBanner extends StatelessWidget {
     final Color textColor = isCorrect ? TPColors.primary500 : (gameOver ? TPColors.red400 : TPColors.orange500);
     final IconData icon = isCorrect ? Icons.emoji_events : (gameOver ? Icons.sentiment_dissatisfied : Icons.lightbulb_outline);
     final String title = isCorrect
-        ? '答對了！'
-        : gameOver
-            ? '三條命用完了'
-            : '可惜，再試試看';
+        ? strings.resultBannerTitleCorrect
+        : (gameOver ? strings.resultBannerTitleGameOver : strings.resultBannerTitleWrong);
     final String subtitle = isCorrect
-        ? '你成功選對最靠近 ${question.target.displayName} 的景點。'
-        : '正確答案：${question.options[question.correctIndex].attraction.displayName}';
+        ? strings.resultBannerSubtitleCorrect(question.target.displayName)
+        : strings.resultBannerSubtitleWrong(question.options[question.correctIndex].attraction.displayName);
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -695,8 +951,8 @@ class _ResultBanner extends StatelessWidget {
                 ),
                 if (gameOver) ...[
                   const SizedBox(height: 8),
-                  const TPText(
-                    '按下重新開始，會重置三條命並抽出全新的題組。',
+                  TPText(
+                    strings.resultBannerFooter,
                     style: TPTextStyles.caption,
                     color: TPColors.red400,
                   ),
@@ -711,10 +967,11 @@ class _ResultBanner extends StatelessWidget {
 }
 
 class _ErrorState extends StatelessWidget {
-  const _ErrorState({required this.message, required this.onRetry});
+  const _ErrorState({required this.message, required this.onRetry, required this.actionLabel});
 
   final String message;
   final VoidCallback onRetry;
+  final String actionLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -735,8 +992,8 @@ class _ErrorState extends StatelessWidget {
           height: 44,
           child: OutlinedButton(
             onPressed: onRetry,
-            child: const TPText(
-              '重新載入',
+            child: TPText(
+              actionLabel,
               style: TPTextStyles.h3SemiBold,
               color: TPColors.primary500,
             ),

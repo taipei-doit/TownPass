@@ -4,9 +4,24 @@ import 'package:town_pass/util/tp_text.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
 
 class GameLanding extends StatelessWidget {
-  const GameLanding({required this.onStart, super.key});
+  const GameLanding({
+    required this.onStart,
+    required this.title,
+    required this.description,
+    required this.bulletPoints,
+    required this.startLabel,
+    required this.languageToggleLabel,
+    required this.onToggleLanguage,
+    super.key,
+  });
 
   final VoidCallback onStart;
+  final String title;
+  final String description;
+  final List<String> bulletPoints;
+  final String startLabel;
+  final String languageToggleLabel;
+  final VoidCallback onToggleLanguage;
 
   @override
   Widget build(BuildContext context) {
@@ -31,14 +46,32 @@ class GameLanding extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const TPText(
-                  'Taipei Guessr',
+                Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: onToggleLanguage,
+                    style: TextButton.styleFrom(
+                      foregroundColor: TPColors.white,
+                      backgroundColor: Colors.black.withOpacity(0.25),
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                    ),
+                    child: TPText(
+                      languageToggleLabel,
+                      style: TPTextStyles.caption,
+                      color: TPColors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 12),
+                TPText(
+                  title,
                   style: TPTextStyles.h1SemiBold,
                   color: TPColors.white,
                 ),
                 const SizedBox(height: 12),
-                const TPText(
-                  '每幅光影，皆有其座標。憑一張臺北的剪影，在記憶的街角，尋訪那最相近的一隅。',
+                TPText(
+                  description,
                   style: TPTextStyles.bodyRegular,
                   color: TPColors.white,
                 ),
@@ -56,21 +89,18 @@ class GameLanding extends StatelessWidget {
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
-            children: const [
-              _LandingBullet(
-                icon: Icons.lightbulb_outline,
-                text: '觀察上方景點，回想所在區域',
-              ),
-              SizedBox(height: 12),
-              _LandingBullet(
-                icon: Icons.map_outlined,
-                text: '推敲下方四圖，判斷相對位置',
-              ),
-              SizedBox(height: 12),
-              _LandingBullet(
-                icon: Icons.touch_app_outlined,
-                text: '選出最近鄰居，考驗你對臺北的認識',
-              ),
+            children: [
+              for (int i = 0; i < bulletPoints.length && i < 3; i++) ...[
+                if (i != 0) const SizedBox(height: 12),
+                _LandingBullet(
+                  icon: i == 0
+                      ? Icons.lightbulb_outline
+                      : i == 1
+                          ? Icons.map_outlined
+                          : Icons.touch_app_outlined,
+                  text: bulletPoints[i],
+                ),
+              ],
             ],
           ),
         ),
@@ -83,8 +113,8 @@ class GameLanding extends StatelessWidget {
               backgroundColor: TPColors.primary500,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
             ),
-            child: const TPText(
-              '開始遊戲',
+            child: TPText(
+              startLabel,
               style: TPTextStyles.h3SemiBold,
               color: TPColors.white,
             ),
