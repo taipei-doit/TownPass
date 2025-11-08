@@ -128,7 +128,7 @@ class _WelcomePageState extends State<WelcomePage> {
               ),
               onPressed: onPressed,
               child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 30),
+                padding: const EdgeInsets.symmetric(vertical: 20),
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
