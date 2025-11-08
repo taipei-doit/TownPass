@@ -47,6 +47,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   @override
   void initState() {
     super.initState();
+    _listenShaking();
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 700), // 單向動畫持續時間
@@ -106,8 +107,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.pop(context); // 返回上一頁
-      // 如果使用 GetX: Get.back();
+      Get.offAllNamed('/lucky_draw/welcome');
     }
   }
 
