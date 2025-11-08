@@ -14,6 +14,7 @@ import 'package:town_pass/page/city_service_edit/city_service_edit_view.dart';
 import 'package:town_pass/page/city_service_edit/city_service_edit_view_controller.dart';
 import 'package:town_pass/page/feedback/feedback_view.dart';
 import 'package:town_pass/page/feedback/feedback_view_controller.dart';
+import 'package:town_pass/page/game/game_view.dart';
 import 'package:town_pass/page/invoice_receipt/invoice_receipt_view.dart';
 import 'package:town_pass/page/language/language_view.dart';
 import 'package:town_pass/page/language/language_view_controller.dart';
@@ -43,6 +44,7 @@ abstract class TPRoute {
   static const String basicInfo = '/basic_info';
   static const String basicInfoEdit = '/basic_info_edit';
   static const String feedback = '/feedback';
+  static const String game = '/game';
   static const String invoiceReceipt = '/invoice_receipt';
   static const String home = '/home';
   static const String language = '/language';
@@ -97,6 +99,10 @@ abstract class TPRoute {
         binding: BindingsBuilder(() {
           Get.put<FeedbackViewController>(FeedbackViewController());
         })),
+    GetPage(
+      name: game,
+      page: () => const GameView(),
+    ),
     GetPage(
       name: invoiceReceipt,
       page: () => const InvoiceReceiptView(),

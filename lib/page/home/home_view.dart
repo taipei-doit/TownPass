@@ -25,6 +25,21 @@ class HomeView extends StatelessWidget {
           ),
           onPressed: () => Get.toNamed(TPRoute.account),
         ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: IconButton(
+              icon: Semantics(
+                label: '遊戲',
+                child: const Icon(
+                  Icons.sports_esports,
+                  size: 30,
+                ),
+              ),
+              onPressed: () => Get.toNamed(TPRoute.game),
+            ),
+          ),
+        ],
         backgroundColor: TPColors.white,
       ),
       body: const CustomScrollView(
