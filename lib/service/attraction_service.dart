@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../models/api_response.dart';
+import '../models/attraction.dart';
 
 class AttractionService {
   static const String _baseUrl =
