@@ -13,8 +13,11 @@ class _LuckyDarwWelcomePageState extends State<LuckyDarwWelcomePage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
-      appBar: TPAppBar(title: 'Lucky Draw'),
-      backgroundColor: TPColors.white,
+      appBar: TPAppBar(
+        title: '城心誠靈',
+        backgroundColor: TPColors.secondary50,
+      ),
+      backgroundColor: TPColors.secondary50,
       body: Placeholder(),
     );
   }
