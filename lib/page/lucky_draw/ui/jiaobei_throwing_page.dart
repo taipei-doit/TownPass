@@ -294,7 +294,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
         child: Column(
           children: [
             _jiaobeiAnimation,
-            const SizedBox(height: 40),
+            const SizedBox(height: 56),
             _result != null && !_isAnimating
                 ? _nextStepButton
                 : const SizedBox.shrink(),
