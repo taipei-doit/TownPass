@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -19,6 +20,8 @@ class _DrawingPageState extends State<DrawingPage>
   final _streamSubscription = <StreamSubscription<dynamic>>[];
   late final AnimationController _lottieController;
 
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
+
   @override
   void initState() {
     super.initState();
@@ -35,7 +38,7 @@ class _DrawingPageState extends State<DrawingPage>
   }
 
   void _listenShaking() {
-    const threshold = 2.0;
+    final threshold = _shakingThreshold;
 
     _streamSubscription.add(
       userAccelerometerEventStream().listen((event) {
