@@ -101,7 +101,7 @@ class _DrawingPageState extends State<DrawingPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TPAppBar(
-        title: '城心誠靈 - Draw a Stick',
+        title: '城心誠靈  |  搖一搖抽籤',
         backgroundColor: TPColors.secondary50,
       ),
       body: AnimatedLightFlowBackground(
