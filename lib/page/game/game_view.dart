@@ -465,7 +465,7 @@ class _GameViewState extends State<GameView> {
 
   void _showGameInfo() {
     final _GameStrings strings = _strings;
-    Get.dialog(
+  Get.dialog(
       AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         title: TPText(
@@ -498,6 +498,9 @@ class _GameViewState extends State<GameView> {
     final String title =
         isCorrect ? strings.resultDialogTitleCorrect : (gameOver ? strings.resultDialogTitleGameOver : strings.resultDialogTitleWrong);
     final Color accentColor = isCorrect ? TPColors.primary500 : (_lives == 0 ? TPColors.red400 : TPColors.orange500);
+
+    final PageController _pageController = PageController();
+    int _pageIndex = 0;
 
     Get.dialog(
       Dialog(
@@ -533,38 +536,85 @@ class _GameViewState extends State<GameView> {
                 ),
               ),
               Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    children: [
-                      _AttractionDetailCard(
-                        title: strings.resultDialogTargetTitle,
-                        attraction: question.target,
-                        highlight: accentColor,
+                child: StatefulBuilder(
+                  builder: (context, setState) {
+                    final List<Widget> pages = [
+                      // Target attraction page (vertically scrollable)
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            _AttractionDetailCard(
+                              title: strings.resultDialogTargetTitle,
+                              attraction: question.target,
+                              highlight: accentColor,
+                            ),
+                            const SizedBox(height: 24),
+                            // Additional spacing or future widgets can go here
+                          ],
+                        ),
                       ),
-                      const SizedBox(height: 16),
+                      // Option pages (each option occupies one vertically-scrollable page)
                       ...List.generate(
                         question.options.length,
                         (index) {
                           final GameOption option = question.options[index];
                           final bool isOptionCorrect = index == question.correctIndex;
                           final bool isSelected = index == _selectedIndex;
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 12),
-                            child: _AttractionDetailCard(
-                              title: strings.optionTitle(
-                                index + 1,
-                                isCorrect: isOptionCorrect,
-                                showSelectedTag: isSelected && !isOptionCorrect,
-                              ),
-                              attraction: option.attraction,
-                              highlight: isOptionCorrect ? TPColors.primary500 : TPColors.grayscale300,
+                          return SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                _AttractionDetailCard(
+                                  title: strings.optionTitle(
+                                    index + 1,
+                                    isCorrect: isOptionCorrect,
+                                    showSelectedTag: isSelected && !isOptionCorrect,
+                                  ),
+                                  attraction: option.attraction,
+                                  highlight: isOptionCorrect ? TPColors.primary500 : TPColors.grayscale300,
+                                ),
+                                const SizedBox(height: 24),
+                                // If the attraction has more fields to show, they can be added below
+                              ],
                             ),
                           );
                         },
                       ),
-                    ],
-                  ),
+                    ];
+
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: PageView.builder(
+                            controller: _pageController,
+                            itemCount: pages.length,
+                            onPageChanged: (p) => setState(() => _pageIndex = p),
+                            itemBuilder: (context, index) => pages[index],
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: List.generate(
+                            pages.length,
+                            (i) => Container(
+                              margin: const EdgeInsets.symmetric(horizontal: 4),
+                              width: _pageIndex == i ? 10 : 8,
+                              height: _pageIndex == i ? 10 : 8,
+                              decoration: BoxDecoration(
+                                color: _pageIndex == i ? accentColor : TPColors.grayscale300,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
+                    );
+                  },
                 ),
               ),
               Padding(
