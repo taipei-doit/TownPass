@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:nativewrappers/_internal/vm/lib/math_patch.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:get/route_manager.dart';
@@ -16,15 +18,31 @@ class DrawingPage extends StatefulWidget {
 }
 
 class _DrawingPageState extends State<DrawingPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
   late final AnimationController _lottieController;
+  late final AnimationController _floatingController;
+  late final Animation<double> _floatingAnimation;
 
   get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
 
   @override
   void initState() {
     super.initState();
+
+    // Floating animation controller
+    _floatingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+
+    _floatingAnimation = Tween<double>(
+      begin: -30.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _floatingController,
+      curve: Curves.easeInOut,
+    ));
 
     // Lottie controller
     _lottieController = AnimationController(vsync: this);
@@ -42,11 +60,10 @@ class _DrawingPageState extends State<DrawingPage>
 
     _streamSubscription.add(
       userAccelerometerEventStream().listen((event) {
-        final shook = event.x.abs() > threshold ||
-            event.y.abs() > threshold ||
-            event.z.abs() > threshold;
+        final shakingValue = sqrt(event.x * event.x + event.y * event.y);
+        final isShook = shakingValue > threshold;
 
-        if (shook) {
+        if (isShook) {
           _playAnimationOnce();
         }
       }),
@@ -61,6 +78,7 @@ class _DrawingPageState extends State<DrawingPage>
 
   void _playAnimationOnce() {
     if (!_lottieController.isAnimating) {
+      _floatingController.stop();
       _lottieController.reset();
       _lottieController.forward();
     }
@@ -69,12 +87,14 @@ class _DrawingPageState extends State<DrawingPage>
   void _navigateOnce() async {
     _unsubscribeShaking();
     await Get.toNamed('/lucky_draw/draw_result');
+    _floatingController.repeat(reverse: true);
     _listenShaking();
   }
 
   @override
   void dispose() {
     _lottieController.dispose();
+    _floatingController.dispose();
     _unsubscribeShaking();
     super.dispose();
   }
@@ -83,84 +103,76 @@ class _DrawingPageState extends State<DrawingPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const TPAppBar(
-        title: '城心誠靈 - Draw a Stick',
+        title: '城心誠靈  |  搖一搖抽籤',
         backgroundColor: TPColors.secondary50,
       ),
-      backgroundColor: TPColors.secondary50,
-      body: SafeArea(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Lottie Animation
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: GestureDetector(
-                onTap: _playAnimationOnce,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Lottie.asset(
-                    'assets/lottie_json/draw_lots.json',
-                    controller: _lottieController,
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.fill,
-                    onLoaded: (composition) {
-                      _lottieController.duration = composition.duration;
-                    },
-                  ),
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 32),
-
-            // Title
-            const Text(
-              "Shake your phone \n or tap the holder to draw",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                color: TPColors.red900,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            const Text(
-              "搖動手機或點擊籤筒來抽籤",
-              style: TextStyle(
-                fontSize: 16,
-                color: TPColors.red900,
-              ),
-            ),
-
-            const SizedBox(height: 40),
-
-            // Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _playAnimationOnce,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: TPColors.red700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                  ),
-                  child: const Text(
-                    "Draw a Stick",
-                    style: TextStyle(fontSize: 18, color: TPColors.white),
-                  ),
-                ),
-              ),
-            ),
-          ],
+      body: AnimatedLightFlowBackground(
+        backgroundColor: TPColors.secondary50,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              _lottieAnimation,
+              const SizedBox(height: 56),
+              _title,
+            ],
+          ),
         ),
       ),
     );
   }
+
+  Widget get _lottieAnimation => Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+        child: GestureDetector(
+          onTap: _playAnimationOnce,
+          child: AnimatedBuilder(
+            animation: _floatingAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(0, _floatingAnimation.value),
+                child: child,
+              );
+            },
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Lottie.asset(
+                'assets/lottie_json/draw_lots.json',
+                controller: _lottieController,
+                width: 300,
+                height: 300,
+                fit: BoxFit.fill,
+                onLoaded: (composition) {
+                  _lottieController.duration = composition.duration;
+                },
+              ),
+            ),
+          ),
+        ),
+      );
+
+  Widget get _title => const Text.rich(TextSpan(
+        style: TextStyle(
+          fontSize: 24,
+          color: TPColors.secondary700,
+        ),
+        children: [
+          TextSpan(
+            text: "搖動手機 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "或"),
+          TextSpan(
+            text: " 點擊籤筒 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "開始抽籤"),
+        ],
+      ));
 }
