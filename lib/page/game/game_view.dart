@@ -13,7 +13,6 @@ import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
 enum _GamePhase { landing, loading, playing, error }
 
 enum GameLanguage { zh, en }
@@ -153,6 +152,35 @@ class _GameCopy {
   final String finalSummaryTitle;
 }
 
+// Simple sanitizer to convert common HTML entities and tags into plain text.
+// - converts <br> to newlines
+// - decodes common entities like &nbsp;, &amp;, &lt;, &gt;, &quot;, &#39;
+// - strips any remaining HTML tags
+// - collapses repeated spaces/tabs but preserves newlines
+String _sanitizeHtml(String input) {
+  if (input.isEmpty) return input;
+  String s = input;
+
+  // Common HTML entities
+  s = s.replaceAll('&nbsp;', ' ');
+  s = s.replaceAll('&amp;', '&');
+  s = s.replaceAll('&lt;', '<');
+  s = s.replaceAll('&gt;', '>');
+  s = s.replaceAll('&quot;', '"');
+  s = s.replaceAll('&#39;', "'");
+
+  // Remove any remaining tags
+  s = s.replaceAll(RegExp(r'<[^>]*>'), '');
+
+  // Collapse multiple spaces/tabs but keep newlines intact
+  s = s.replaceAllMapped(RegExp(r'[ \t]{2,}'), (m) => ' ');
+
+  // Trim spaces at the start/end of each line and overall
+  s = s.split('\n').map((line) => line.trim()).join('\n').trim();
+
+  return s;
+}
+
 const Map<GameLanguage, _GameCopy> _localizedCopies = {
   GameLanguage.zh: _GameCopy(
     appTitle: 'Taipei Guessr',
@@ -253,11 +281,11 @@ String _resultBannerSubtitleWrongEn(String answer) => 'Correct answer: $answer';
 String _correctAnswersLabelZh(int count) => '答對：$count';
 String _correctAnswersLabelEn(int count) => 'Correct: $count';
 String _distanceLabelZh(double km) => km < 1
-    ? '距離題目：約 ${(km * 1000).round()} 公尺'
-    : '距離題目：約 ${km.toStringAsFixed(1)} 公里';
+    ? '距離：約 ${(km * 1000).round()} 公尺'
+    : '距離：約 ${km.toStringAsFixed(1)} 公里';
 String _distanceLabelEn(double km) => km < 1
-    ? 'Distance: ~ ${(km * 1000).round()} m'
-    : 'Distance: ~ ${km.toStringAsFixed(1)} km';
+    ? 'Dist.: ~ ${(km * 1000).round()} m'
+    : 'Dist.: ~ ${km.toStringAsFixed(1)} km';
 
 class GameView extends StatefulWidget {
   const GameView({super.key});
@@ -1335,7 +1363,7 @@ class _AttractionDetailCard extends StatelessWidget {
                       const SizedBox(width: 4),
                       Expanded(
                         child: TPText(
-                          attraction.address,
+                          _sanitizeHtml(attraction.address),
                           style: TPTextStyles.bodyRegular,
                           color: TPColors.grayscale600,
                         ),
@@ -1346,7 +1374,7 @@ class _AttractionDetailCard extends StatelessWidget {
                 if (attraction.description.isNotEmpty) ...[
                   const SizedBox(height: 8),
                   TPText(
-                    attraction.description,
+                    _sanitizeHtml(attraction.description),
                     style: TPTextStyles.bodyRegular,
                     color: TPColors.grayscale700,
                   ),
