@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
 class WelcomePage extends StatefulWidget {
@@ -32,10 +32,7 @@ class _WelcomePageState extends State<WelcomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Padding(

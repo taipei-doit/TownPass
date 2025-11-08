@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:lottie/lottie.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:get/route_manager.dart';
 
@@ -107,10 +107,7 @@ class _DrawingPageState extends State<DrawingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈  |  搖一搖抽籤',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(title: '搖一搖求籤'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Center(

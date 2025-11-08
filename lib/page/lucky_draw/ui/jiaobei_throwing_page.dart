@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
 enum JiaobeiResult {
@@ -285,21 +285,18 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈  |  搖一搖擲筊',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(title: '搖一搖擲筊'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Column(
           children: [
             _jiaobeiAnimation,
-            const SizedBox(height: 56),
+            const SizedBox(height: 72),
+            _instructionText,
+            const SizedBox(height: 24),
             _result != null && !_isAnimating
                 ? _nextStepButton
                 : const SizedBox.shrink(),
-            const SizedBox(height: 24),
-            _instructionText,
           ],
         ),
       ),
@@ -411,14 +408,14 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
               backgroundColor: TPColors.secondary200,
               foregroundColor: TPColors.secondary800,
               shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(16),
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
-                isSuccessful ? '前往解籤' : '返回再抽一支籤',
-                style: const TextStyle(fontSize: 24),
+                isSuccessful ? '前往解籤' : '返回重新求籤',
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ),

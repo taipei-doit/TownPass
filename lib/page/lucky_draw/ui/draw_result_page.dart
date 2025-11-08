@@ -1,8 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-
-import '../data/lot_poems.dart';
+import 'package:town_pass/page/lucky_draw/data/lot_poems.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
 class DrawResultPage extends StatefulWidget {
   final List<Map<String, String>>? poems;
@@ -31,7 +32,8 @@ class _DrawResultPageState extends State<DrawResultPage> {
     if (LotPoems.lotPoemsList.isNotEmpty) {
       final match = LotPoems.lotPoemsList.firstWhere(
         (p) => p.lot_number == drawNumber,
-        orElse: () => LotPoems.lotPoemsList[(drawNumber - 1) % LotPoems.lotPoemsList.length],
+        orElse: () => LotPoems
+            .lotPoemsList[(drawNumber - 1) % LotPoems.lotPoemsList.length],
       );
       drawItem = _mapFromLotPoems(match);
       return;
@@ -56,8 +58,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
     final grades = ['上上籤', '上籤', '中籤', '下籤'];
     final grade = grades[n % grades.length];
     final title = '第$n籤';
-    final poem =
-        '（籤詩 $n）花開今已結果，富貴榮華終到老，\n君子小人相會合，萬事清吉莫煩惱。';
+    final poem = '（籤詩 $n）花開今已結果，富貴榮華終到老，\n君子小人相會合，萬事清吉莫煩惱。';
     final shengYi = '聖意：此籤第 $n 節錄的詳解，可在此顯示具體聖意說明。';
     final guide = '指引：對應第 $n 節的建議與提醒。';
 
@@ -73,110 +74,116 @@ class _DrawResultPageState extends State<DrawResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3EB),
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// --- TOP CARD ---
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.all(20),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFF2EAD4),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            drawItem['title'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: Color(0xFF7A6A54),
-                            ),
-                          ),
-                          const SizedBox(height: 6),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFD6C1A3),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              drawItem['grade'] ?? '',
+      appBar: const LuckyDrawAppBar(title: '解籤'),
+      backgroundColor: TPColors.secondary50,
+      body: Column(
+        children: [
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// --- TOP CARD ---
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: TPColors.secondary200,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              drawItem['title'] ?? '',
                               style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                color: TPColors.secondary800,
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          Text(
-                            drawItem['poem'] ?? '',
-                            style: const TextStyle(
-                              fontSize: 20,
-                              height: 1.6,
-                              color: Color(0xFF4D3A2A),
+                            const SizedBox(width: 12),
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 4,
+                              ),
+                              decoration: BoxDecoration(
+                                color: TPColors.secondary700,
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: Text(
+                                drawItem['grade'] ?? '',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                ),
+                              ),
                             ),
-                          )
-                        ],
-                      ),
-                    ),
-
-                    const SizedBox(height: 24),
-
-                    /// --- TABS ---
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _buildTabButton("解籤", 0),
-                        _buildTabButton("白話文", 1),
-                        _buildTabButton("指引", 2),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        Text(
+                          drawItem['poem'] ?? '',
+                          style: const TextStyle(
+                            fontSize: 18,
+                            height: 1.6,
+                            color: TPColors.secondary800,
+                          ),
+                        )
                       ],
                     ),
+                  ),
 
-                    const SizedBox(height: 20),
+                  const SizedBox(height: 24),
 
-                    /// --- TAB CONTENT ---
-                    _buildTabContent(),
-                  ],
+                  /// --- TABS ---
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      _buildTabButton("解籤", 0),
+                      _buildTabButton("白話文", 1),
+                      _buildTabButton("指引", 2),
+                    ],
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  /// --- TAB CONTENT ---
+                  _buildTabContent(),
+                ],
+              ),
+            ),
+          ),
+
+          /// Bottom button
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            child: SizedBox(
+              width: double.infinity,
+              child: TextButton(
+                onPressed: () => Get.toNamed('/lucky_draw/attractions'),
+                style: TextButton.styleFrom(
+                  backgroundColor: TPColors.secondary200,
+                  foregroundColor: TPColors.secondary800,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Text(
+                    '前往宮廟進香參拜',
+                    style: TextStyle(fontSize: 16),
+                  ),
                 ),
               ),
             ),
-
-            /// Bottom button
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.toNamed('/lucky_draw/attractions');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFD6A565),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  child: const Text(
-                    "解籤",
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
-                ),
-              ),
-            )
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -190,15 +197,15 @@ class _DrawResultPageState extends State<DrawResultPage> {
         setState(() => selectedTab = index);
       },
       child: Padding(
-        padding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         child: Column(
           children: [
             Text(
               label,
               style: TextStyle(
                 fontSize: 16,
-                color: isSelected ? const Color(0xFFB07A3F) : Colors.grey,
+                color:
+                    isSelected ? TPColors.secondary700 : TPColors.grayscale400,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
               ),
             ),
@@ -208,7 +215,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
               width: isSelected ? 40 : 0,
               height: 3,
               decoration: BoxDecoration(
-                color: const Color(0xFFB07A3F),
+                color: TPColors.secondary700,
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -235,7 +242,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
       style: const TextStyle(
         fontSize: 16,
         height: 1.6,
-        color: Color(0xFF4D3A2A),
+        color: TPColors.secondary900,
       ),
     );
   }
@@ -246,7 +253,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
       style: const TextStyle(
         fontSize: 16,
         height: 1.6,
-        color: Color(0xFF4D3A2A),
+        color: TPColors.secondary900,
       ),
     );
   }
@@ -257,7 +264,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
       style: const TextStyle(
         fontSize: 16,
         height: 1.6,
-        color: Color(0xFF4D3A2A),
+        color: TPColors.secondary900,
       ),
     );
   }
