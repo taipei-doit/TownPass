@@ -58,6 +58,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.8
   lottie: ^3.3.1
+  http: ^1.1.0
 
 dev_dependencies:
   build_runner: ^2.4.12
@@ -97,7 +98,6 @@ flutter:
     - assets/image/
     - assets/svg/
     - assets/image/lots.png
-    - assets/lottie_json/draw_lots.json
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
