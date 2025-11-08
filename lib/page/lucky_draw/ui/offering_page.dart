@@ -70,6 +70,16 @@ class _OfferingPageState extends State<OfferingPage> {
                       ),
                       child: Stack(
                         children: [
+                          // 供桌图片作为底层
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: Image.asset(
+                              'assets/image/offering_table.png',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
                           if (_offeredItems.isEmpty)
                             const Center(
                               child: Text(
