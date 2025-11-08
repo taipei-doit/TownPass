@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:nativewrappers/_internal/vm/lib/math_patch.dart';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -59,9 +60,10 @@ class _DrawingPageState extends State<DrawingPage>
 
     _streamSubscription.add(
       userAccelerometerEventStream().listen((event) {
-        final shook = event.x.abs() > threshold || event.y.abs() > threshold;
+        final shakingValue = sqrt(event.x * event.x + event.y * event.y);
+        final isShook = shakingValue > threshold;
 
-        if (shook) {
+        if (isShook) {
           _playAnimationOnce();
         }
       }),
