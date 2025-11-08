@@ -1,71 +1,87 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart' show rootBundle;
 
 class Temple {
+  final int id;
+  final String city;
+  final String district;
   final String name;
-  final String address;
+  final String attribute;
+  final String merit;
+  final double latitude;
+  final double longitude;
+  final String imageUrl;
   final String introduction;
-  final String? officialSite;
-  final List<String> images;
 
   Temple({
+    required this.id,
+    required this.city,
+    required this.district,
     required this.name,
-    required this.address,
+    required this.attribute,
+    required this.merit,
+    required this.latitude,
+    required this.longitude,
+    required this.imageUrl,
     required this.introduction,
-    this.officialSite,
-    required this.images,
   });
+
+  factory Temple.fromJson(Map<String, dynamic> json) {
+    return Temple(
+      id: json['編號'] ?? 0,
+      city: json['縣市'] ?? '',
+      district: json['區別'] ?? '',
+      name: json['temple_name'] ?? '',
+      attribute: json['團體屬性'] ?? '',
+      merit: json['績優項目'] ?? '',
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
+      imageUrl: json['src'] ?? '',
+      introduction: json['intro'] ?? '',
+    );
+  }
 }
 
-class TemplePage extends StatelessWidget {
+class TemplePage extends StatefulWidget {
   const TemplePage({super.key});
 
+  @override
+  State<TemplePage> createState() => _TemplePageState();
+}
+
+class _TemplePageState extends State<TemplePage> {
+  late Future<List<Temple>> templesFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    templesFuture = _loadTemples();
+  }
+
   Future<List<Temple>> _loadTemples() async {
-    return [
-      Temple(
-        name: 'Longshan Temple',
-        address: 'No. 211, Guangzhou St, Wanhua District, Taipei',
-        introduction:
-            'Built in 1738, Longshan Temple is one of Taiwan’s most famous temples, dedicated to the Buddhist Goddess of Mercy, Guanyin.',
-        officialSite: 'https://english.lungshan.org.tw/',
-        images: [
-          'https://upload.wikimedia.org/wikipedia/commons/6/6e/Lungshan_Temple_Taipei_2016.jpg'
-        ],
-      ),
-      Temple(
-        name: 'Baoan Temple',
-        address: 'No. 61, Hami St, Datong District, Taipei',
-        introduction:
-            'A Taoist temple dedicated to Baosheng Dadi, the God of Medicine, known for its exquisite wood carvings and cultural heritage.',
-        officialSite: 'https://www.baoan.org.tw/',
-        images: [
-          'https://upload.wikimedia.org/wikipedia/commons/d/d8/Taipei_Baoan_Temple_main_entrance_20160709.jpg'
-        ],
-      ),
-      Temple(
-        name: 'Confucius Temple',
-        address: 'No. 275, Dalong St, Datong District, Taipei',
-        introduction:
-            'Built in 1925, this Confucian temple showcases Southern Fujian architectural style and honors Confucius, the great Chinese philosopher.',
-        officialSite: 'https://temple.gov.taipei/',
-        images: [],
-      ),
-    ];
+    final String jsonString = await rootBundle.loadString('assets/temple.json');
+    final List<dynamic> jsonData = json.decode(jsonString);
+
+    final temples = jsonData.map((item) => Temple.fromJson(item)).toList();
+
+
+    return temples;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Famous Temples in Taiwan')),
+      appBar: AppBar(title: const Text('Temple List')),
       body: FutureBuilder<List<Temple>>(
-        future: _loadTemples(),
+        future: templesFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return const Center(child: Text('No temples found.'));
+            return const Center(child: Text('No data found.'));
           }
 
           final temples = snapshot.data!;
@@ -74,100 +90,91 @@ class TemplePage extends StatelessWidget {
             itemCount: temples.length,
             itemBuilder: (context, index) {
               final temple = temples[index];
-              final coverImage =
-                  temple.images.isNotEmpty ? temple.images.first : null;
 
               return Card(
                 margin: const EdgeInsets.all(10),
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15)),
+                  borderRadius: BorderRadius.circular(15),
+                ),
                 elevation: 5,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (_) => AlertDialog(
-                            title: Text(temple.name),
-                            content: SingleChildScrollView(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(temple.introduction),
-                                  const SizedBox(height: 10),
-                                  if (temple.officialSite != null &&
-                                      temple.officialSite!.isNotEmpty)
-                                    GestureDetector(
-                                      onTap: () async {
-                                        final url =
-                                            Uri.parse(temple.officialSite!);
-                                        if (await canLaunchUrl(url)) {
-                                          await launchUrl(url);
-                                        }
-                                      },
-                                      child: const Text(
-                                        'Official Website',
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          decoration: TextDecoration.underline,
-                                        ),
-                                      ),
-                                    ),
-                                ],
+                child: InkWell(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) => AlertDialog(
+                        title: Text(temple.name),
+                        content: SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${temple.city} ${temple.district}",
+                                style: const TextStyle(color: Colors.grey),
                               ),
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Close'),
-                              ),
+                              const SizedBox(height: 8),
+                              const SizedBox(height: 8),
+                              if (temple.introduction.isNotEmpty)
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 10),
+                                  child: Text(temple.introduction),
+                                ),
                             ],
                           ),
-                        );
-                      },
-                      child: ClipRRect(
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.pop(context),
+                            child: const Text('Close'),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
                         borderRadius: const BorderRadius.only(
                           topLeft: Radius.circular(15),
                           topRight: Radius.circular(15),
                         ),
-                        child: coverImage != null
+                        child: temple.imageUrl.isNotEmpty
                             ? Image.network(
-                                coverImage,
+                                temple.imageUrl,
                                 height: 200,
                                 width: double.infinity,
                                 fit: BoxFit.cover,
                               )
                             : Container(
                                 height: 200,
-                                width: double.infinity,
                                 color: Colors.grey[300],
-                                child: const Center(child: Text('No Image')),
+                                child: const Center(
+                                  child: Text('No Image'),
+                                ),
                               ),
                       ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            temple.name,
-                            style: const TextStyle(
-                                fontSize: 18, fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            temple.address,
-                            style: const TextStyle(
-                                fontSize: 14, color: Colors.grey),
-                          ),
-                        ],
+                      Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              temple.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${temple.city} ${temple.district}",
+                              style: const TextStyle(color: Colors.grey),
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               );
             },
