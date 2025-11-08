@@ -16,15 +16,31 @@ class DrawingPage extends StatefulWidget {
 }
 
 class _DrawingPageState extends State<DrawingPage>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
   late final AnimationController _lottieController;
+  late final AnimationController _floatingController;
+  late final Animation<double> _floatingAnimation;
 
   get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
 
   @override
   void initState() {
     super.initState();
+
+    // Floating animation controller
+    _floatingController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 2000),
+    )..repeat(reverse: true);
+
+    _floatingAnimation = Tween<double>(
+      begin: -30.0,
+      end: 0.0,
+    ).animate(CurvedAnimation(
+      parent: _floatingController,
+      curve: Curves.easeInOut,
+    ));
 
     // Lottie controller
     _lottieController = AnimationController(vsync: this);
@@ -61,6 +77,7 @@ class _DrawingPageState extends State<DrawingPage>
 
   void _playAnimationOnce() {
     if (!_lottieController.isAnimating) {
+      _floatingController.stop();
       _lottieController.reset();
       _lottieController.forward();
     }
@@ -69,12 +86,14 @@ class _DrawingPageState extends State<DrawingPage>
   void _navigateOnce() async {
     _unsubscribeShaking();
     await Get.toNamed('/lucky_draw/draw_result');
+    _floatingController.repeat(reverse: true);
     _listenShaking();
   }
 
   @override
   void dispose() {
     _lottieController.dispose();
+    _floatingController.dispose();
     _unsubscribeShaking();
     super.dispose();
   }
@@ -96,17 +115,26 @@ class _DrawingPageState extends State<DrawingPage>
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: GestureDetector(
                 onTap: _playAnimationOnce,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: Lottie.asset(
-                    'assets/lottie_json/draw_lots.json',
-                    controller: _lottieController,
-                    width: 300,
-                    height: 300,
-                    fit: BoxFit.fill,
-                    onLoaded: (composition) {
-                      _lottieController.duration = composition.duration;
-                    },
+                child: AnimatedBuilder(
+                  animation: _floatingAnimation,
+                  builder: (context, child) {
+                    return Transform.translate(
+                      offset: Offset(0, _floatingAnimation.value),
+                      child: child,
+                    );
+                  },
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: Lottie.asset(
+                      'assets/lottie_json/draw_lots.json',
+                      controller: _lottieController,
+                      width: 300,
+                      height: 300,
+                      fit: BoxFit.fill,
+                      onLoaded: (composition) {
+                        _lottieController.duration = composition.duration;
+                      },
+                    ),
                   ),
                 ),
               ),
