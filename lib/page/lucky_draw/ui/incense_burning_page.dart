@@ -1,7 +1,12 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart'; // 如果你使用 GetX 進行導航
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:sensors_plus/sensors_plus.dart';
+
 
 class IncenseBurningPage extends StatefulWidget {
   const IncenseBurningPage({super.key});
@@ -12,16 +17,33 @@ class IncenseBurningPage extends StatefulWidget {
 
 class _IncenseBurningPageState extends State<IncenseBurningPage>
     with SingleTickerProviderStateMixin {
+  final _streamSubscription = <StreamSubscription<dynamic>>[];
+
   // 狀態變數
   bool _incenseInserted = false; // 紀錄香是否已插入 (用於切換香爐圖片)
   bool _isAnimating = false; // 判斷是否正在動畫中，避免重複點擊
   bool _handIsFolding = false; // 紀錄手部是否已切換為雙手合十
   bool _isAnimationSequenceCompleted = false; // 紀錄整個動畫序列是否已完成 (手已回到初始位置)
 
+
   // 動畫相關
   late AnimationController _animationController;
   late Animation<Offset> _handMovementAnimation; // 手的移動動畫
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
+  void _listenShaking() {
+    final threshold = _shakingThreshold;
 
+    _streamSubscription.add(
+      userAccelerometerEventStream().listen((event) {
+        final shakingValue = event.z.abs();
+        final isShook = shakingValue > threshold;
+
+        if (isShook) {
+          _onActionButtonPressed();
+        }
+      }),
+    );
+  }
   @override
   void initState() {
     super.initState();
