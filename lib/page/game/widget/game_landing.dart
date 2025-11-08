@@ -59,17 +59,17 @@ class GameLanding extends StatelessWidget {
             children: const [
               _LandingBullet(
                 icon: Icons.lightbulb_outline,
-                text: '讀取線索，觀察描述細節',
+                text: '觀察上方景點，回想所在區域',
               ),
               SizedBox(height: 12),
               _LandingBullet(
                 icon: Icons.map_outlined,
-                text: '從提示區域推敲實際地點',
+                text: '推敲下方四圖，判斷相對位置',
               ),
               SizedBox(height: 12),
               _LandingBullet(
                 icon: Icons.touch_app_outlined,
-                text: '選擇答案，立即知道結果',
+                text: '選出最近鄰居，考驗你對臺北的認識',
               ),
             ],
           ),
