@@ -1,54 +1,17 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
-import 'package:town_pass/util/tp_colors.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
-class LuckyDarwWelcomePage extends StatefulWidget {
-  const LuckyDarwWelcomePage({super.key});
+class LuckyDrawDrawingPage extends StatefulWidget {
+  const LuckyDrawDrawingPage({super.key});
 
   @override
-  State<LuckyDarwWelcomePage> createState() => _LuckyDarwWelcomePageState();
+  State<LuckyDrawDrawingPage> createState() => _LuckyDrawDrawingPageState();
 }
 
-class _LuckyDarwWelcomePageState extends State<LuckyDarwWelcomePage> {
-  final _streamSubscription = <StreamSubscription<dynamic>>[];
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    for (final subscription in _streamSubscription) {
-      subscription.cancel();
-    }
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: TPAppBar(
-        title: '城心誠靈',
-        backgroundColor: TPColors.secondary50,
-      ),
-      backgroundColor: TPColors.secondary50,
-      body: _LuckyDrawPage(),
-    );
-  }
-}
-
-class _LuckyDrawPage extends StatefulWidget {
-  const _LuckyDrawPage({super.key});
-
-  @override
-  State<_LuckyDrawPage> createState() => _LuckyDrawPageState();
-}
-
-class _LuckyDrawPageState extends State<_LuckyDrawPage> {
+class _LuckyDrawDrawingPageState extends State<LuckyDrawDrawingPage> {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
 
   @override
@@ -91,7 +54,7 @@ class _LuckyDrawPageState extends State<_LuckyDrawPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF7F3EB), // light beige background
+      backgroundColor: TPColors.secondary50,
       body: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -173,7 +136,7 @@ class _LuckyDrawPageState extends State<_LuckyDrawPage> {
 }
 
 class _StickResultPage extends StatefulWidget {
-  const _StickResultPage({super.key});
+  const _StickResultPage();
 
   @override
   State<_StickResultPage> createState() => _StickResultPageState();
@@ -293,42 +256,43 @@ class _StickResultPageState extends State<_StickResultPage> {
     );
   }
 
- Widget _buildTabButton(String label, int index) {
-  bool isSelected = selectedTab == index;
+  Widget _buildTabButton(String label, int index) {
+    bool isSelected = selectedTab == index;
 
-  return GestureDetector(
-    behavior: HitTestBehavior.translucent,  // ✅ catches taps even outside child
-    onTap: () {
-      setState(() => selectedTab = index);
-    },
-    child: Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12), // ✅ bigger hitbox
-      child: Column(
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 16,
-              color: isSelected ? const Color(0xFFB07A3F) : Colors.grey,
-              fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+    return GestureDetector(
+      behavior:
+          HitTestBehavior.translucent, // ✅ catches taps even outside child
+      onTap: () {
+        setState(() => selectedTab = index);
+      },
+      child: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 16, vertical: 12), // ✅ bigger hitbox
+        child: Column(
+          children: [
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 16,
+                color: isSelected ? const Color(0xFFB07A3F) : Colors.grey,
+                fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+              ),
             ),
-          ),
-          const SizedBox(height: 6),
-          AnimatedContainer(
-            duration: const Duration(milliseconds: 200),
-            width: isSelected ? 40 : 0,
-            height: 3,
-            decoration: BoxDecoration(
-              color: const Color(0xFFB07A3F),
-              borderRadius: BorderRadius.circular(2),
+            const SizedBox(height: 6),
+            AnimatedContainer(
+              duration: const Duration(milliseconds: 200),
+              width: isSelected ? 40 : 0,
+              height: 3,
+              decoration: BoxDecoration(
+                color: const Color(0xFFB07A3F),
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
-    ),
-  );
-}
-
+    );
+  }
 
   /// --- TAB CONTENT BASED ON SELECTED TAB ---
   Widget _buildTabContent() {
