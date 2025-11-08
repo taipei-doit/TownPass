@@ -1,15 +1,74 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
 
+import '../data/lot_poems.dart';
+
 class DrawResultPage extends StatefulWidget {
-  const DrawResultPage();
+  final List<Map<String, String>>? poems;
+  const DrawResultPage({super.key, this.poems});
 
   @override
   State<DrawResultPage> createState() => _DrawResultPageState();
 }
 
 class _DrawResultPageState extends State<DrawResultPage> {
-  int selectedTab = 0; // 0 = 解籤, 1 = 聖意, 2 = 指引
+  int selectedTab = 0; // 0 = 白話文, 1 = 解籤, 2 = 指引
+
+  late int drawNumber;
+  late Map<String, String> drawItem;
+
+  @override
+  void initState() {
+    super.initState();
+    _pickRandomDraw();
+  }
+
+  void _pickRandomDraw() {
+    final rnd = Random();
+    drawNumber = rnd.nextInt(60) + 1; // 1..60
+
+    if (LotPoems.lotPoemsList.isNotEmpty) {
+      final match = LotPoems.lotPoemsList.firstWhere(
+        (p) => p.lot_number == drawNumber,
+        orElse: () => LotPoems.lotPoemsList[(drawNumber - 1) % LotPoems.lotPoemsList.length],
+      );
+      drawItem = _mapFromLotPoems(match);
+      return;
+    }
+
+    // fallback
+    drawItem = _generateDrawItem(drawNumber);
+  }
+
+  Map<String, String> _mapFromLotPoems(LotPoems p) {
+    return {
+      'title': '第${p.lot_number}籤 ${p.sexagenary_cycle}',
+      'grade': p.overall_score,
+      'poem': p.oracle_poetry,
+      'white_text': p.modern_white_text,
+      'shengyi': p.core_interpretation,
+      'guide': p.action_advice,
+    };
+  }
+
+  Map<String, String> _generateDrawItem(int n) {
+    final grades = ['上上籤', '上籤', '中籤', '下籤'];
+    final grade = grades[n % grades.length];
+    final title = '第$n籤';
+    final poem =
+        '（籤詩 $n）花開今已結果，富貴榮華終到老，\n君子小人相會合，萬事清吉莫煩惱。';
+    final shengYi = '聖意：此籤第 $n 節錄的詳解，可在此顯示具體聖意說明。';
+    final guide = '指引：對應第 $n 節的建議與提醒。';
+
+    return {
+      'title': title,
+      'grade': grade,
+      'poem': poem,
+      'shengyi': shengYi,
+      'guide': guide,
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,9 +95,9 @@ class _DrawResultPageState extends State<DrawResultPage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text(
-                            "第十五籤",
-                            style: TextStyle(
+                          Text(
+                            drawItem['title'] ?? '',
+                            style: const TextStyle(
                               fontSize: 14,
                               color: Color(0xFF7A6A54),
                             ),
@@ -51,18 +110,18 @@ class _DrawResultPageState extends State<DrawResultPage> {
                               color: const Color(0xFFD6C1A3),
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Text(
-                              "上上籤",
-                              style: TextStyle(
+                            child: Text(
+                              drawItem['grade'] ?? '',
+                              style: const TextStyle(
                                 color: Colors.white,
                                 fontSize: 12,
                               ),
                             ),
                           ),
                           const SizedBox(height: 14),
-                          const Text(
-                            "花開今已結果，富貴榮華終到老，\n君子小人相會合，萬事清吉莫煩惱。",
-                            style: TextStyle(
+                          Text(
+                            drawItem['poem'] ?? '',
+                            style: const TextStyle(
                               fontSize: 20,
                               height: 1.6,
                               color: Color(0xFF4D3A2A),
@@ -78,8 +137,8 @@ class _DrawResultPageState extends State<DrawResultPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _buildTabButton("解籤", 0),
-                        _buildTabButton("聖意", 1),
+                        _buildTabButton("白話文", 0),
+                        _buildTabButton("解籤", 1),
                         _buildTabButton("指引", 2),
                       ],
                     ),
@@ -171,14 +230,9 @@ class _DrawResultPageState extends State<DrawResultPage> {
   }
 
   Widget _buildExplanationText() {
-    return const Text(
-      "此籤寓意著努力已有成果，未來將會富貴榮華、安享晚年。不論是君子或小人，"
-      "都能和睦相處，所有事情都會順利解決，不必過於煩惱。\n\n"
-      "這是一個充滿希望和肯定的預示，表示過去的辛勞和付出即將開花結果。生活將進入"
-      "一個穩定、富足且和諧的階段。人際關係方面，無論是益友還是普通交往的人，都能夠"
-      "和睦共處，這將為您的事業和生活帶來極大的便利和順遂。總體而言，這是一個極佳的徵兆，"
-      "鼓勵您放下憂慮，以積極樂觀的心態迎接美好的未來。",
-      style: TextStyle(
+    return Text(
+      drawItem['white_text'] ?? '',
+      style: const TextStyle(
         fontSize: 16,
         height: 1.6,
         color: Color(0xFF4D3A2A),
@@ -187,9 +241,9 @@ class _DrawResultPageState extends State<DrawResultPage> {
   }
 
   Widget _buildShengYiText() {
-    return const Text(
-      "聖意內容可放在這裡 — 依照你的資料填入。",
-      style: TextStyle(
+    return Text(
+      drawItem['shengyi'] ?? '',
+      style: const TextStyle(
         fontSize: 16,
         height: 1.6,
         color: Color(0xFF4D3A2A),
@@ -198,9 +252,9 @@ class _DrawResultPageState extends State<DrawResultPage> {
   }
 
   Widget _buildGuideText() {
-    return const Text(
-      "指引內容可放在這裡 — 依照你的資料填入。",
-      style: TextStyle(
+    return Text(
+      drawItem['guide'] ?? '',
+      style: const TextStyle(
         fontSize: 16,
         height: 1.6,
         color: Color(0xFF4D3A2A),
