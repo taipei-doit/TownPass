@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
+import 'package:get/instance_manager.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
@@ -289,168 +291,196 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
       ),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                _jiaobeiAnimation,
-                // 預留結果顯示的固定空間，避免佈局偏移
-                SizedBox(
-                  height: 140,
-                  child: _result != null && !_isAnimating
-                      ? _jiaobeiResultInfo
-                      : const SizedBox.shrink(),
-                ),
-                // 擲筊按鈕
-                Container(
-                  margin: const EdgeInsets.all(24),
-                  width: double.infinity,
-                  height: 56,
-                  child: ElevatedButton(
-                    onPressed: _isAnimating ? null : _throwJiaobei,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: TPColors.secondary500,
-                      disabledBackgroundColor: TPColors.secondary300,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(28),
-                      ),
-                      elevation: 4,
-                    ),
-                    child: Text(
-                      _isAnimating ? '擲筊中...' : '擲筊',
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            _jiaobeiAnimation,
+            const SizedBox(height: 40),
+            _result != null && !_isAnimating
+                ? _nextStepButton
+                : const SizedBox.shrink(),
+            const SizedBox(height: 24),
+            _instructionText,
           ],
         ),
       ),
     );
   }
 
-  Widget get _jiaobeiAnimation => Expanded(
-        child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              // 左邊筊杯
-              _isAnimating
-                  ? AnimatedBuilder(
-                      animation: _leftController,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(
-                            _leftHorizontalPosition.value,
-                            _leftVerticalPosition.value,
-                          ),
-                          child: Transform.scale(
-                            scale: _leftScale.value,
-                            child: Transform.rotate(
-                              angle: _leftRotation.value,
-                              child: SvgPicture.asset(
-                                _isThrowingLeft
-                                    ? 'assets/svg/jiaobei/pos_left.svg'
-                                    : 'assets/svg/jiaobei/neg_left.svg',
-                                width: 100,
-                                height: 100,
+  Widget get _jiaobeiAnimation => Column(children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 300),
+          child: GestureDetector(
+            onTap: _throwJiaobei,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 左邊筊杯
+                _isAnimating
+                    ? AnimatedBuilder(
+                        animation: _leftController,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              _leftHorizontalPosition.value,
+                              _leftVerticalPosition.value,
+                            ),
+                            child: Transform.scale(
+                              scale: _leftScale.value,
+                              child: Transform.rotate(
+                                angle: _leftRotation.value,
+                                child: SvgPicture.asset(
+                                  _isThrowingLeft
+                                      ? 'assets/svg/jiaobei/pos_left.svg'
+                                      : 'assets/svg/jiaobei/neg_left.svg',
+                                  width: 100,
+                                  height: 100,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  : Transform.rotate(
-                      angle: _leftFinalRotation,
-                      child: SvgPicture.asset(
-                        _isThrowingLeft
-                            ? 'assets/svg/jiaobei/pos_left.svg'
-                            : 'assets/svg/jiaobei/neg_left.svg',
-                        width: 100,
-                        height: 100,
+                          );
+                        },
+                      )
+                    : Transform.rotate(
+                        angle: _leftFinalRotation,
+                        child: SvgPicture.asset(
+                          _isThrowingLeft
+                              ? 'assets/svg/jiaobei/pos_left.svg'
+                              : 'assets/svg/jiaobei/neg_left.svg',
+                          width: 100,
+                          height: 100,
+                        ),
                       ),
-                    ),
-              const SizedBox(width: 12),
-              // 右邊筊杯
-              _isAnimating
-                  ? AnimatedBuilder(
-                      animation: _rightController,
-                      builder: (context, child) {
-                        return Transform.translate(
-                          offset: Offset(
-                            _rightHorizontalPosition.value,
-                            _rightVerticalPosition.value,
-                          ),
-                          child: Transform.scale(
-                            scale: _rightScale.value,
-                            child: Transform.rotate(
-                              angle: _rightRotation.value,
-                              child: SvgPicture.asset(
-                                _isThrowingRight
-                                    ? 'assets/svg/jiaobei/pos_right.svg'
-                                    : 'assets/svg/jiaobei/neg_right.svg',
-                                width: 100,
-                                height: 100,
+                const SizedBox(width: 12),
+                // 右邊筊杯
+                _isAnimating
+                    ? AnimatedBuilder(
+                        animation: _rightController,
+                        builder: (context, child) {
+                          return Transform.translate(
+                            offset: Offset(
+                              _rightHorizontalPosition.value,
+                              _rightVerticalPosition.value,
+                            ),
+                            child: Transform.scale(
+                              scale: _rightScale.value,
+                              child: Transform.rotate(
+                                angle: _rightRotation.value,
+                                child: SvgPicture.asset(
+                                  _isThrowingRight
+                                      ? 'assets/svg/jiaobei/pos_right.svg'
+                                      : 'assets/svg/jiaobei/neg_right.svg',
+                                  width: 100,
+                                  height: 100,
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    )
-                  : Transform.rotate(
-                      angle: _rightFinalRotation,
-                      child: SvgPicture.asset(
-                        _isThrowingRight
-                            ? 'assets/svg/jiaobei/pos_right.svg'
-                            : 'assets/svg/jiaobei/neg_right.svg',
-                        width: 100,
-                        height: 100,
+                          );
+                        },
+                      )
+                    : Transform.rotate(
+                        angle: _rightFinalRotation,
+                        child: SvgPicture.asset(
+                          _isThrowingRight
+                              ? 'assets/svg/jiaobei/pos_right.svg'
+                              : 'assets/svg/jiaobei/neg_right.svg',
+                          width: 100,
+                          height: 100,
+                        ),
                       ),
-                    ),
-            ],
+              ],
+            ),
           ),
         ),
-      );
+      ]);
 
-  Widget get _jiaobeiResultInfo => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Colors.white.withAlpha(230),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withAlpha(25),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
+  Widget get _nextStepButton {
+    if (_result == null) {
+      return const SizedBox.shrink();
+    }
+
+    final isSuccessful = _result == JiaobeiResult.shengJiao;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      child: Row(children: [
+        Expanded(
+          child: TextButton(
+            onPressed: isSuccessful
+                ? () => Get.offAndToNamed('/lucky_draw/draw_result')
+                : () => Get.back(),
+            style: TextButton.styleFrom(
+              backgroundColor: TPColors.secondary200,
+              foregroundColor: TPColors.secondary800,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
             ),
-          ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              child: Text(
+                isSuccessful ? '前往解籤' : '返回再抽一支籤',
+                style: const TextStyle(fontSize: 24),
+              ),
+            ),
+          ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              _getResultText(),
-              style: const TextStyle(
-                fontSize: 32,
-                fontWeight: FontWeight.bold,
-                color: TPColors.secondary800,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _getResultDescription(),
-              style: const TextStyle(
-                fontSize: 16,
-                color: TPColors.secondary600,
-              ),
-            ),
-          ],
+      ]),
+    );
+  }
+
+  Widget get _instructionText {
+    if (_isAnimating) {
+      return const Text(
+        '擲筊中...',
+        style: TextStyle(
+          fontSize: 24,
+          fontWeight: FontWeight.bold,
+          color: TPColors.secondary800,
         ),
       );
+    }
+
+    if (_result != null) {
+      return Text.rich(TextSpan(
+        style: const TextStyle(
+          fontSize: 24,
+          color: TPColors.secondary700,
+        ),
+        children: [
+          TextSpan(
+            text: _getResultText(),
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: '  ${_getResultDescription()}'),
+        ],
+      ));
+    }
+
+    return const Text.rich(TextSpan(
+      style: TextStyle(
+        fontSize: 24,
+        color: TPColors.secondary700,
+      ),
+      children: [
+        TextSpan(
+          text: "搖動手機 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
+          ),
+        ),
+        TextSpan(text: "或"),
+        TextSpan(
+          text: " 點擊筊杯 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
+          ),
+        ),
+        TextSpan(text: "開始擲筊"),
+      ],
+    ));
+  }
 }
