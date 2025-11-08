@@ -18,7 +18,6 @@ class Attraction {
   final String address;
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
-    final String? nameZh = _asString(json['name_zh']);
     final String? name = _asString(json['name']);
     final List<dynamic>? images = json['images'] as List<dynamic>?;
     final Map<String, dynamic>? firstImage =
@@ -30,13 +29,13 @@ class Attraction {
     final double? lon = _asNum(json['elong'])?.toDouble();
     final String? imageUrl = _asString(firstImage?['src']);
 
-    if (lat == null || lon == null || imageUrl == null || (nameZh ?? name) == null) {
+    if (lat == null || lon == null || imageUrl == null || name == null) {
       throw const FormatException('Attraction data missing required fields');
     }
 
     return Attraction(
       id: (json['id'] ?? '').toString(),
-      displayName: nameZh?.isNotEmpty == true ? nameZh! : name!,
+      displayName: name.replaceAll('_', ' '),
       latitude: lat,
       longitude: lon,
       imageUrl: imageUrl,
