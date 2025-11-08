@@ -34,9 +34,8 @@ class _GameViewState extends State<GameView> {
   String? _errorMessage;
 
   @override
-  void dispose() {
-    _service.dispose();
-    super.dispose();
+  void initState(){
+    super.initState();
     _bgmPlayer = AudioPlayer();
     _startBgm();
     // Log player state changes to help debug emulator audio issues
@@ -46,6 +45,12 @@ class _GameViewState extends State<GameView> {
     _bgmPlayer.onPlayerComplete.listen((_) {
       debugPrint('BGM playback completed');
     });
+  }
+
+  @override
+  void dispose() {
+    _service.dispose();
+    super.dispose();
   }
 
   Future<void> _startBgm() async {
