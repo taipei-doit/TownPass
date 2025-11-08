@@ -458,29 +458,32 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
       ));
     }
 
-    return const Text.rich(TextSpan(
-      style: TextStyle(
-        fontSize: 24,
-        color: TPColors.secondary700,
+    return const Text.rich(
+      TextSpan(
+        style: TextStyle(
+          fontSize: 24,
+          color: TPColors.secondary700,
+        ),
+        children: [
+          TextSpan(
+            text: "搖動手機 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "或"),
+          TextSpan(
+            text: " 點擊筊杯 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "開始擲筊\n向神明請示此籤是否為您所求"),
+        ],
       ),
-      children: [
-        TextSpan(
-          text: "搖動手機 ",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: TPColors.secondary800,
-          ),
-        ),
-        TextSpan(text: "或"),
-        TextSpan(
-          text: " 點擊筊杯 ",
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: TPColors.secondary800,
-          ),
-        ),
-        TextSpan(text: "開始擲筊"),
-      ],
-    ));
+      textAlign: TextAlign.center,
+    );
   }
 }
