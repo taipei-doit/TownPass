@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:get/route_manager.dart';
 
 class DrawingPage extends StatefulWidget {
   const DrawingPage({super.key});
@@ -68,9 +69,6 @@ class _DrawingPageState extends State<DrawingPage> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 24.0),
               child: GestureDetector(
-                onTap: () {
-                  // TODO: handle tap
-                },
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
@@ -240,7 +238,7 @@ class _StickResultPageState extends State<_StickResultPage> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    Navigator.pop(context);
+                    Get.toNamed('/lucky_draw/welcome');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD6A565),
