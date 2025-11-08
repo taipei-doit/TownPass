@@ -5,14 +5,16 @@ import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 
 class LuckyDrawAppBar extends TPAppBar {
-  const LuckyDrawAppBar({super.key, String? title});
+  const LuckyDrawAppBar({super.key, this.subtitle});
 
-  final String mainTitle = '城心誠靈';
+  final String? subtitle;
+
+  final String _mainTitle = '城心誠靈';
 
   @override
   Widget build(BuildContext context) => TPAppBar(
         key: key,
-        title: title != null ? '$mainTitle  |  $title' : mainTitle,
+        title: subtitle != null ? '$_mainTitle  |  $subtitle' : _mainTitle,
         backgroundColor: TPColors.secondary50,
         actions: [
           IconButton(

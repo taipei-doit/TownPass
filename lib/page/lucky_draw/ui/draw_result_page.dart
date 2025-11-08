@@ -74,7 +74,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '解籤'),
+      appBar: const LuckyDrawAppBar(subtitle: '解籤'),
       backgroundColor: TPColors.secondary50,
       body: Column(
         children: [

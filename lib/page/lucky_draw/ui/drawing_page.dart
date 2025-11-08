@@ -107,7 +107,7 @@ class _DrawingPageState extends State<DrawingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '搖一搖求籤'),
+      appBar: const LuckyDrawAppBar(subtitle: '搖一搖求籤'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Center(

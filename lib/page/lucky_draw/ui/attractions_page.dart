@@ -28,7 +28,7 @@ class AttractionListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '推薦宮廟及附近景點'),
+      appBar: const LuckyDrawAppBar(subtitle: '推薦宮廟及附近景點'),
       backgroundColor: TPColors.secondary50,
       body: FutureBuilder<ApiResponse>(
         future: _loadAttractions(), // fetch with GPS

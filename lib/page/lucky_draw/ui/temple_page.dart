@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 
 class Temple {
   final int id;
@@ -65,14 +66,13 @@ class _TemplePageState extends State<TemplePage> {
 
     final temples = jsonData.map((item) => Temple.fromJson(item)).toList();
 
-
     return temples;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Temple List')),
+      appBar: const LuckyDrawAppBar(subtitle: '雲端寺廟'),
       body: FutureBuilder<List<Temple>>(
         future: templesFuture,
         builder: (context, snapshot) {

@@ -106,7 +106,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '誠心奉香'),
+      appBar: const LuckyDrawAppBar(subtitle: '誠心奉香'),
       backgroundColor: TPColors.secondary50,
       body: SafeArea(
         child: Column(
