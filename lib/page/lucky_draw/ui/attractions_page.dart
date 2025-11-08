@@ -6,6 +6,7 @@ import 'package:town_pass/service/geo_locator_service.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
+import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:shimmer/shimmer.dart';
@@ -28,9 +29,21 @@ class AttractionListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
+      appBar: TPAppBar(
         title: '城心誠靈  |  推薦宮廟及附近景點',
         backgroundColor: TPColors.secondary50,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Navigate back to main view and ensure the service tab (index 0) is selected.
+              Get.offAllNamed(TPRoute.main, arguments: 0);
+            },
+            icon: const Icon(
+              Icons.close,
+              size: 20,
+            ),
+          )
+        ],
       ),
       backgroundColor: TPColors.secondary50,
       body: FutureBuilder<ApiResponse>(
