@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:lottie/lottie.dart';
+import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:get/route_manager.dart';
@@ -105,44 +106,46 @@ class _DrawingPageState extends State<DrawingPage>
         title: '城心誠靈 - Draw a Stick',
         backgroundColor: TPColors.secondary50,
       ),
-      backgroundColor: TPColors.secondary50,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Lottie Animation
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: GestureDetector(
-                onTap: _playAnimationOnce,
-                child: AnimatedBuilder(
-                  animation: _floatingAnimation,
-                  builder: (context, child) {
-                    return Transform.translate(
-                      offset: Offset(0, _floatingAnimation.value),
-                      child: child,
-                    );
-                  },
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Lottie.asset(
-                      'assets/lottie_json/draw_lots.json',
-                      controller: _lottieController,
-                      width: 300,
-                      height: 300,
-                      fit: BoxFit.fill,
-                      onLoaded: (composition) {
-                        _lottieController.duration = composition.duration;
-                      },
+      body: AnimatedLightFlowBackground(
+        backgroundColor: TPColors.secondary50,
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Lottie Animation
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: GestureDetector(
+                  onTap: _playAnimationOnce,
+                  child: AnimatedBuilder(
+                    animation: _floatingAnimation,
+                    builder: (context, child) {
+                      return Transform.translate(
+                        offset: Offset(0, _floatingAnimation.value),
+                        child: child,
+                      );
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Lottie.asset(
+                        'assets/lottie_json/draw_lots.json',
+                        controller: _lottieController,
+                        width: 300,
+                        height: 300,
+                        fit: BoxFit.fill,
+                        onLoaded: (composition) {
+                          _lottieController.duration = composition.duration;
+                        },
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 56),
-            _title,
-          ],
+              const SizedBox(height: 56),
+              _title,
+            ],
+          ),
         ),
       ),
     );
