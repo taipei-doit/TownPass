@@ -158,10 +158,10 @@ const Map<GameLanguage, _GameCopy> _localizedCopies = {
     appTitle: 'Taipei Guessr',
     backSemantics: '返回上一頁',
     infoButtonSemantics: '遊戲介紹',
-    infoDialogTitle: 'Taipei Guessr 遊戲說明',
+    infoDialogTitle: '遊戲說明',
     infoDialogBody:
         '遊戲開始後會出現一張景點圖片，並告訴你該景點的名稱。\n你的任務：從四張圖片中挑出實際距離最接近該景點的位置。'
-        '\n\n每局擁有三條命，答錯會扣一條命；命用完就得重新開始。',
+        '\n每局擁有三條命，答錯會扣一條命；命用完就得重新開始。',
     infoDialogConfirm: '了解',
     loadingError: '載入題目時發生問題，請稍後再試。',
     livesLabel: '剩餘生命',
@@ -201,10 +201,10 @@ const Map<GameLanguage, _GameCopy> _localizedCopies = {
     appTitle: 'Taipei Guessr',
     backSemantics: 'Go back',
     infoButtonSemantics: 'How to play',
-    infoDialogTitle: 'Taipei Guessr - How to Play',
+    infoDialogTitle: 'How to Play',
     infoDialogBody:
         'Each round shows a landmark photo along with its name.\nYour mission: pick the option that is physically closest to it.'
-        '\n\nYou have three lives per session. Every wrong guess costs one life; lose them all and the game restarts.',
+        '\nYou have three lives per session. Every wrong guess costs one life; lose them all and the game restarts.',
     infoDialogConfirm: 'Got it',
     loadingError: 'We could not load the next question. Please try again later.',
     livesLabel: 'Lives left',
@@ -613,7 +613,7 @@ class _GameViewState extends State<GameView> {
                               title: strings.resultDialogTargetTitle,
                               attraction: question.target,
                               highlight: accentColor,
-                              distanceLabel: strings.distanceToTargetLabel(0),
+                              distanceLabel: null,
                             ),
                             const SizedBox(height: 24),
                             // Additional spacing or future widgets can go here
