@@ -98,6 +98,7 @@ flutter:
     - assets/mock_data/
     - assets/image/
     - assets/svg/
+    - assets/svg/jiaobei/
     - assets/image/lots.png
     - assets/lottie_json/
     - assets/coords.csv
