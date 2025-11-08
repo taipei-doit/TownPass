@@ -17,7 +17,7 @@ import 'package:town_pass/page/feedback/feedback_view_controller.dart';
 import 'package:town_pass/page/invoice_receipt/invoice_receipt_view.dart';
 import 'package:town_pass/page/language/language_view.dart';
 import 'package:town_pass/page/language/language_view_controller.dart';
-import 'package:town_pass/page/lucky_draw/ui/lucky_darw_welcome_page.dart';
+import 'package:town_pass/page/lucky_draw/lucky_draw_route.dart';
 import 'package:town_pass/page/main/main_view.dart';
 import 'package:town_pass/page/main/main_view_controller.dart';
 import 'package:town_pass/page/message/message_view.dart';
@@ -59,7 +59,7 @@ abstract class TPRoute {
   static const String settingStartPage = '/setting_start_page';
   static const String subscription = '/subscription';
   static const String suspendAccount = '/suspend_account';
-  static const String luckyDraw = '/lucky_draw';
+  static const String luckyDrawWelcome = '/lucky_draw';
   static const String webView = '/web_view';
 
   static final List<GetPage> page = [
@@ -188,10 +188,7 @@ abstract class TPRoute {
       name: activityDetail,
       page: () => const ActivityDetailView(),
     ),
-    GetPage(
-      name: luckyDraw,
-      page: () => const LuckyDarwWelcomePage(),
-    ),
+    LuckyDrawRoute.getPage,
   ];
 
   static Future openUri({required String uri, String? forceTitle}) async {
