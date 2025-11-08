@@ -1,4 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
@@ -23,6 +25,7 @@ class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
 
   _GamePhase _phase = _GamePhase.landing;
+  late final AudioPlayer _bgmPlayer;
   GameQuestion? _currentQuestion;
   int _lives = 3;
   bool _hasGuessed = false;
@@ -34,6 +37,37 @@ class _GameViewState extends State<GameView> {
   void dispose() {
     _service.dispose();
     super.dispose();
+    _bgmPlayer = AudioPlayer();
+    _startBgm();
+    // Log player state changes to help debug emulator audio issues
+    _bgmPlayer.onPlayerStateChanged.listen((state) {
+      debugPrint('BGM player state: $state');
+    });
+    _bgmPlayer.onPlayerComplete.listen((_) {
+      debugPrint('BGM playback completed');
+    });
+  }
+
+  Future<void> _startBgm() async {
+    try {
+      // Quick check: try loading the asset bytes to ensure it's packaged
+      try {
+        final data = await rootBundle.load('audio/bgm.mp3');
+        debugPrint('BGM asset loaded, size=${data.lengthInBytes} bytes');
+      } catch (err) {
+        debugPrint('BGM asset load failed: $err');
+      }
+      // Loop the background music
+      await _bgmPlayer.setReleaseMode(ReleaseMode.loop);
+  // Play asset. Path must match pubspec asset entry (no leading slash).
+  // The asset is declared as `lib/page/game/audio/` in pubspec.yaml
+      debugPrint('Attempting to play BGM asset...');
+      await _bgmPlayer.play(AssetSource('audio/bgm.mp3'), volume: 0.6);
+      debugPrint('BGM play() awaited without exception');
+    } catch (e) {
+      // ignore audio errors silently for now
+      debugPrint('BGM play error: $e');
+    }
   }
 
   @override
@@ -202,6 +236,53 @@ class _GameViewState extends State<GameView> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    _bgmPlayer.dispose();
+    super.dispose();
+  }
+
+  static const List<_GeoLocation> _locations = [
+    _GeoLocation(
+      name: '台北101',
+      district: '信義區',
+      clue: '在高空觀景台就能欣賞整個信義計畫區夜景，附近緊鄰市府與百貨商圈。',
+      options: ['台北101', '士林官邸', '大稻埕碼頭'],
+    ),
+    _GeoLocation(
+      name: '大稻埕碼頭',
+      district: '大同區',
+      clue: '沿著淡水河畔騎車欣賞夕陽，附近有貨櫃市集與復古商店。',
+      options: ['西門紅樓', '大稻埕碼頭', '松山文創園區'],
+    ),
+    _GeoLocation(
+      name: '貓空纜車',
+      district: '文山區',
+      clue: '透明車廂讓你俯瞰茶園，終點可以品茶看夜景。',
+      options: ['象山步道', '貓空纜車', '北投溫泉'],
+    ),
+    _GeoLocation(
+      name: '北投溫泉博物館',
+      district: '北投區',
+      clue: '洋式紅磚建築改建而成的溫泉展館，周邊瀰漫著硫磺氣味。',
+      options: ['北投溫泉博物館', '剝皮寮老街', '松菸誠品'],
+    ),
+  ];
+}
+
+class _GeoLocation {
+  const _GeoLocation({
+    required this.name,
+    required this.district,
+    required this.clue,
+    required this.options,
+  });
+
+  final String name;
+  final String district;
+  final String clue;
+  final List<String> options;
 }
 
 class _GameBoard extends StatelessWidget {
