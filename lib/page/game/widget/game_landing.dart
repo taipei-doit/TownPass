@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
 
 class GameLanding extends StatelessWidget {
   const GameLanding({
@@ -27,7 +26,6 @@ class GameLanding extends StatelessWidget {
   Widget build(BuildContext context) {
     final int currentHour = DateTime.now().hour;
     final String backgroundAssetPath = _backgroundAssetPathForHour(currentHour);
-    final Color overlayColor = _overlayColorForHour(currentHour);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -38,7 +36,6 @@ class GameLanding extends StatelessWidget {
               image: DecorationImage(
                 image: AssetImage(backgroundAssetPath),
                 fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(overlayColor, BlendMode.srcOver),
               ),
               borderRadius: BorderRadius.circular(20),
             ),
@@ -135,15 +132,6 @@ class GameLanding extends StatelessWidget {
       return 'lib/page/game/image/evening.jpg';
     }
     return 'lib/page/game/image/night.jpg';
-  }
-
-  Color _overlayColorForHour(int hour) {
-    if (hour >= 6 && hour < 16) {
-      return Colors.black.withOpacity(0.15);
-    } else if (hour >= 16 && hour < 20) {
-      return const Color(0xAA111827);
-    }
-    return const Color(0xCC050914);
   }
 }
 
