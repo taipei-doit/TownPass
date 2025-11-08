@@ -101,7 +101,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
                 height: 52,
                 child: ElevatedButton(
                   onPressed: () {
-                    Get.toNamed('/lucky_draw/welcome');
+                    Get.toNamed('/lucky_draw/attractions');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFFD6A565),
