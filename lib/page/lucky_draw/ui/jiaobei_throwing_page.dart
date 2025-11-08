@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:get/instance_manager.dart';
 import 'package:town_pass/page/lucky_draw/ui/animated_light_flow_background.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
 enum JiaobeiResult {
@@ -285,10 +285,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈  |  搖一搖擲筊',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(title: '搖一搖擲筊'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Column(

@@ -1,10 +1,9 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:get/route_manager.dart';
-import 'package:town_pass/util/tp_app_bar.dart';
+import 'package:town_pass/page/lucky_draw/data/lot_poems.dart';
+import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
-
-import '../data/lot_poems.dart';
 
 class DrawResultPage extends StatefulWidget {
   final List<Map<String, String>>? poems;
@@ -75,10 +74,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const TPAppBar(
-        title: '城心誠靈  |  解籤',
-        backgroundColor: TPColors.secondary50,
-      ),
+      appBar: const LuckyDrawAppBar(title: '解籤'),
       backgroundColor: TPColors.secondary50,
       body: Column(
         children: [
