@@ -1,49 +1,13 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:town_pass/models/attraction.dart';
+import 'package:town_pass/page/lucky_draw/data/temple.dart';
 import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
+import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
-
-class Temple {
-  final int id;
-  final String city;
-  final String district;
-  final String name;
-  final String attribute;
-  final String merit;
-  final double latitude;
-  final double longitude;
-  final String imageUrl;
-  final String introduction;
-
-  Temple({
-    required this.id,
-    required this.city,
-    required this.district,
-    required this.name,
-    required this.attribute,
-    required this.merit,
-    required this.latitude,
-    required this.longitude,
-    required this.imageUrl,
-    required this.introduction,
-  });
-
-  factory Temple.fromJson(Map<String, dynamic> json) {
-    return Temple(
-      id: json['編號'] ?? 0,
-      city: json['縣市'] ?? '',
-      district: json['區別'] ?? '',
-      name: json['temple_name'] ?? '',
-      attribute: json['團體屬性'] ?? '',
-      merit: json['績優項目'] ?? '',
-      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
-      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
-      imageUrl: json['src'] ?? '',
-      introduction: json['intro'] ?? '',
-    );
-  }
-}
+import 'package:town_pass/util/tp_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TemplePage extends StatefulWidget {
   const TemplePage({super.key});
@@ -113,6 +77,18 @@ class _TemplePageState extends State<TemplePage> {
         ),
         child: InkWell(
           onTap: () {
+            // showModalBottomSheet(
+            //   context: context,
+            //   isScrollControlled: true,
+            //   isDismissible: true,
+            //   backgroundColor: TPColors.white,
+            //   shape: const RoundedRectangleBorder(
+            //     borderRadius: BorderRadius.vertical(
+            //       top: Radius.circular(24),
+            //     ),
+            //   ),
+            //   builder: (_) => _bottomSheet(temple),
+            // );
             showDialog(
               context: context,
               builder: (context) => _templeInfoDialog(context, temple),
@@ -205,4 +181,66 @@ class _TemplePageState extends State<TemplePage> {
       ],
     );
   }
+
+  Widget _bottomSheet(Attraction attraction) => DraggableScrollableSheet(
+      expand: false,
+      initialChildSize: 0.5, // 初始高度
+      minChildSize: 0.3, // 最小高度
+      maxChildSize: 0.9, // 最大高度
+      builder: (context, scrollController) {
+        return SingleChildScrollView(
+          controller: scrollController,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Center(
+                  child: Container(
+                    width: 50,
+                    height: 5,
+                    margin: const EdgeInsets.only(bottom: 12),
+                    decoration: BoxDecoration(
+                      color: TPColors.grayscale300,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: TPText(
+                    attraction.name,
+                    style: const TPTextStyles(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                TPText(attraction.address),
+                const SizedBox(height: 16),
+                TPText(
+                  attraction.introduction,
+                  style: const TPTextStyles(fontSize: 16),
+                ),
+                const SizedBox(height: 24),
+                Center(
+                  child: TPButton(
+                    text: '前往查看詳情',
+                    onPressed: () async {
+                      final uri = Uri.parse(attraction.url);
+                      if (await canLaunchUrl(uri)) {
+                        await launchUrl(uri,
+                            mode: LaunchMode.externalApplication);
+                      }
+                    },
+                  ),
+                ),
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
+        );
+      },
+    );
 }
