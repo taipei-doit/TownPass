@@ -165,7 +165,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
             child: SizedBox(
               width: double.infinity,
               child: TextButton(
-                onPressed: () => Get.toNamed('/lucky_draw/attractions'),
+                onPressed: () => Get.toNamed('/lucky_draw/random_temple'),
                 style: TextButton.styleFrom(
                   backgroundColor: TPColors.secondary200,
                   foregroundColor: TPColors.secondary800,
