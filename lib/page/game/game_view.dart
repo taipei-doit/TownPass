@@ -10,8 +10,7 @@ import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
-import 'package:town_pass/util/tp_text_styles.dart';
-import 'dart:math'
+import 'dart:math';
 
 enum _GamePhase { landing, loading, playing, error }
 
@@ -21,7 +20,7 @@ class GameView extends StatefulWidget {
   @override
   State<GameView> createState() => _GameViewState();
 }
-
+// class _GameViewState extends State<GameView> with WidgetsBindingObserver {
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
   final Random _random = Random();
@@ -29,9 +28,11 @@ class _GameViewState extends State<GameView> {
   int _currentIndex = 0;
   bool _hasGuessed = false;
   bool _isCorrectGuess = false;
-  String? _selectedOption;
-
   _GamePhase _phase = _GamePhase.landing;
+  GameQuestion? _currentQuestion;
+  int _lives = 3;
+  int? _selectedIndex;
+  String? _errorMessage;
   
   @override
   void initState() {
@@ -50,6 +51,11 @@ class _GameViewState extends State<GameView> {
 
   @override
   void dispose() {
+    // stop and dispose bgm player when the view is disposed
+    try {
+      _bgmPlayer.stop();
+      _bgmPlayer.dispose();
+    } catch (_) {}
     _service.dispose();
     super.dispose();
   }
