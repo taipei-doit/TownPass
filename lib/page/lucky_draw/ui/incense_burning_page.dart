@@ -80,12 +80,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
           _isAnimating = false; // 動畫結束
           _isAnimationSequenceCompleted = true; // 標記整個動畫序列已完成
         });
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('誠心奉香儀式已完成！'),
-            backgroundColor: Colors.blueGrey,
-          ),
-        );
       }
     });
   }
@@ -100,13 +94,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
       });
       _animationController.forward(); // 啟動手部移動動畫
     } else {
-      // 動畫已完成，現在按鈕是「完成並返回」，點擊後離開頁面
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('功德圓滿，返回上一頁。'),
-          backgroundColor: Colors.green,
-        ),
-      );
       Get.offAllNamed('/lucky_draw/welcome');
     }
   }
