@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import '../models/attraction.dart';
+import 'package:town_pass/models/attraction.dart';
 
 class AttractionService {
   static const String _baseUrl =
