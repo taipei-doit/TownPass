@@ -31,7 +31,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
 
     if (LotPoems.lotPoemsList.isNotEmpty) {
       final match = LotPoems.lotPoemsList.firstWhere(
-        (p) => p.lot_number == drawNumber,
+        (p) => p.lotNumber == drawNumber,
         orElse: () => LotPoems
             .lotPoemsList[(drawNumber - 1) % LotPoems.lotPoemsList.length],
       );
@@ -45,12 +45,12 @@ class _DrawResultPageState extends State<DrawResultPage> {
 
   Map<String, String> _mapFromLotPoems(LotPoems p) {
     return {
-      'title': '第${p.lot_number}籤 ${p.sexagenary_cycle}',
-      'grade': p.overall_score,
-      'poem': p.oracle_poetry,
-      'white_text': p.modern_white_text,
-      'explanation': p.core_interpretation,
-      'guide': p.action_advice,
+      'title': '第${p.lotNumber}籤 ${p.sexagenaryCycle}',
+      'grade': p.overallScore,
+      'poem': p.oraclePoetry,
+      'white_text': p.modernWhiteText,
+      'explanation': p.coreInterpretation,
+      'guide': p.actionAdvice,
     };
   }
 
@@ -74,7 +74,7 @@ class _DrawResultPageState extends State<DrawResultPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '解籤'),
+      appBar: const LuckyDrawAppBar(subtitle: '解籤'),
       backgroundColor: TPColors.secondary50,
       body: Column(
         children: [

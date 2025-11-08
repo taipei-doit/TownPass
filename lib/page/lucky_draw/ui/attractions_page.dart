@@ -28,7 +28,7 @@ class AttractionListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '推薦宮廟及附近景點'),
+      appBar: const LuckyDrawAppBar(subtitle: '推薦宮廟及附近景點'),
       backgroundColor: TPColors.secondary50,
       body: FutureBuilder<ApiResponse>(
         future: _loadAttractions(), // fetch with GPS
@@ -226,16 +226,17 @@ class AttractionListPage extends StatelessWidget {
               context: context,
               isScrollControlled: true, // 可以全屏高度
               isDismissible: true, // 點背景或向下滑都會關閉
-              backgroundColor: Colors.white,
+              backgroundColor: TPColors.white,
               shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(24),
+                ),
               ),
-              builder: (_) => _buildBottomSheet(attraction),
+              builder: (_) => _bottomSheet(attraction),
             );
           });
 
-  Widget _buildBottomSheet(Attraction attraction) {
-    return DraggableScrollableSheet(
+  Widget _bottomSheet(Attraction attraction) => DraggableScrollableSheet(
       expand: false,
       initialChildSize: 0.5, // 初始高度
       minChildSize: 0.3, // 最小高度
@@ -296,5 +297,4 @@ class AttractionListPage extends StatelessWidget {
         );
       },
     );
-  }
 }

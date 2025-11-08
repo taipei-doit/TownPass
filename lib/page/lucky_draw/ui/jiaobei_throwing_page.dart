@@ -318,7 +318,7 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const LuckyDrawAppBar(title: '搖一搖擲筊'),
+      appBar: const LuckyDrawAppBar(subtitle: '搖一搖擲筊'),
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Column(
