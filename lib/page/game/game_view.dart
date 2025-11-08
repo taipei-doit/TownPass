@@ -1,12 +1,16 @@
-import 'dart:math';
-
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/page/game/model/game_question.dart';
+import 'package:town_pass/page/game/service/attraction_service.dart';
 import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
+import 'package:town_pass/util/tp_text_styles.dart';
+
+enum _GamePhase { landing, loading, playing, error }
 
 class GameView extends StatefulWidget {
   const GameView({super.key});
@@ -16,22 +20,55 @@ class GameView extends StatefulWidget {
 }
 
 class _GameViewState extends State<GameView> {
-  final Random _random = Random();
-  int _currentIndex = 0;
-  bool _hasStartedGame = false;
+  final AttractionService _service = AttractionService();
+
+  _GamePhase _phase = _GamePhase.landing;
+  GameQuestion? _currentQuestion;
+  int _lives = 3;
   bool _hasGuessed = false;
-  bool _isCorrect = false;
-  String? _selectedOption;
+  bool _isCorrectGuess = false;
+  int? _selectedIndex;
+  String? _errorMessage;
 
   @override
-  void initState() {
-    super.initState();
-    _currentIndex = _random.nextInt(_locations.length);
+  void dispose() {
+    _service.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final _GeoLocation current = _locations[_currentIndex];
+    Widget child;
+    switch (_phase) {
+      case _GamePhase.landing:
+        child = GameLanding(onStart: _startGame);
+        break;
+      case _GamePhase.loading:
+        child = const Center(child: CircularProgressIndicator());
+        break;
+      case _GamePhase.error:
+        child = _ErrorState(
+          message: _errorMessage ?? '載入題目時發生問題，請稍後再試。',
+          onRetry: () => _loadNextQuestion(),
+        );
+        break;
+      case _GamePhase.playing:
+        if (_currentQuestion == null) {
+          child = const Center(child: CircularProgressIndicator());
+        } else {
+          child = _GameBoard(
+            question: _currentQuestion!,
+            lives: _lives,
+            hasGuessed: _hasGuessed,
+            isCorrect: _isCorrectGuess,
+            selectedIndex: _selectedIndex,
+            onOptionTap: _handleOptionSelected,
+            onNext: _handleNextPressed,
+          );
+        }
+        break;
+    }
+
     return Scaffold(
       backgroundColor: TPColors.white,
       appBar: TPAppBar(
@@ -45,7 +82,7 @@ class _GameViewState extends State<GameView> {
           onPressed: () => Get.back<void>(),
         ),
         actions: [
-          if (_hasStartedGame)
+          if (_phase == _GamePhase.playing)
             IconButton(
               icon: Semantics(
                 label: '遊戲介紹',
@@ -63,45 +100,78 @@ class _GameViewState extends State<GameView> {
       ),
       body: Padding(
         padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
-        child: _hasStartedGame
-            ? _GameBoard(
-                current: current,
-                hasGuessed: _hasGuessed,
-                isCorrect: _isCorrect,
-                selectedOption: _selectedOption,
-                onOptionSelected: _onOptionSelected,
-                onNextRound: _nextRound,
-              )
-            : GameLanding(onStart: _startGame),
+        child: child,
       ),
     );
   }
 
   void _startGame() {
-    setState(() {
-      _hasStartedGame = true;
-    });
+    _loadNextQuestion(resetLives: true);
   }
 
-  void _onOptionSelected(String option) {
-    if (_hasGuessed) {
+  Future<void> _loadNextQuestion({bool resetLives = false}) async {
+    if (resetLives) {
+      _lives = 3;
+    }
+    setState(() {
+      _phase = _GamePhase.loading;
+      _currentQuestion = null;
+      _hasGuessed = false;
+      _selectedIndex = null;
+      _isCorrectGuess = false;
+      _errorMessage = null;
+    });
+
+    try {
+      final GameQuestion question = await _service.fetchQuestion();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _currentQuestion = question;
+        _phase = _GamePhase.playing;
+      });
+    } catch (e) {
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _errorMessage = e.toString();
+        _phase = _GamePhase.error;
+      });
+    }
+  }
+
+  void _handleOptionSelected(int index) {
+    if (_phase != _GamePhase.playing || _hasGuessed || _currentQuestion == null) {
       return;
     }
-    final bool correct = option == _locations[_currentIndex].name;
+    final bool isCorrect = index == _currentQuestion!.correctIndex;
     setState(() {
-      _selectedOption = option;
+      _selectedIndex = index;
       _hasGuessed = true;
-      _isCorrect = correct;
+      _isCorrectGuess = isCorrect;
+      if (!isCorrect) {
+        _lives = (_lives - 1).clamp(0, 3);
+      }
     });
   }
 
-  void _nextRound() {
-    setState(() {
-      _currentIndex = _random.nextInt(_locations.length);
-      _selectedOption = null;
-      _hasGuessed = false;
-      _isCorrect = false;
-    });
+  void _handleNextPressed() {
+    if (!_hasGuessed) {
+      return;
+    }
+    if (_lives == 0) {
+      setState(() {
+        _phase = _GamePhase.landing;
+        _currentQuestion = null;
+        _hasGuessed = false;
+        _selectedIndex = null;
+        _isCorrectGuess = false;
+      });
+    } else {
+      _loadNextQuestion();
+    }
   }
 
   void _showGameInfo() {
@@ -114,7 +184,8 @@ class _GameViewState extends State<GameView> {
           color: TPColors.grayscale900,
         ),
         content: const TPText(
-          '遊戲會顯示一張臺北景點的圖片。\n你的任務是從下方四張圖片中，判斷哪一個景點的「實際地理位置」與上方景點最為接近。\n點擊你認為最接近的答案，看看你對台北了解多少！\n',
+          '遊戲開始後會出現一張景點圖片，並告訴你該景點的名稱。\n你的任務：從四張圖片中挑出實際距離最接近該景點的位置。'
+          '\n\n每局擁有三條命，答錯會扣一條命；命用完就得重新開始。',
           color: TPColors.grayscale700,
         ),
         actionsPadding: const EdgeInsets.only(right: 12, bottom: 8),
@@ -122,7 +193,7 @@ class _GameViewState extends State<GameView> {
           TextButton(
             onPressed: () => Get.back<void>(),
             child: const TPText(
-              '開始玩',
+              '了解',
               style: TPTextStyles.h3SemiBold,
               color: TPColors.primary500,
             ),
@@ -131,114 +202,74 @@ class _GameViewState extends State<GameView> {
       ),
     );
   }
-
-  static const List<_GeoLocation> _locations = [
-    _GeoLocation(
-      name: '台北101',
-      district: '信義區',
-      clue: '在高空觀景台就能欣賞整個信義計畫區夜景，附近緊鄰市府與百貨商圈。',
-      options: ['台北101', '士林官邸', '大稻埕碼頭'],
-    ),
-    _GeoLocation(
-      name: '大稻埕碼頭',
-      district: '大同區',
-      clue: '沿著淡水河畔騎車欣賞夕陽，附近有貨櫃市集與復古商店。',
-      options: ['西門紅樓', '大稻埕碼頭', '松山文創園區'],
-    ),
-    _GeoLocation(
-      name: '貓空纜車',
-      district: '文山區',
-      clue: '透明車廂讓你俯瞰茶園，終點可以品茶看夜景。',
-      options: ['象山步道', '貓空纜車', '北投溫泉'],
-    ),
-    _GeoLocation(
-      name: '北投溫泉博物館',
-      district: '北投區',
-      clue: '洋式紅磚建築改建而成的溫泉展館，周邊瀰漫著硫磺氣味。',
-      options: ['北投溫泉博物館', '剝皮寮老街', '松菸誠品'],
-    ),
-  ];
-}
-
-class _GeoLocation {
-  const _GeoLocation({
-    required this.name,
-    required this.district,
-    required this.clue,
-    required this.options,
-  });
-
-  final String name;
-  final String district;
-  final String clue;
-  final List<String> options;
 }
 
 class _GameBoard extends StatelessWidget {
   const _GameBoard({
-    required this.current,
+    required this.question,
+    required this.lives,
     required this.hasGuessed,
     required this.isCorrect,
-    required this.selectedOption,
-    required this.onOptionSelected,
-    required this.onNextRound,
+    required this.selectedIndex,
+    required this.onOptionTap,
+    required this.onNext,
   });
 
-  final _GeoLocation current;
+  final GameQuestion question;
+  final int lives;
   final bool hasGuessed;
   final bool isCorrect;
-  final String? selectedOption;
-  final void Function(String option) onOptionSelected;
-  final VoidCallback onNextRound;
+  final int? selectedIndex;
+  final void Function(int index) onOptionTap;
+  final VoidCallback onNext;
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _GeoGuessPreview(location: current),
-        const SizedBox(height: 16),
-        _GameClue(location: current),
-        const SizedBox(height: 24),
-        TPText(
-          '猜你在哪裡？',
-          style: TPTextStyles.h3SemiBold,
-          color: TPColors.grayscale900,
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 12,
-          runSpacing: 12,
-          children: current.options
-              .map(
-                (option) => _GuessChip(
-                  label: option,
-                  selected: selectedOption == option,
-                  disabled: hasGuessed,
-                  isCorrectOption: option == current.name,
-                  showResult: hasGuessed,
-                  onTap: () => onOptionSelected(option),
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _LivesIndicator(lives: lives),
+                const SizedBox(height: 16),
+                _QuestionCard(question: question),
+                const SizedBox(height: 16),
+                TPText(
+                  '哪個景點離 ${question.target.displayName} 最近？',
+                  style: TPTextStyles.h3SemiBold,
+                  color: TPColors.grayscale900,
                 ),
-              )
-              .toList(),
-        ),
-        const SizedBox(height: 24),
-        if (hasGuessed)
-          _ResultBanner(
-            isCorrect: isCorrect,
-            correctAnswer: current.name,
+                const SizedBox(height: 12),
+                _OptionGrid(
+                  question: question,
+                  hasGuessed: hasGuessed,
+                  selectedIndex: selectedIndex,
+                  onTap: onOptionTap,
+                ),
+                const SizedBox(height: 24),
+                if (hasGuessed)
+                  _ResultBanner(
+                    question: question,
+                    isCorrect: isCorrect,
+                    livesRemaining: lives,
+                  ),
+              ],
+            ),
           ),
-        const Spacer(),
+        ),
+        const SizedBox(height: 16),
         SizedBox(
           height: 48,
           child: ElevatedButton(
-            onPressed: hasGuessed ? onNextRound : null,
+            onPressed: hasGuessed ? onNext : null,
             style: ElevatedButton.styleFrom(
               backgroundColor: TPColors.primary500,
               disabledBackgroundColor: TPColors.grayscale200,
             ),
             child: TPText(
-              hasGuessed ? '換一個地點' : '先選擇一個地點',
+              lives == 0 ? '重新開始' : '下一題',
               style: TPTextStyles.h3SemiBold,
               color: TPColors.white,
             ),
@@ -249,91 +280,86 @@ class _GameBoard extends StatelessWidget {
   }
 }
 
-class _GeoGuessPreview extends StatelessWidget {
-  const _GeoGuessPreview({required this.location});
+class _LivesIndicator extends StatelessWidget {
+  const _LivesIndicator({required this.lives});
 
-  final _GeoLocation location;
+  final int lives;
 
   @override
   Widget build(BuildContext context) {
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-          gradient: const LinearGradient(
-            colors: [Color(0xFF16374F), Color(0xFF0D1F2C)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
+    return Row(
+      children: [
+        const TPText(
+          '剩餘生命',
+          style: TPTextStyles.h3SemiBold,
+          color: TPColors.grayscale900,
+        ),
+        const SizedBox(width: 12),
+        ...List.generate(
+          3,
+          (index) => Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Icon(
+              index < lives ? Icons.favorite : Icons.favorite_border,
+              color: index < lives ? TPColors.red400 : TPColors.grayscale300,
+            ),
           ),
         ),
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: Opacity(
-                opacity: 0.1,
-                child: Assets.svg.iconMunicipalNavigation.svg(),
-              ),
+      ],
+    );
+  }
+}
+
+class _QuestionCard extends StatelessWidget {
+  const _QuestionCard({required this.question});
+
+  final GameQuestion question;
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Stack(
+        children: [
+          AspectRatio(
+            aspectRatio: 16 / 9,
+            child: CachedNetworkImage(
+              imageUrl: question.target.imageUrl,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(color: TPColors.grayscale100),
+              errorWidget: (_, __, ___) => const ColoredBox(color: TPColors.grayscale200),
             ),
-            Center(
+          ),
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: 0,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.bottomCenter,
+                  end: Alignment.topCenter,
+                  colors: [Color(0xCC000000), Color(0x00000000)],
+                ),
+              ),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.explore, color: TPColors.white, size: 48),
-                  const SizedBox(height: 12),
                   TPText(
-                    location.district,
-                    style: TPTextStyles.h3SemiBold,
+                    question.target.displayName,
+                    style: TPTextStyles.h2SemiBold,
                     color: TPColors.white,
                   ),
                   const SizedBox(height: 4),
                   const TPText(
-                    '猜猜這是哪個地點',
+                    '挑戰：找出距離最近的景點',
                     style: TPTextStyles.bodyRegular,
                     color: TPColors.white,
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _GameClue extends StatelessWidget {
-  const _GameClue({required this.location});
-
-  final _GeoLocation location;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: TPColors.grayscale50,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.lightbulb_outline, color: TPColors.primary500),
-              SizedBox(width: 8),
-              TPText(
-                '線索',
-                style: TPTextStyles.h3SemiBold,
-                color: TPColors.grayscale900,
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          TPText(
-            location.clue,
-            style: TPTextStyles.bodyRegular,
-            color: TPColors.grayscale700,
           ),
         ],
       ),
@@ -341,59 +367,97 @@ class _GameClue extends StatelessWidget {
   }
 }
 
-class _GuessChip extends StatelessWidget {
-  const _GuessChip({
-    required this.label,
-    required this.selected,
-    required this.disabled,
-    required this.isCorrectOption,
+class _OptionGrid extends StatelessWidget {
+  const _OptionGrid({
+    required this.question,
+    required this.hasGuessed,
+    required this.selectedIndex,
+    required this.onTap,
+  });
+
+  final GameQuestion question;
+  final bool hasGuessed;
+  final int? selectedIndex;
+  final void Function(int index) onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: question.options.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
+        childAspectRatio: 1.1,
+      ),
+      itemBuilder: (context, index) {
+        final GameOption option = question.options[index];
+        return _OptionTile(
+          imageUrl: option.attraction.imageUrl,
+          isCorrect: index == question.correctIndex,
+          isSelected: selectedIndex == index,
+          showResult: hasGuessed,
+          onTap: () => onTap(index),
+        );
+      },
+    );
+  }
+}
+
+class _OptionTile extends StatelessWidget {
+  const _OptionTile({
+    required this.imageUrl,
+    required this.isCorrect,
+    required this.isSelected,
     required this.showResult,
     required this.onTap,
   });
 
-  final String label;
-  final bool selected;
-  final bool disabled;
-  final bool isCorrectOption;
+  final String imageUrl;
+  final bool isCorrect;
+  final bool isSelected;
   final bool showResult;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
-    final bool highlightCorrect = showResult && isCorrectOption;
-    final bool highlightWrong = showResult && selected && !isCorrectOption;
-
-    Color borderColor = TPColors.grayscale200;
-    Color background = TPColors.white;
-    Color textColor = TPColors.grayscale900;
-
-    if (selected && !showResult) {
+    Color borderColor = Colors.transparent;
+    if (showResult && isCorrect) {
       borderColor = TPColors.primary500;
-      background = TPColors.primary50;
-      textColor = TPColors.primary500;
-    } else if (highlightCorrect) {
-      borderColor = TPColors.primary500;
-      background = TPColors.primary50;
-      textColor = TPColors.primary500;
-    } else if (highlightWrong) {
-      borderColor = TPColors.red500;
-      background = TPColors.red50;
-      textColor = TPColors.red500;
+    } else if (showResult && isSelected && !isCorrect) {
+      borderColor = TPColors.red400;
+    } else if (!showResult && isSelected) {
+      borderColor = TPColors.primary400;
     }
 
     return GestureDetector(
-      onTap: disabled ? null : onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      onTap: showResult ? null : onTap,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: background,
-          borderRadius: BorderRadius.circular(999),
-          border: Border.all(color: borderColor),
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(
+            color: borderColor,
+            width: borderColor == Colors.transparent ? 0 : 3,
+          ),
+          boxShadow: const [
+            BoxShadow(
+              color: Color(0x14000000),
+              blurRadius: 10,
+              offset: Offset(0, 4),
+            ),
+          ],
         ),
-        child: TPText(
-          label,
-          style: TPTextStyles.bodySemiBold,
-          color: textColor,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(16),
+          child: CachedNetworkImage(
+            imageUrl: imageUrl,
+            fit: BoxFit.cover,
+            placeholder: (_, __) => Container(color: TPColors.grayscale100),
+            errorWidget: (_, __, ___) => const ColoredBox(color: TPColors.grayscale200),
+          ),
         ),
       ),
     );
@@ -401,25 +465,39 @@ class _GuessChip extends StatelessWidget {
 }
 
 class _ResultBanner extends StatelessWidget {
-  const _ResultBanner({required this.isCorrect, required this.correctAnswer});
+  const _ResultBanner({
+    required this.question,
+    required this.isCorrect,
+    required this.livesRemaining,
+  });
 
+  final GameQuestion question;
   final bool isCorrect;
-  final String correctAnswer;
+  final int livesRemaining;
 
   @override
   Widget build(BuildContext context) {
-    final Color background = isCorrect ? TPColors.primary50 : TPColors.red50;
-    final Color textColor = isCorrect ? TPColors.primary500 : TPColors.red500;
-    final IconData icon = isCorrect ? Icons.emoji_events : Icons.close;
-    final String title = isCorrect ? '答對了！' : '再接再厲';
+    final bool gameOver = !isCorrect && livesRemaining == 0;
+    final Color background = isCorrect ? TPColors.primary50 : (gameOver ? TPColors.red50 : TPColors.orange50);
+    final Color textColor = isCorrect ? TPColors.primary500 : (gameOver ? TPColors.red400 : TPColors.orange500);
+    final IconData icon = isCorrect ? Icons.emoji_events : (gameOver ? Icons.sentiment_dissatisfied : Icons.lightbulb_outline);
+    final String title = isCorrect
+        ? '答對了！'
+        : gameOver
+            ? '三條命用完了'
+            : '可惜，再試試看';
+    final String subtitle = isCorrect
+        ? '你成功選對最靠近 ${question.target.displayName} 的景點。'
+        : '正確答案：${question.options[question.correctIndex].attraction.displayName}';
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: background,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Icon(icon, color: textColor),
           const SizedBox(width: 12),
@@ -434,15 +512,60 @@ class _ResultBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 TPText(
-                  '正確答案：$correctAnswer',
+                  subtitle,
                   style: TPTextStyles.bodyRegular,
                   color: textColor,
                 ),
+                if (gameOver) ...[
+                  const SizedBox(height: 8),
+                  const TPText(
+                    '按下重新開始，會重置三條命並抽出全新的題組。',
+                    style: TPTextStyles.caption,
+                    color: TPColors.red400,
+                  ),
+                ],
               ],
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class _ErrorState extends StatelessWidget {
+  const _ErrorState({required this.message, required this.onRetry});
+
+  final String message;
+  final VoidCallback onRetry;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        const Icon(Icons.wifi_off, size: 48, color: TPColors.grayscale400),
+        const SizedBox(height: 16),
+        TPText(
+          message,
+          style: TPTextStyles.bodyRegular,
+          color: TPColors.grayscale700,
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 16),
+        SizedBox(
+          height: 44,
+          child: OutlinedButton(
+            onPressed: onRetry,
+            child: const TPText(
+              '重新載入',
+              style: TPTextStyles.h3SemiBold,
+              color: TPColors.primary500,
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

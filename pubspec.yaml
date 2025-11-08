@@ -44,6 +44,7 @@ dependencies:
   fluttertoast: ^8.2.8
   get: ^4.6.6
   geolocator: ^13.0.1
+  http: ^1.2.1
   intl: any
   image_picker: ^1.1.2
   json_annotation: ^4.9.0
