@@ -1,15 +1,17 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:flutter/services.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:town_pass/gen/assets.gen.dart';
+import 'package:town_pass/page/game/model/attraction.dart';
 import 'package:town_pass/page/game/model/game_question.dart';
 import 'package:town_pass/page/game/service/attraction_service.dart';
 import 'package:town_pass/page/game/widget/game_landing.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
+import 'package:town_pass/util/tp_text_styles.dart';
 import 'package:town_pass/util/tp_text_styles.dart';
 
 enum _GamePhase { landing, loading, playing, error }
@@ -24,7 +26,6 @@ class GameView extends StatefulWidget {
 class _GameViewState extends State<GameView> {
   final AttractionService _service = AttractionService();
   late final AudioPlayer _bgmPlayer;
-  int _currentIndex = 0;
   bool _hasGuessed = false;
   bool _isCorrectGuess = false;
   String? _selectedOption;
@@ -34,7 +35,6 @@ class _GameViewState extends State<GameView> {
   @override
   void initState() {
     super.initState();
-    _currentIndex = _random.nextInt(_locations.length);
     _bgmPlayer = AudioPlayer();
     _startBgm();
     // Log player state changes to help debug emulator audio issues
@@ -199,6 +199,13 @@ class _GameViewState extends State<GameView> {
         _lives = (_lives - 1).clamp(0, 3);
       }
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || _currentQuestion == null) {
+        return;
+      }
+      _showResultDetailDialog(_currentQuestion!, isCorrect);
+    });
   }
 
   void _handleNextPressed() {
@@ -243,6 +250,98 @@ class _GameViewState extends State<GameView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _showResultDetailDialog(GameQuestion question, bool isCorrect) {
+    final String title = isCorrect ? '太厲害！答對了' : (_lives == 0 ? '答錯了，遊戲結束' : '答錯了，再接再厲');
+    final Color accentColor = isCorrect ? TPColors.primary500 : (_lives == 0 ? TPColors.red400 : TPColors.orange500);
+
+    Get.dialog(
+      Dialog(
+        insetPadding: const EdgeInsets.all(16),
+        child: ConstrainedBox(
+          constraints: BoxConstraints(
+            maxHeight: MediaQuery.of(context).size.height * 0.8,
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                decoration: BoxDecoration(
+                  color: accentColor.withOpacity(0.1),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    TPText(
+                      title,
+                      style: TPTextStyles.h3SemiBold,
+                      color: accentColor,
+                    ),
+                    const SizedBox(height: 4),
+                    TPText(
+                      '題目景點：${question.target.displayName}',
+                      style: TPTextStyles.bodyRegular,
+                      color: TPColors.grayscale800,
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    children: [
+                      _AttractionDetailCard(
+                        title: '題目景點',
+                        attraction: question.target,
+                        highlight: accentColor,
+                      ),
+                      const SizedBox(height: 16),
+                      ...List.generate(
+                        question.options.length,
+                        (index) {
+                          final GameOption option = question.options[index];
+                          final bool isOptionCorrect = index == question.correctIndex;
+                          final bool isSelected = index == _selectedIndex;
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: _AttractionDetailCard(
+                              title: '選項 ${index + 1}${isOptionCorrect ? '（正確）' : ''}${isSelected && !isOptionCorrect ? '（你選擇）' : ''}',
+                              attraction: option.attraction,
+                              highlight: isOptionCorrect ? TPColors.primary500 : TPColors.grayscale300,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: SizedBox(
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () => Get.back<void>(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: accentColor,
+                    ),
+                    child: const TPText(
+                      '關閉',
+                      style: TPTextStyles.h3SemiBold,
+                      color: TPColors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -409,6 +508,7 @@ class _QuestionCard extends StatelessWidget {
       ),
     );
   }
+
 }
 
 class _OptionGrid extends StatelessWidget {
@@ -440,6 +540,7 @@ class _OptionGrid extends StatelessWidget {
         final GameOption option = question.options[index];
         return _OptionTile(
           imageUrl: option.attraction.imageUrl,
+          name: option.attraction.displayName,
           isCorrect: index == question.correctIndex,
           isSelected: selectedIndex == index,
           showResult: hasGuessed,
@@ -453,6 +554,7 @@ class _OptionGrid extends StatelessWidget {
 class _OptionTile extends StatelessWidget {
   const _OptionTile({
     required this.imageUrl,
+    required this.name,
     required this.isCorrect,
     required this.isSelected,
     required this.showResult,
@@ -460,6 +562,7 @@ class _OptionTile extends StatelessWidget {
   });
 
   final String imageUrl;
+  final String name;
   final bool isCorrect;
   final bool isSelected;
   final bool showResult;
@@ -496,11 +599,41 @@ class _OptionTile extends StatelessWidget {
         ),
         child: ClipRRect(
           borderRadius: BorderRadius.circular(16),
-          child: CachedNetworkImage(
-            imageUrl: imageUrl,
-            fit: BoxFit.cover,
-            placeholder: (_, __) => Container(color: TPColors.grayscale100),
-            errorWidget: (_, __, ___) => const ColoredBox(color: TPColors.grayscale200),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              CachedNetworkImage(
+                imageUrl: imageUrl,
+                fit: BoxFit.cover,
+                placeholder: (_, __) => Container(color: TPColors.grayscale100),
+                errorWidget: (_, __, ___) => const ColoredBox(color: TPColors.grayscale200),
+              ),
+              Positioned(
+                left: 0,
+                right: 0,
+                bottom: 0,
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.bottomCenter,
+                      end: Alignment.topCenter,
+                      colors: [
+                        Color(0xCC000000),
+                        Color(0x00000000),
+                      ],
+                    ),
+                  ),
+                  child: TPText(
+                    name,
+                    style: TPTextStyles.bodySemiBold,
+                    color: TPColors.white,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -610,6 +743,88 @@ class _ErrorState extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+class _AttractionDetailCard extends StatelessWidget {
+  const _AttractionDetailCard({
+    required this.title,
+    required this.attraction,
+    required this.highlight,
+  });
+
+  final String title;
+  final Attraction attraction;
+  final Color highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: highlight.withOpacity(0.4)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+            child: CachedNetworkImage(
+              imageUrl: attraction.imageUrl,
+              height: 160,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              placeholder: (_, __) => Container(height: 160, color: TPColors.grayscale100),
+              errorWidget: (_, __, ___) => Container(height: 160, color: TPColors.grayscale200),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TPText(
+                  title,
+                  style: TPTextStyles.caption,
+                  color: highlight,
+                ),
+                const SizedBox(height: 4),
+                TPText(
+                  attraction.displayName,
+                  style: TPTextStyles.h3SemiBold,
+                  color: TPColors.grayscale900,
+                ),
+                if (attraction.address.isNotEmpty) ...[
+                  const SizedBox(height: 4),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Icon(Icons.place_outlined, size: 16, color: TPColors.grayscale600),
+                      const SizedBox(width: 4),
+                      Expanded(
+                        child: TPText(
+                          attraction.address,
+                          style: TPTextStyles.bodyRegular,
+                          color: TPColors.grayscale600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+                if (attraction.description.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  TPText(
+                    attraction.description,
+                    style: TPTextStyles.bodyRegular,
+                    color: TPColors.grayscale700,
+                  ),
+                ],
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

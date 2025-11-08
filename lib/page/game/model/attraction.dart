@@ -5,6 +5,8 @@ class Attraction {
     required this.latitude,
     required this.longitude,
     required this.imageUrl,
+    required this.description,
+    required this.address,
   });
 
   final String id;
@@ -12,6 +14,8 @@ class Attraction {
   final double latitude;
   final double longitude;
   final String imageUrl;
+  final String description;
+  final String address;
 
   factory Attraction.fromJson(Map<String, dynamic> json) {
     final String? nameZh = _asString(json['name_zh']);
@@ -36,6 +40,8 @@ class Attraction {
       latitude: lat,
       longitude: lon,
       imageUrl: imageUrl,
+      description: _asString(json['introduction']) ?? '',
+      address: _asString(json['address']) ?? '',
     );
   }
 
