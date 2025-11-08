@@ -36,24 +36,71 @@ class _WelcomePageState extends State<WelcomePage> {
       body: AnimatedLightFlowBackground(
         backgroundColor: TPColors.secondary50,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 60),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 30),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.center,
             spacing: 36,
             children: [
-              _button(
-                title: '抽籤',
-                subtitle: '尋求數位神諭',
-                imagePath: 'assets/image/kau_chim.png',
-                onPressed: () => Get.toNamed('/lucky_draw/drawing'),
+              const Text(
+                '在臺北的快節奏生活中\n為您找到一處安定內心的空間',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: TPColors.secondary800,
+                ),
               ),
               _button(
-                title: '拜拜',
-                subtitle: '點亮雲端香火',
-                imagePath: 'assets/image/incense_burner.png',
-                onPressed: () => Get.toNamed('/lucky_draw/temple'),
-              )
+              title: '抽籤',
+              subtitle: '尋求數位神諭',
+              imagePath: 'assets/image/kau_chim.png',
+              onPressed: () => Get.toNamed('/lucky_draw/drawing'),
+              ),
+              _button(
+              title: '拜拜',
+              subtitle: '點亮雲端香火',
+              imagePath: 'assets/image/incense_burner.png',
+              onPressed: () {},
+              ),
+              const Padding(
+              // 在底部文字左右加上間距，讓內容不貼邊
+              padding: EdgeInsets.only(left: 12, right: 12),
+              child: Align(
+                child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  // 內文使用左右邊距後，保持左對齊以利閱讀
+                  Text.rich(
+                  TextSpan(
+                    children: [
+                    TextSpan(text: '我們服務結合兩大應用：\n\n1.  '),
+                    TextSpan(
+                      text: '數位神諭',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text:
+                        '：結合城市數據與千年籤詩智慧，一鍵擲筊求籤，立即獲得最貼近您職涯、愛情、生活的指引。\n\n2. ',
+                    ),
+                    TextSpan(
+                      text: '雲端香火',
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                    TextSpan(
+                      text:
+                        '：壓力山大、時間寶貴時，您可線上選擇廟宇進行拜拜，是舒緩生活壓力的最佳選擇。',
+                    ),
+                    ],
+                  ),
+                  textAlign: TextAlign.left,
+                  style: TextStyle(color: TPColors.secondary800),
+                  ),
+                ],
+                ),
+              ),
+              ),
             ],
           ),
         ),
