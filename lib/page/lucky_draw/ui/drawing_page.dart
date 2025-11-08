@@ -2,16 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
+import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
-class LuckyDrawDrawingPage extends StatefulWidget {
-  const LuckyDrawDrawingPage({super.key});
+class DrawingPage extends StatefulWidget {
+  const DrawingPage({super.key});
 
   @override
-  State<LuckyDrawDrawingPage> createState() => _LuckyDrawDrawingPageState();
+  State<DrawingPage> createState() => _DrawingPageState();
 }
 
-class _LuckyDrawDrawingPageState extends State<LuckyDrawDrawingPage> {
+class _DrawingPageState extends State<DrawingPage> {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
 
   @override
@@ -54,6 +55,10 @@ class _LuckyDrawDrawingPageState extends State<LuckyDrawDrawingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: const TPAppBar(
+        title: '城心誠靈 - Draw a Stick',
+        backgroundColor: TPColors.secondary50,
+      ),
       backgroundColor: TPColors.secondary50,
       body: SafeArea(
         child: Column(

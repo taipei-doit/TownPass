@@ -5,14 +5,14 @@ import 'package:get/route_manager.dart';
 import 'package:town_pass/util/tp_app_bar.dart';
 import 'package:town_pass/util/tp_colors.dart';
 
-class LuckyDrawWelcomePage extends StatefulWidget {
-  const LuckyDrawWelcomePage({super.key});
+class WelcomePage extends StatefulWidget {
+  const WelcomePage({super.key});
 
   @override
-  State<LuckyDrawWelcomePage> createState() => _LuckyDrawWelcomePageState();
+  State<WelcomePage> createState() => _WelcomePageState();
 }
 
-class _LuckyDrawWelcomePageState extends State<LuckyDrawWelcomePage> {
+class _WelcomePageState extends State<WelcomePage> {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
 
   @override
