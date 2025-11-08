@@ -295,11 +295,11 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
           children: [
             _jiaobeiAnimation,
             const SizedBox(height: 56),
+            _instructionText,
+            const SizedBox(height: 24),
             _result != null && !_isAnimating
                 ? _nextStepButton
                 : const SizedBox.shrink(),
-            const SizedBox(height: 24),
-            _instructionText,
           ],
         ),
       ),
@@ -415,10 +415,10 @@ class _JiaobeiThrowingPageState extends State<JiaobeiThrowingPage>
               ),
             ),
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 12),
+              padding: const EdgeInsets.symmetric(vertical: 8),
               child: Text(
                 isSuccessful ? '前往解籤' : '返回再抽一支籤',
-                style: const TextStyle(fontSize: 24),
+                style: const TextStyle(fontSize: 16),
               ),
             ),
           ),
