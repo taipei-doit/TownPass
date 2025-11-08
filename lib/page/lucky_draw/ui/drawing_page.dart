@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:sensors_plus/sensors_plus.dart';
@@ -18,7 +19,8 @@ class _DrawingPageState extends State<DrawingPage>
     with SingleTickerProviderStateMixin {
   final _streamSubscription = <StreamSubscription<dynamic>>[];
   late final AnimationController _lottieController;
-  bool _hasNavigated = false;
+
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
 
   @override
   void initState() {
@@ -32,11 +34,11 @@ class _DrawingPageState extends State<DrawingPage>
       }
     });
 
-    _shakeListen();
+    _listenShaking();
   }
 
-  void _shakeListen() {
-    const threshold = 10.0;
+  void _listenShaking() {
+    final threshold = _shakingThreshold;
 
     _streamSubscription.add(
       userAccelerometerEventStream().listen((event) {
@@ -51,26 +53,29 @@ class _DrawingPageState extends State<DrawingPage>
     );
   }
 
+  void _unsubscribeShaking() {
+    for (var sub in _streamSubscription) {
+      sub.cancel();
+    }
+  }
+
   void _playAnimationOnce() {
-    if (!_lottieController.isAnimating && !_hasNavigated) {
+    if (!_lottieController.isAnimating) {
       _lottieController.reset();
       _lottieController.forward();
     }
   }
 
-  void _navigateOnce() {
-    if (_hasNavigated) return;
-    _hasNavigated = true;
-
-    Get.toNamed('/lucky_draw/draw_result');
+  void _navigateOnce() async {
+    _unsubscribeShaking();
+    await Get.toNamed('/lucky_draw/draw_result');
+    _listenShaking();
   }
 
   @override
   void dispose() {
     _lottieController.dispose();
-    for (var sub in _streamSubscription) {
-      sub.cancel();
-    }
+    _unsubscribeShaking();
     super.dispose();
   }
 

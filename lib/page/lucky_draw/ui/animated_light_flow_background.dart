@@ -30,12 +30,20 @@ class _AnimatedLightFlowBackgroundState
     super.initState();
     _controllers = List.generate(
       _particleCount,
-      (index) => AnimationController(
-        duration: Duration(
-          milliseconds: 8000 + _random.nextInt(4000),
-        ),
-        vsync: this,
-      )..repeat(),
+      (index) {
+        final controller = AnimationController(
+          duration: Duration(
+            milliseconds: 8000 + _random.nextInt(4000),
+          ),
+          vsync: this,
+        );
+
+        // 為每個粒子設置隨機的初始進度，讓它們錯開
+        controller.value = _random.nextDouble();
+        controller.repeat();
+
+        return controller;
+      },
     );
 
     _animations = _controllers
@@ -106,7 +114,7 @@ class LightFlowPainter extends CustomPainter {
     final startY = size.height + 50;
     const endY = -50.0;
     final amplitude = 30 + _random.nextDouble() * 40;
-    final frequency = 3 + _random.nextDouble() * 2.5;
+    final frequency = 2 + _random.nextDouble() * 2;
     final phase = _random.nextDouble() * 2 * pi;
 
     // 計算當前位置（往上移動）
@@ -117,20 +125,20 @@ class LightFlowPainter extends CustomPainter {
     // 創建漸變效果 - 增加不透明度
     final gradient = RadialGradient(
       colors: [
-        TPColors.secondary200.withAlpha(100),
-        TPColors.secondary200.withAlpha(50),
-        TPColors.secondary200.withAlpha(0),
+        TPColors.secondary300.withAlpha(100),
+        TPColors.secondary300.withAlpha(50),
+        TPColors.secondary300.withAlpha(0),
       ],
       stops: const [0.0, 0.5, 1.0],
     );
 
     final rect = Rect.fromCircle(
       center: Offset(currentX, currentY),
-      radius: 100,
+      radius: 80,
     );
 
     paint.shader = gradient.createShader(rect);
-    canvas.drawCircle(Offset(currentX, currentY), 100, paint);
+    canvas.drawCircle(Offset(currentX, currentY), 80, paint);
 
     // 添加小光點 - 增加不透明度
     final smallPaint = Paint()
@@ -139,8 +147,8 @@ class LightFlowPainter extends CustomPainter {
 
     final smallGradient = RadialGradient(
       colors: [
-        TPColors.secondary200.withAlpha(128),
-        TPColors.secondary200.withAlpha(0),
+        TPColors.red100.withAlpha(128),
+        TPColors.red100.withAlpha(0),
       ],
       stops: const [0.0, 1.0],
     );

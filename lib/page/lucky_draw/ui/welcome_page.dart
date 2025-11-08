@@ -48,7 +48,7 @@ class _WelcomePageState extends State<WelcomePage> {
               _button(
                 title: '抽籤',
                 subtitle: '尋求數位神諭',
-                imagePath: 'assets/image/jiaobei.png',
+                imagePath: 'assets/image/kau_chim.png',
                 onPressed: () => Get.toNamed('/lucky_draw/drawing'),
               ),
               _button(
