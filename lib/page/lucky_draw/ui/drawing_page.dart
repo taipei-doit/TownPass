@@ -24,7 +24,9 @@ class _DrawingPageState extends State<DrawingPage>
   late final AnimationController _floatingController;
   late final Animation<double> _floatingAnimation;
 
-  get _shakingThreshold => Platform.isIOS ? 10.0 : 4.0;
+  get _shakingThreshold => Platform.isIOS ? 10.0 : 5.0;
+
+  bool _isAnimating = false;
 
   @override
   void initState() {
@@ -47,6 +49,8 @@ class _DrawingPageState extends State<DrawingPage>
     // Lottie controller
     _lottieController = AnimationController(vsync: this);
     _lottieController.addStatusListener((status) {
+      setState(() => _isAnimating = status == AnimationStatus.forward);
+
       if (status == AnimationStatus.completed) {
         _navigateOnce();
       }
@@ -115,7 +119,7 @@ class _DrawingPageState extends State<DrawingPage>
             children: [
               _lottieAnimation,
               const SizedBox(height: 56),
-              _title,
+              _instructionText,
             ],
           ),
         ),
@@ -152,28 +156,41 @@ class _DrawingPageState extends State<DrawingPage>
         ),
       );
 
-  Widget get _title => const Text.rich(TextSpan(
+  Widget get _instructionText {
+    if (_isAnimating) {
+      return const Text(
+        "抽籤中...",
         style: TextStyle(
           fontSize: 24,
-          color: TPColors.secondary700,
+          fontWeight: FontWeight.bold,
+          color: TPColors.secondary800,
         ),
-        children: [
-          TextSpan(
-            text: "搖動手機 ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: TPColors.secondary800,
-            ),
+      );
+    }
+
+    return const Text.rich(TextSpan(
+      style: TextStyle(
+        fontSize: 24,
+        color: TPColors.secondary700,
+      ),
+      children: [
+        TextSpan(
+          text: "搖動手機 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
           ),
-          TextSpan(text: "或"),
-          TextSpan(
-            text: " 點擊籤筒 ",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: TPColors.secondary800,
-            ),
+        ),
+        TextSpan(text: "或"),
+        TextSpan(
+          text: " 點擊籤筒 ",
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: TPColors.secondary800,
           ),
-          TextSpan(text: "開始抽籤"),
-        ],
-      ));
+        ),
+        TextSpan(text: "開始抽籤"),
+      ],
+    ));
+  }
 }
