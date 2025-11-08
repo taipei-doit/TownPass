@@ -87,7 +87,7 @@ class _DrawingPageState extends State<DrawingPage>
         backgroundColor: TPColors.secondary50,
       ),
       backgroundColor: TPColors.secondary50,
-      body: SafeArea(
+      body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -112,55 +112,36 @@ class _DrawingPageState extends State<DrawingPage>
               ),
             ),
 
-            const SizedBox(height: 32),
-
-            // Title
-            const Text(
-              "Shake your phone \n or tap the holder to draw",
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 22,
-                color: TPColors.red900,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            const SizedBox(height: 12),
-
-            const Text(
-              "搖動手機或點擊籤筒來抽籤",
-              style: TextStyle(
-                fontSize: 16,
-                color: TPColors.red900,
-              ),
-            ),
-
-            const SizedBox(height: 40),
-
-            // Button
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 32.0),
-              child: SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: ElevatedButton(
-                  onPressed: _playAnimationOnce,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: TPColors.red700,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(28),
-                    ),
-                  ),
-                  child: const Text(
-                    "Draw a Stick",
-                    style: TextStyle(fontSize: 18, color: TPColors.white),
-                  ),
-                ),
-              ),
-            ),
+            const SizedBox(height: 56),
+            _title,
           ],
         ),
       ),
     );
   }
+
+  Widget get _title => const Text.rich(TextSpan(
+        style: TextStyle(
+          fontSize: 24,
+          color: TPColors.secondary700,
+        ),
+        children: [
+          TextSpan(
+            text: "搖動手機 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "或"),
+          TextSpan(
+            text: " 點擊籤筒 ",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: TPColors.secondary800,
+            ),
+          ),
+          TextSpan(text: "開始抽籤"),
+        ],
+      ));
 }
