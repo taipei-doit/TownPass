@@ -90,12 +90,6 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
     });
   }
 
-  void _reset() {
-    _unsubscribeShaking();
-    _isAnimating = false;
-    _isAnimationSequenceCompleted = false;
-  }
-
   Future<void> _onActionButtonPressed() async {
     if (_isAnimating) return; // 動畫中禁用按鈕
 
@@ -111,6 +105,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
   @override
   void dispose() {
     _animationController.dispose(); // 釋放動畫控制器
+    _unsubscribeShaking();
     super.dispose();
   }
 
@@ -230,11 +225,7 @@ class _IncenseBurningPageState extends State<IncenseBurningPage>
       child: Row(children: [
         Expanded(
           child: TextButton(
-            onPressed: () async {
-              _reset();
-              await Get.offAndToNamed('/lucky_draw/offering');
-              _listenShaking();
-            },
+            onPressed: () => Get.offAndToNamed('/lucky_draw/offering'),
             style: TextButton.styleFrom(
               backgroundColor: TPColors.secondary200,
               foregroundColor: TPColors.secondary800,
