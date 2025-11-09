@@ -46,6 +46,24 @@ class _RandomTemplePageState extends State<RandomTemplePage> {
       page: 1,
     );
   }
+  Future<void> _openMap(double lat, double lng) async {
+    final Uri googleMapSchemeUrl = Uri.parse('comgooglemaps://?q=$lat,$lng');
+    final Uri geoUrl = Uri.parse('geo:$lat,$lng?q=$lat,$lng'); // Android fallback
+    final Uri webUrl = Uri.parse('https://www.google.com/maps?q=$lat,$lng'); // Web fallback
+
+    // Try Google Maps app (iOS)
+    if (await canLaunchUrl(googleMapSchemeUrl)) {
+      await launchUrl(googleMapSchemeUrl);
+    } 
+    // Try geo: (Android)
+    else if (await canLaunchUrl(geoUrl)) {
+      await launchUrl(geoUrl);
+    } 
+    // Fallback to web
+    else {
+      await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -331,6 +349,14 @@ class _RandomTemplePageState extends State<RandomTemplePage> {
                         }
                       },
                     ),
+                  ),
+                  Center(child: 
+                    TPButton(
+                      text: '在地圖中查看位置',
+                      onPressed: () async  {
+                        await _openMap(attraction.nlat, attraction.elong);
+                      },
+                    )
                   ),
                   const SizedBox(height: 16),
                 ],

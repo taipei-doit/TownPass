@@ -5,6 +5,7 @@ import 'package:town_pass/page/lucky_draw/ui/lucky_draw_app_bar.dart';
 import 'package:town_pass/util/tp_button.dart';
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_text.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class TemplePage extends StatefulWidget {
   const TemplePage({super.key});
@@ -20,6 +21,27 @@ class _TemplePageState extends State<TemplePage> {
   void initState() {
     super.initState();
     templesFuture = TempleDataService.instance.temples;
+  }
+
+  Future<void> _openMap(double lat, double lng) async {
+    final Uri googleMapSchemeUrl = Uri.parse('comgooglemaps://?q=$lat,$lng');
+    final Uri geoUrl =
+        Uri.parse('geo:$lat,$lng?q=$lat,$lng'); // Android fallback
+    final Uri webUrl =
+        Uri.parse('https://www.google.com/maps?q=$lat,$lng'); // Web fallback
+
+    // Try Google Maps app (iOS)
+    if (await canLaunchUrl(googleMapSchemeUrl)) {
+      await launchUrl(googleMapSchemeUrl);
+    }
+    // Try geo: (Android)
+    else if (await canLaunchUrl(geoUrl)) {
+      await launchUrl(geoUrl);
+    }
+    // Fallback to web
+    else {
+      await launchUrl(webUrl, mode: LaunchMode.externalApplication);
+    }
   }
 
   @override
@@ -186,6 +208,14 @@ class _TemplePageState extends State<TemplePage> {
                       text: '線上參拜',
                       onPressed: () =>
                           Get.toNamed('/lucky_draw/incense_burning'),
+                    ),
+                  ),
+                  Center(
+                    child: TPButton(
+                      text: '在地圖中查看位置',
+                      onPressed: () async  {
+                        await _openMap(temple.latitude, temple.longitude);
+                      },
                     ),
                   ),
                   const SizedBox(height: 16),
