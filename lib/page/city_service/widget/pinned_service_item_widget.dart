@@ -47,27 +47,31 @@ class PinnedServiceItemWidget extends StatelessWidget {
               ),
             ],
           ),
-          if (isEdit ?? false) ...[
-            Positioned(
-              top: 2,
-              right: 11,
-              child: Container(
-                decoration: const ShapeDecoration(
-                  shape: CircleBorder(),
-                  shadows: [
-                    BoxShadow(
-                      color: TPColors.grayscale100,
-                      blurRadius: 8,
-                      offset: Offset(0, 1),
-                      spreadRadius: 0,
-                    )
-                  ],
-                ),
-                child: Assets.svg.iconRemove.svg(),
-              ),
-            ),
-          ],
+          if (isEdit ?? false) _buildRemoveIcon(),
         ],
+      ),
+    );
+  }
+
+  /// 建立移除圖示，通常在編輯模式下顯示。
+  /// 此圖示包含一個圓形背景陰影，並顯示一個 SVG 移除圖示。
+  Widget _buildRemoveIcon() {
+    return Positioned(
+      top: 2,
+      right: 11,
+      child: Container(
+        decoration: const ShapeDecoration(
+          shape: CircleBorder(),
+          shadows: [
+            BoxShadow(
+              color: TPColors.grayscale100,
+              blurRadius: 8,
+              offset: Offset(0, 1),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        child: Assets.svg.iconRemove.svg(),
       ),
     );
   }
