@@ -32,7 +32,7 @@ class CityServiceEditViewController extends GetxController {
 
   void cancelEdit() {
     if (_recordPinnedList != null) {
-      Get.find<PinnedServiceWidgetController>().replaceWith(_recordPinnedList!);
+      pinnedServiceController.replaceWith(_recordPinnedList!); // 使用已定義的 getter 存取 controller
       _recordPinnedList = null;
     }
     isEditMode.value = false;
