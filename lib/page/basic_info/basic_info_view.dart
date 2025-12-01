@@ -12,6 +12,40 @@ import 'package:town_pass/util/tp_setting_list.dart';
 class BasicInfoView extends GetView<BasicInfoViewController> {
   const BasicInfoView({super.key});
 
+  /// Builds a TPSettingListTile.navigate for editable basic information fields.
+  /// Encapsulates the common navigation to `TPRoute.basicInfoEdit`
+  /// and handling of the update callback for various fields,
+  /// improving readability and reducing repetition in the widget tree.
+  TPSettingListTile _buildEditableSettingTile({
+    required String title,
+    required RxString fieldRx,
+    required Function(String value) updateFieldCallback,
+    required String? Function(String?) validator,
+    TextInputType keyboardType = TextInputType.text,
+    String defaultContent = '',
+  }) {
+    return TPSettingListTile.navigate(
+      title: title,
+      content: fieldRx.value ?? defaultContent,
+      onTap: () {
+        Get.toNamed(
+          TPRoute.basicInfoEdit,
+          arguments: BasicInfoEditArgument(
+            title: title,
+            currentValue: fieldRx.value ?? '',
+            keyboardType: keyboardType,
+            validator: validator,
+          ),
+        )?.then(
+          (value) => switch (value) {
+            String() => updateFieldCallback(value),
+            Object() || null => null,
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,116 +59,52 @@ class BasicInfoView extends GetView<BasicInfoViewController> {
                   title: controller.name,
                   content: '',
                 ),
-                TPSettingListTile.navigate(
+                _buildEditableSettingTile(
                   title: '身分證',
-                  content: controller.idNumber.value,
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.basicInfoEdit,
-                      arguments: BasicInfoEditArgument(
-                        title: '身分證',
-                        currentValue: controller.idNumber.value ?? '',
-                        validator: (idNumber) =>
-                            idNumberValidator(idNumber: idNumber ?? '')
-                                ? null
-                                : '',
-                      ),
-                    )?.then(
-                      (value) => switch (value) {
-                        String() => controller.updateAccount(idNumber: value),
-                        Object() || null => null,
-                      },
-                    );
-                  },
+                  fieldRx: controller.idNumber,
+                  updateFieldCallback: (value) => controller.updateAccount(idNumber: value),
+                  validator: (idNumber) =>
+                      idNumberValidator(idNumber: idNumber ?? '') ? null : '',
+                  defaultContent: '',
                 ),
-                TPSettingListTile.navigate(
+                _buildEditableSettingTile(
                   title: '生日',
-                  content: controller.birthday.value,
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.basicInfoEdit,
-                      arguments: BasicInfoEditArgument(
-                        title: '生日',
-                        currentValue: controller.birthday.value ?? '',
-                        keyboardType: TextInputType.datetime,
-                        validator: (string) => DateFormat('yyyy/MM/dd')
-                                    .tryParseStrict(string ?? '') ==
-                                null
-                            ? ''
-                            : null,
-                      ),
-                    )?.then(
-                      (value) => switch (value) {
-                        String() => controller.updateAccount(birthday: value),
-                        Object() || null => null,
-                      },
-                    );
-                  },
+                  fieldRx: controller.birthday,
+                  updateFieldCallback: (value) => controller.updateAccount(birthday: value),
+                  validator: (string) => DateFormat('yyyy/MM/dd')
+                              .tryParseStrict(string ?? '') == null
+                          ? ''
+                          : null,
+                  keyboardType: TextInputType.datetime,
+                  defaultContent: '',
                 ),
-                TPSettingListTile.navigate(
+                _buildEditableSettingTile(
                   title: '電子信箱',
-                  content: controller.email.value ?? '未設定',
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.basicInfoEdit,
-                      arguments: BasicInfoEditArgument(
-                        title: '電子信箱',
-                        currentValue: controller.email.value ?? '',
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (email) =>
-                            EmailValidator.validate(email ?? '') ? null : '',
-                      ),
-                    )?.then(
-                      (value) => switch (value) {
-                        String() => controller.updateAccount(email: value),
-                        Object() || null => null,
-                      },
-                    );
-                  },
+                  fieldRx: controller.email,
+                  updateFieldCallback: (value) => controller.updateAccount(email: value),
+                  validator: (email) =>
+                      EmailValidator.validate(email ?? '') ? null : '',
+                  keyboardType: TextInputType.emailAddress,
+                  defaultContent: '未設定',
                 ),
-                TPSettingListTile.navigate(
+                _buildEditableSettingTile(
                   title: '手機門號',
-                  content: controller.phoneNumber.value ?? '未設定',
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.basicInfoEdit,
-                      arguments: BasicInfoEditArgument(
-                        title: '手機門號',
-                        currentValue: controller.phoneNumber.value ?? '',
-                        keyboardType: TextInputType.phone,
-                        validator: (phoneNumber) =>
-                            RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '')
-                                ? null
-                                : '',
-                      ),
-                    )?.then(
-                      (value) => switch (value) {
-                        String() =>
-                          controller.updateAccount(phoneNumber: value),
-                        Object() || null => null,
-                      },
-                    );
-                  },
+                  fieldRx: controller.phoneNumber,
+                  updateFieldCallback: (value) => controller.updateAccount(phoneNumber: value),
+                  validator: (phoneNumber) =>
+                      RegExp(r'^09\d{8}$').hasMatch(phoneNumber ?? '')
+                          ? null
+                          : '',
+                  keyboardType: TextInputType.phone,
+                  defaultContent: '未設定',
                 ),
-                TPSettingListTile.navigate(
+                _buildEditableSettingTile(
                   title: '通訊地址',
-                  content: controller.address.value ?? '未設定',
-                  onTap: () {
-                    Get.toNamed(
-                      TPRoute.basicInfoEdit,
-                      arguments: BasicInfoEditArgument(
-                        title: '通訊地址',
-                        currentValue: controller.address.value ?? '',
-                        validator: (address) =>
-                            (address != null && address.isNotEmpty) ? null : '',
-                      ),
-                    )?.then(
-                      (value) => switch (value) {
-                        String() => controller.updateAccount(address: value),
-                        Object() || null => null,
-                      },
-                    );
-                  },
+                  fieldRx: controller.address,
+                  updateFieldCallback: (value) => controller.updateAccount(address: value),
+                  validator: (address) =>
+                      (address != null && address.isNotEmpty) ? null : '',
+                  defaultContent: '未設定',
                 ),
               ],
             ),
