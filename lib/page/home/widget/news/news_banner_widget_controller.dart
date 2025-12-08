@@ -34,10 +34,13 @@ class NewsBannerWidgetController extends GetxController {
   void onInit() {
     super.onInit();
 
-    Timer.periodic(
+    // 原有的 Timer.periodic 在執行一次後立即取消，
+    // 其行為等同於一個延遲一次性執行 (one-shot) 的操作。
+    // 將其替換為 Future.delayed，能更清晰地表達延遲載入的意圖，
+    // 並避免了設置一個週期性定時器卻立即取消的冗餘操作。
+    Future.delayed(
       const Duration(seconds: 3),
-      (timer) async {
-        timer.cancel();
+      () async {
         final String banners = await rootBundle.loadString(Assets.mockData.homeBanner);
         list = HomeBannerList.fromJson(jsonDecode(banners));
         isLoading = false;
