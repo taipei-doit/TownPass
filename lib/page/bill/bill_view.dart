@@ -10,6 +10,68 @@ import 'package:town_pass/util/tp_text.dart';
 class BillView extends StatelessWidget {
   const BillView({super.key});
 
+  // 新增一個私有資料模型來表示熱門繳費項目
+  class _PopularBillItem {
+    final Widget icon;
+    final String name;
+    final String uri;
+
+    const _PopularBillItem({
+      required this.icon,
+      required this.name,
+      required this.uri,
+    });
+  }
+
+  // 將熱門繳費的資料定義為一個靜態常數列表
+  static const List<_PopularBillItem> _popularBillItems = [
+    _PopularBillItem(
+      icon: Assets.svg.iconBillCar.svg(),
+      name: '停車費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-5/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillWater.svg(),
+      name: '水費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-6/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillLocalTax.svg(),
+      name: '地方稅',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/tax-1/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillTuition.svg(),
+      name: '學雜費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-7/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillPublicHousing.svg(),
+      name: '國/社宅租金維管費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-8/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillHospital.svg(),
+      name: '聯合醫院醫療費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-9/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillHousingMaintenance.svg(),
+      name: '平價住宅維護費',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-10/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillClass.svg(),
+      name: '公訓處自費課程',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-11/',
+    ),
+    _PopularBillItem(
+      icon: Assets.svg.iconBillOther.svg(),
+      name: '其他',
+      uri: 'https://taipei-pass-service.vercel.app/fee-payment/others/',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -99,69 +161,14 @@ class BillView extends StatelessWidget {
             color: TPColors.grayscale900,
           ),
           const SizedBox(height: 12),
-          _BillType(
-            icon: Assets.svg.iconBillCar.svg(),
-            name: '停車費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-5/',
+          // 使用 map 函式根據 _popularBillItems 列表來動態生成 _BillType 小部件
+          ..._popularBillItems.map(
+            (item) => _BillType(
+              icon: item.icon,
+              name: item.name,
+              onTap: () async => await TPRoute.openUri(uri: item.uri),
             ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillWater.svg(),
-            name: '水費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-6/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillLocalTax.svg(),
-            name: '地方稅',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/tax-1/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillTuition.svg(),
-            name: '學雜費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-7/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillPublicHousing.svg(),
-            name: '國/社宅租金維管費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-8/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillHospital.svg(),
-            name: '聯合醫院醫療費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-9/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillHousingMaintenance.svg(),
-            name: '平價住宅維護費',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-10/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillClass.svg(),
-            name: '公訓處自費課程',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/detail/fee-11/',
-            ),
-          ),
-          _BillType(
-            icon: Assets.svg.iconBillOther.svg(),
-            name: '其他',
-            onTap: () async => await TPRoute.openUri(
-              uri: 'https://taipei-pass-service.vercel.app/fee-payment/others/',
-            ),
-          ),
+          ).toList(),
         ],
       ),
     );
