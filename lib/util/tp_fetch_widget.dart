@@ -17,7 +17,7 @@ class FetchingFetchStatus extends FetchStatus {
 
 
 class TPFetchWidgetController extends GetxController {
-  final Function? onFetch;
+  final Future<void> Function()? onFetch;
 
   TPFetchWidgetController({this.onFetch,});
 }
@@ -28,7 +28,7 @@ class TPFetchWidget extends StatelessWidget {
     required this.fetch,
   });
 
-  final Function fetch;
+  final Future<void> Function() fetch;
 
   @override
   Widget build(BuildContext context) {
