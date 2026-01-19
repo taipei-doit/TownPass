@@ -4,7 +4,9 @@ import 'package:town_pass/util/web_message_handler/tp_web_message_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 abstract class TPWebMessageListener {
-  static List<TPWebMessageHandler> get messageHandler => [
+  // 將訊息處理器列表快取起來，避免每次訪問時都重複建立新的實例。
+  // 這樣做可以提升應用程式的啟動效能，因為這些處理器通常是無狀態的。
+  static final List<TPWebMessageHandler> _cachedMessageHandlers = [
         UserinfoWebMessageHandler(),
         LaunchMapWebMessageHandler(),
         PhoneCallMessageHandler(),
@@ -15,6 +17,8 @@ abstract class TPWebMessageListener {
         NotifyMessageHandler(),
         QRCodeScanMessageHandler(),
       ];
+
+  static List<TPWebMessageHandler> get messageHandler => _cachedMessageHandlers;
 
   static WebMessageListener webMessageListener() {
     return WebMessageListener(
