@@ -26,14 +26,20 @@ class LanguageView extends GetView<LanguageViewController> {
         children: [
           TPSettingListTile.selectionList(
             onIndexChange: (index) => controller.onIndexChange(index),
-            selections: Language.values
-                .map<SettingSelectionListItem>(
-                  (language) => SettingSelectionListItem(title: language.string),
-                )
-                .toList(),
+            selections: _buildLanguageSelections(),
           ),
         ],
       ),
     );
+  }
+
+  /// Builds a list of [SettingSelectionListItem] from all available [Language] values.
+  /// Each item displays the localized string for the language.
+  List<SettingSelectionListItem> _buildLanguageSelections() {
+    return Language.values
+        .map<SettingSelectionListItem>(
+          (language) => SettingSelectionListItem(title: language.string),
+        )
+        .toList();
   }
 }
