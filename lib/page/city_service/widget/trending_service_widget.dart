@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:town_pass/page/city_service/model/trending_service_model.dart';
-import 'package:town_pass/util/extension/list.dart';
+import 'package:town_pass/util/extension/list.dart'; // 雖然不再直接使用，但仍保留匯入
 import 'package:town_pass/util/tp_colors.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
@@ -76,25 +76,37 @@ class TrendingServiceWidget extends StatelessWidget {
   ///
   /// Generate [Table.children] from [_list].
   static List<TableRow> get _tableRowList {
-    return List<TableRow>.generate(
-      _list.length ~/ 2 + _list.length % 2,
-      (index) => TableRow(
+    final List<TableRow> rows = [];
+    for (int i = 0; i < _list.length; i += 2) {
+      final List<Widget> rowChildren = [];
+      rowChildren.add(Expanded(child: _list[i])); // 第一個按鈕
+
+      // 檢查是否有第二個按鈕
+      if (i + 1 < _list.length) {
+        rowChildren.add(_columnSpacer); // 加入欄間距
+        rowChildren.add(Expanded(child: _list[i + 1])); // 第二個按鈕
+      } else {
+        // 如果只有一個按鈕，則在第二個位置加入一個空的Expanded以保持佈局一致性
+        rowChildren.add(_columnSpacer); // 仍需加入欄間距
+        rowChildren.add(const Expanded(child: SizedBox.shrink()));
+      }
+
+      // 將處理好的橫列內容加入到 TableRow
+      rows.add(TableRow(
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Expanded(child: _list[index * 2]),
-              Expanded(
-                child: switch (index * 2 + 1 < _list.length) {
-                  true => _list[index * 2 + 1],
-                  false => const SizedBox.shrink(),
-                },
-              ),
-            ].joinedAround(_columnSpacer),
+            children: rowChildren,
           ),
         ],
-      ),
-    ).joined(_rowSpacer);
+      ));
+
+      // 如果還有下一組按鈕，則在當前行之後加入行間距
+      if (i + 2 < _list.length) {
+        rows.add(_rowSpacer);
+      }
+    }
+    return rows;
   }
 }
 
