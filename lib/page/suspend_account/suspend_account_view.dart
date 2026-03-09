@@ -14,6 +14,22 @@ import 'package:url_launcher/url_launcher.dart';
 class SuspendAccountView extends GetView<SuspendAccountController> {
   const SuspendAccountView({super.key});
 
+  /// 內部共用方法：開啟郵件應用程式至客服信箱。
+  /// 此方法將郵件連結的建構與錯誤處理邏輯封裝起來，避免在 Widget tree 中直接寫入。
+  /// 如果無法開啟郵件應用程式，則會顯示一個 Toast 提示。
+  Future<void> _launchCustomerServiceMail() async {
+    final Uri uri = Uri(
+      scheme: tpLaunchMailScheme,
+      path: tpMailAddress,
+    );
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
+    } else {
+      Fluttertoast.showToast(msg: '無法開啟郵件 App');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,18 +99,7 @@ class SuspendAccountView extends GetView<SuspendAccountController> {
                 decoration: TextDecoration.underline,
                 decorationColor: TPColors.primary500,
               ),
-              onTap: () async {
-                final Uri uri = Uri(
-                  scheme: tpLaunchMailScheme,
-                  path: tpMailAddress,
-                );
-
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri);
-                } else {
-                  Fluttertoast.showToast(msg: '無法開啟郵件 App');
-                }
-              },
+              onTap: _launchCustomerServiceMail, // 改為呼叫新建立的私有方法
             ),
           ),
         ],
