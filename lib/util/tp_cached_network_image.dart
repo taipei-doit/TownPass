@@ -32,23 +32,27 @@ class TPCachedNetworkImage extends StatelessWidget {
     return Container(
       width: width,
       height: height,
+      // 設定容器的背景顏色和外框圓角，在圖片載入中或錯誤時可見。
       decoration: ShapeDecoration(
         color: color,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius)),
       ),
-      child: CachedNetworkImage(
-        imageUrl: imageUrl,
-        httpHeaders: httpHeaders,
-        width: double.infinity,
-        height: double.infinity,
-        fit: fit,
-        placeholder: (context, string) =>
-            const Center(child: CircularProgressIndicator()),
-        errorWidget: (context, string, object) => ColoredBox(
-          color: TPColors.grayscale100,
-          child: Center(
-            child: Assets.svg.logoS.svg(),
+      child: ClipRRect( // 確保圖片內容（包含載入中及錯誤狀態）也依照圓角進行裁切。
+        borderRadius: BorderRadius.circular(borderRadius),
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
+          httpHeaders: httpHeaders,
+          width: double.infinity,
+          height: double.infinity,
+          fit: fit,
+          placeholder: (context, string) =>
+              const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, string, object) => ColoredBox(
+            color: TPColors.grayscale100,
+            child: Center(
+              child: Assets.svg.logoS.svg(),
+            ),
           ),
         ),
       ),
