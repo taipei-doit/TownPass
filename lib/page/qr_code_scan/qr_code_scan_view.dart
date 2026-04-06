@@ -11,6 +11,14 @@ import 'package:town_pass/util/tp_text.dart';
 class QRCodeScanView extends GetView<QRCodeScanController> {
   const QRCodeScanView({super.key});
 
+  // 常數定義掃描視窗的尺寸和位置參數。
+  // _scanWindowTopRelativeOffsetFactor: 定義掃描視窗頂部相對於螢幕寬度的偏移比例 (0.3)。
+  static const double _scanWindowTopRelativeOffsetFactor = 0.3;
+  // _scanWindowVerticalFixedOffset: 定義掃描視窗的固定垂直偏移量 (4 + 48 = 52.0)，可能用於調整與其他 UI 元素的距離。
+  static const double _scanWindowVerticalFixedOffset = 52.0;
+  // _scanWindowSizeFactor: 定義掃描視窗的寬高相對於螢幕寬度的比例 (0.6)。
+  static const double _scanWindowSizeFactor = 0.6;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,11 +120,22 @@ class QRCodeScanView extends GetView<QRCodeScanController> {
     );
   }
 
-  Rect get _scanWindow => Rect.fromCenter(
-        center: Offset(Get.width / 2, Get.width * 0.3 + 4 + 48),
-        width: Get.width * 0.6,
-        height: Get.width * 0.6,
-      );
+  /// 計算並回傳 QR Code 掃描視窗的 Rect 範圍。
+  /// 此 getter 會根據螢幕寬度及預設的比例和固定偏移量來決定掃描視窗的大小和中心位置。
+  Rect get _scanWindow {
+    final double screenWidth = Get.width; // 取得螢幕寬度，以便計算相對尺寸
+    final double scanWindowWidth = screenWidth * _scanWindowSizeFactor;
+    final double scanWindowHeight = scanWindowWidth; // 掃描視窗為正方形
+
+    final double centerX = screenWidth / 2;
+    final double centerY = screenWidth * _scanWindowTopRelativeOffsetFactor + _scanWindowVerticalFixedOffset;
+
+    return Rect.fromCenter(
+      center: Offset(centerX, centerY),
+      width: scanWindowWidth,
+      height: scanWindowHeight,
+    );
+  }
 }
 
 class _ScannerOverlay extends CustomPainter {
@@ -157,7 +176,6 @@ class _ScannerOverlay extends CustomPainter {
     final double cornerStrokeHeight = window.height / 5;
 
     canvas
-      ..drawPath(backgroundWithCutout, backgroundPaint)
       ..drawPath(
         Path()
           // top left corner
