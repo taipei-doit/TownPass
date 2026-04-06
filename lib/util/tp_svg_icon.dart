@@ -20,13 +20,19 @@ class TPSvgIcon extends StatelessWidget {
       semanticsLabel: semanticsLabel,
       height: iconTheme.size,
       width: iconTheme.size,
-      colorFilter: switch (iconTheme.color) {
-        Color color => ColorFilter.mode(
-            color,
-            BlendMode.srcIn,
-          ),
-        null => null,
-      },
+      colorFilter: _buildColorFilter(iconTheme.color), // Extracted for better structure
     );
+  }
+
+  /// Builds a ColorFilter based on the provided color,
+  /// applying a srcIn blend mode if the color is not null.
+  ColorFilter? _buildColorFilter(Color? color) {
+    return switch (color) {
+      Color c => ColorFilter.mode(
+          c,
+          BlendMode.srcIn,
+        ),
+      null => null,
+    };
   }
 }
