@@ -16,13 +16,10 @@ class FeedbackViewController extends GetxController {
 
   final String contactPhoneNumber = '02-27208889';
 
-  List<FeedbackType> get feedbackTypeList => [
-        FeedbackType.register,
-        FeedbackType.login,
-        FeedbackType.cardUsage,
-        FeedbackType.perk,
-        FeedbackType.other,
-      ];
+  // 改善：直接使用 FeedbackType.values 獲取所有列舉值。
+  // 這樣做更簡潔、更有效率，因為避免了每次訪問時都重新創建一個 List，
+  // 並且當 FeedbackType 增加新的值時，此處無需修改。
+  List<FeedbackType> get feedbackTypeList => FeedbackType.values;
 
   final RxBool isDropdownOpened = RxBool(false);
 
