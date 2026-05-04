@@ -12,6 +12,15 @@ import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 
+// 將重複使用的硬編碼 URI 提取為檔案內私有常數，提升程式碼的可讀性與維護性。
+// 如果未來這些 URI 需要在多個檔案中共享，可以將此類移至獨立的工具檔案 (例如 lib/util/app_uris.dart)。
+class _SubscriptionUris {
+  _SubscriptionUris._(); // 私有建構子，防止實例化
+
+  static const String settings = 'https://taipei-pass-service.vercel.app/subscription';
+  static const String itemList = 'https://taipei-pass-service.vercel.app/subscription/item-list';
+}
+
 class SubscriptionWidget extends StatelessWidget {
   const SubscriptionWidget({super.key});
 
@@ -41,7 +50,7 @@ class SubscriptionWidget extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     await TPRoute.openUri(
-                      uri: 'https://taipei-pass-service.vercel.app/subscription',
+                      uri: _SubscriptionUris.settings, // 使用提取的常數
                     );
                   },
                   child: Row(
@@ -68,7 +77,7 @@ class SubscriptionWidget extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   onTap: () async {
                     await TPRoute.openUri(
-                      uri: 'https://taipei-pass-service.vercel.app/subscription/item-list',
+                      uri: _SubscriptionUris.itemList, // 使用提取的常數
                     );
                   },
                   child: Row(
@@ -125,7 +134,7 @@ class SubscriptionWidget extends StatelessWidget {
                           ),
                           onTap: () async {
                             await TPRoute.openUri(
-                              uri: 'https://taipei-pass-service.vercel.app/subscription',
+                              uri: _SubscriptionUris.settings, // 使用提取的常數
                             );
                           },
                         ),
