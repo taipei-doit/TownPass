@@ -34,9 +34,9 @@ class TPWebView extends StatelessWidget {
     this.titleController,
   });
 
-  String get url => (Get.arguments as WebViewArgument?)?.url ?? '';
-
-  String? get forceTitle => (Get.arguments as WebViewArgument?)?.forceTitle;
+  // 移除了原始的 url 和 forceTitle getter，改在 build 方法中一次性解析 Get.arguments
+  // String get url => (Get.arguments as WebViewArgument?)?.url ?? '';
+  // String? get forceTitle => (Get.arguments as WebViewArgument?)?.forceTitle;
 
   final TPAppBarController _defaultTitleController = TPAppBarController();
 
@@ -48,6 +48,11 @@ class TPWebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // 將路由參數一次性解析為 local 變數，避免重複的 Get.arguments 存取與類型轉換
+    final WebViewArgument? args = Get.arguments is WebViewArgument ? Get.arguments : null;
+    final String url = args?.url ?? '';
+    final String? forceTitle = args?.forceTitle;
+
     return Scaffold(
       appBar: TPAppBar(
         backgroundColor: TPColors.primary500,
@@ -80,8 +85,10 @@ class TPWebView extends StatelessWidget {
         onWebViewCreated: (controller) {
           webViewController.value = controller;
           try {
+            // 使用 local 的 url 變數
             controller.loadUrl(urlRequest: URLRequest(url: WebUri(url)));
           } catch (_) {
+            // 使用 local 的 url 變數
             controller.loadData(data: _failedToLoadUrlData(url: url));
           }
         },
@@ -89,10 +96,8 @@ class TPWebView extends StatelessWidget {
           canGoBack.value = await webViewController.value?.canGoBack() ?? false;
         },
         onTitleChanged: (_, title) {
-          appBarController.title.value = switch (forceTitle == null) {
-            true => title,
-            false => forceTitle,
-          };
+          // 使用 local 的 forceTitle 變數，並簡化條件判斷
+          appBarController.title.value = forceTitle ?? title;
         },
         onGeolocationPermissionsShowPrompt: (controller, origin) async {
           // should be deal individually (ask for user agreement)
