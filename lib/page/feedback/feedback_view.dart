@@ -11,6 +11,98 @@ import 'package:town_pass/util/tp_line.dart';
 import 'package:town_pass/util/tp_text.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+/// 意見回饋類型選擇下拉選單元件
+/// 將複雜的 OverlayPortal 相關邏輯抽離，使 FeedbackView 的 build 方法更簡潔。
+class _FeedbackTypeDropdown extends StatelessWidget {
+  const _FeedbackTypeDropdown({
+    required this.controller,
+    super.key,
+  });
+
+  final FeedbackViewController controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return CompositedTransformTarget(
+      link: controller.dropdownMenuLayerLink,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: controller.toggleDropdownMenu,
+        child: OverlayPortal(
+          controller: controller.overlayPortalController,
+          overlayChildBuilder: (context) {
+            return CompositedTransformFollower(
+              link: controller.dropdownMenuLayerLink,
+              targetAnchor: Alignment.bottomLeft,
+              followerAnchor: Alignment.topLeft,
+              child: Stack(
+                children: [
+                  ModalBarrier(onDismiss: controller.toggleDropdownMenu),
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: ColoredBox(
+                      color: TPColors.grayscale50,
+                      child: ListView.separated(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        shrinkWrap: true,
+                        itemCount: FeedbackType.values.length,
+                        separatorBuilder: (_, __) => const TPLine.horizontal(color: TPColors.grayscale200),
+                        itemBuilder: (context, index) {
+                          final FeedbackType feedbackType = FeedbackType.values[index];
+                          return GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: () {
+                              controller.feedbackType.value = feedbackType;
+                              controller.toggleDropdownMenu();
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              child: TPText(
+                                feedbackType.string,
+                                style: TPTextStyles.h3Regular,
+                                color: TPColors.grayscale700,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Obx(
+                    () => TPText(
+                      switch (controller.feedbackType.value) {
+                        null => '請選擇建議類型',
+                        FeedbackType feedback => feedback.string,
+                      },
+                      style: TPTextStyles.h3SemiBold,
+                      color: TPColors.grayscale700,
+                    ),
+                  ),
+                ),
+                Obx(
+                  () => switch (controller.isDropdownOpened.value) {
+                    true => Assets.svg.iconArrowUp.svg(),
+                    false => Assets.svg.iconArrowDown.svg(),
+                  },
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class FeedbackView extends GetView<FeedbackViewController> {
   const FeedbackView({super.key});
 
@@ -22,83 +114,8 @@ class FeedbackView extends GetView<FeedbackViewController> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Center(
-            child: CompositedTransformTarget(
-              link: controller.dropdownMenuLayerLink,
-              child: GestureDetector(
-                behavior: HitTestBehavior.opaque,
-                onTap: controller.toggleDropdownMenu,
-                child: OverlayPortal(
-                  controller: controller.overlayPortalController,
-                  overlayChildBuilder: (context) {
-                    return CompositedTransformFollower(
-                      link: controller.dropdownMenuLayerLink,
-                      targetAnchor: Alignment.bottomLeft,
-                      followerAnchor: Alignment.topLeft,
-                      child: Stack(
-                        children: [
-                          ModalBarrier(onDismiss: controller.toggleDropdownMenu),
-                          Align(
-                            alignment: Alignment.topCenter,
-                            child: ColoredBox(
-                              color: TPColors.grayscale50,
-                              child: ListView.separated(
-                                padding: const EdgeInsets.symmetric(horizontal: 16),
-                                shrinkWrap: true,
-                                itemCount: FeedbackType.values.length,
-                                separatorBuilder: (_, __) => const TPLine.horizontal(color: TPColors.grayscale200),
-                                itemBuilder: (context, index) {
-                                  final FeedbackType feedbackType = FeedbackType.values[index];
-                                  return GestureDetector(
-                                    behavior: HitTestBehavior.opaque,
-                                    onTap: () {
-                                      controller.feedbackType.value = feedbackType;
-                                      controller.toggleDropdownMenu();
-                                    },
-                                    child: Container(
-                                      padding: const EdgeInsets.symmetric(vertical: 12),
-                                      child: TPText(
-                                        feedbackType.string,
-                                        style: TPTextStyles.h3Regular,
-                                        color: TPColors.grayscale700,
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Obx(
-                            () => TPText(
-                              switch (controller.feedbackType.value) {
-                                null => '請選擇建議類型',
-                                FeedbackType feedback => feedback.string,
-                              },
-                              style: TPTextStyles.h3SemiBold,
-                              color: TPColors.grayscale700,
-                            ),
-                          ),
-                        ),
-                        Obx(
-                          () => switch (controller.isDropdownOpened.value) {
-                            true => Assets.svg.iconArrowUp.svg(),
-                            false => Assets.svg.iconArrowDown.svg(),
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
+            // 將意見回饋類型下拉選單抽離為獨立元件
+            child: _FeedbackTypeDropdown(controller: controller),
           ),
           Expanded(
             child: ColoredBox(
