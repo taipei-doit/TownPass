@@ -8,6 +8,11 @@ class NotificationService extends GetxService {
   static int _id = 0;
   static final FlutterLocalNotificationsPlugin _notificationInstance = FlutterLocalNotificationsPlugin();
 
+  // Android 通知通道的常數，避免使用魔術字串。
+  static const String _androidChannelId = 'TownPass_android_notification_id';
+  static const String _androidChannelName = 'TownPass android notification channel name';
+  static const String _androidChannelDescription = 'TownPass notifications for important updates'; // 可以考慮添加描述，雖然目前未使用
+
   Future<NotificationService> init() async {
     await _notificationInstance.getNotificationAppLaunchDetails();
 
@@ -47,8 +52,9 @@ class NotificationService extends GetxService {
       content,
       const NotificationDetails(
         android: AndroidNotificationDetails(
-          'TownPass android notification id',
-          'TownPass android notification channel name',
+          _androidChannelId, // 使用常數
+          _androidChannelName, // 使用常數
+          // 可選：如果需要，可以在這裡添加 channelDescription: _androidChannelDescription,
           importance: Importance.max,
           priority: Priority.max,
         ),
