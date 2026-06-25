@@ -29,23 +29,23 @@ class HomeView extends StatelessWidget {
       ),
       body: const CustomScrollView(
         slivers: [
-          _SliverSizedBox(height: 20),
+          _SliverGap(20),
           SliverToBoxAdapter(child: NewsBannerWidget()),
-          _SliverSizedBox(height: 20),
+          _SliverGap(20),
           SliverToBoxAdapter(child: ActivityInfoWidget()),
-          _SliverSizedBox(height: 8),
+          _SliverGap(8),
           SliverToBoxAdapter(child: CityNewsWidget()),
-          _SliverSizedBox(height: 16),
+          _SliverGap(16),
           SliverToBoxAdapter(child: SubscriptionWidget()),
-          _SliverSizedBox(height: 32),
+          _SliverGap(32),
         ],
       ),
     );
   }
 }
 
-class _SliverSizedBox extends StatelessWidget {
-  const _SliverSizedBox({required this.height});
+class _SliverGap extends StatelessWidget {
+  const _SliverGap(this.height);
 
   final double height;
 
