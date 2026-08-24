@@ -23,15 +23,13 @@ class TPDialog {
               color: TPColors.grayscale950,
             ),
           ],
+          if (title != null && content != null) const SizedBox(height: 16),
           if (content != null) ...[
-            if (title != null) ...[
-              const SizedBox(height: 16),
-              TPText(
-                content,
-                style: TPTextStyles.bodyRegular,
-                color: TPColors.grayscale950,
-              ),
-            ],
+            TPText(
+              content,
+              style: TPTextStyles.bodyRegular,
+              color: TPColors.grayscale950,
+            ),
           ],
           const SizedBox(height: 24),
           const TPLine.horizontal(),
@@ -68,12 +66,8 @@ class TPDialog {
               color: TPColors.grayscale950,
             ),
           ],
-          if (content != null) ...[
-            if (title != null) ...[
-              const SizedBox(height: 16),
-              content,
-            ],
-          ],
+          if (title != null && content != null) const SizedBox(height: 16),
+          if (content != null) content,
           const SizedBox(height: 24),
           const TPLine.horizontal(),
           GestureDetector(
