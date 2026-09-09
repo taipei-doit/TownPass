@@ -8,17 +8,19 @@ class SubscriptionService extends GetxService {
     return this;
   }
 
+  /// 新增訂閱項目，預設產生兩筆測試用的模擬資料
   void addSubscription({required String title}) {
+    final now = DateTime.now();
     itemList.addAll([
       SubscriptionItem(
         title: title,
         content: '$title內容 ' * 20,
-        datetime: DateTime.now(),
+        datetime: now,
       ),
       SubscriptionItem(
         title: title,
         content: '$title內容2 ' * 20,
-        datetime: DateTime.now(),
+        datetime: now,
       ),
     ]);
   }
