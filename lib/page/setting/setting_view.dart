@@ -18,6 +18,7 @@ class SettingView extends GetView<SettingViewController> {
     return GetBuilder(
       init: Get.put<SettingViewController>(SettingViewController()),
       builder: (controller) {
+        final lastLoginStr = controller.lastLoginDateTime.format('yyyy/MM/dd HH:mm:ss');
         return Scaffold(
           appBar: const TPAppBar(title: '設定'),
           body: TPSettingList(
@@ -59,7 +60,7 @@ class SettingView extends GetView<SettingViewController> {
             child: Column(
               children: [
                 TPText(
-                  '最後登入時間：${controller.lastLoginDateTime.format('yyyy/MM/dd HH:mm:ss')}',
+                  '最後登入時間：$lastLoginStr',
                   style: TPTextStyles.bodyRegular,
                   color: TPColors.primary500,
                 ),
