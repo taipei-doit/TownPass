@@ -7,24 +7,24 @@ import 'package:town_pass/util/tp_constant.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 
+// 熱門繳費項目的私有資料模型
+class _PopularBillItem {
+  final Widget icon;
+  final String name;
+  final String uri;
+
+  const _PopularBillItem({
+    required this.icon,
+    required this.name,
+    required this.uri,
+  });
+}
+
 class BillView extends StatelessWidget {
   const BillView({super.key});
 
-  // 新增一個私有資料模型來表示熱門繳費項目
-  class _PopularBillItem {
-    final Widget icon;
-    final String name;
-    final String uri;
-
-    const _PopularBillItem({
-      required this.icon,
-      required this.name,
-      required this.uri,
-    });
-  }
-
-  // 將熱門繳費的資料定義為一個靜態常數列表
-  static const List<_PopularBillItem> _popularBillItems = [
+  // 熱門繳費項目列表。icon 是執行期建立的 widget，所以不能用 const
+  static final List<_PopularBillItem> _popularBillItems = [
     _PopularBillItem(
       icon: Assets.svg.iconBillCar.svg(),
       name: '停車費',
@@ -128,11 +128,12 @@ class BillView extends StatelessWidget {
                   child: SizedBox(
                     width: 120 * goldenRatio,
                     child: DottedBorder(
-                      color: TPColors.grayscale200,
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(5.0),
-                      strokeWidth: 1.5,
-                      dashPattern: const [4, 3],
+                      options: const RoundedRectDottedBorderOptions(
+                        color: TPColors.grayscale200,
+                        radius: Radius.circular(5.0),
+                        strokeWidth: 1.5,
+                        dashPattern: [4, 3],
+                      ),
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
