@@ -47,7 +47,7 @@ class TPSwitch extends StatelessWidget {
             inactiveTrackColor: TPColors.grayscale100,
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             trackOutlineColor: WidgetStateProperty.resolveWith(
-              (final Set<WidgetState> states) {
+              (Set<WidgetState> states) {
                 if (states.contains(WidgetState.selected)) {
                   return null;
                 }
@@ -55,7 +55,7 @@ class TPSwitch extends StatelessWidget {
               },
             ),
             thumbColor: WidgetStateProperty.resolveWith(
-              (final Set<WidgetState> states) => TPColors.white,
+              (Set<WidgetState> states) => TPColors.white,
             ),
           ),
         ),

@@ -17,13 +17,10 @@ class NotificationService extends GetxService {
         requestAlertPermission: false,
         requestBadgePermission: false,
         requestSoundPermission: false,
-        onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) async {
-          // add action when notification clicked
-        },
       ),
     );
 
-    await _notificationInstance.initialize(initializationSettings);
+    await _notificationInstance.initialize(settings: initializationSettings);
 
     return this;
   }
@@ -42,10 +39,10 @@ class NotificationService extends GetxService {
 
   static Future<void> showNotification({String? title, String? content}) async {
     await _notificationInstance.show(
-      _id++,
-      title,
-      content,
-      const NotificationDetails(
+      id: _id++,
+      title: title,
+      body: content,
+      notificationDetails: const NotificationDetails(
         android: AndroidNotificationDetails(
           'TownPass android notification id',
           'TownPass android notification channel name',

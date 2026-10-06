@@ -128,11 +128,12 @@ class BillView extends StatelessWidget {
                   child: SizedBox(
                     width: 120 * goldenRatio,
                     child: DottedBorder(
-                      color: TPColors.grayscale200,
-                      borderType: BorderType.RRect,
-                      radius: const Radius.circular(5.0),
-                      strokeWidth: 1.5,
-                      dashPattern: const [4, 3],
+                      options: const RoundedRectDottedBorderOptions(
+                        color: TPColors.grayscale200,
+                        radius: Radius.circular(5.0),
+                        strokeWidth: 1.5,
+                        dashPattern: [4, 3],
+                      ),
                       child: Center(
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
