@@ -76,14 +76,14 @@ class BillAppBar extends StatelessWidget implements PreferredSizeWidget {
               _BottomItem(
                 icon: Assets.svg.iconAppBarScan.svg(),
                 title: '掃描',
-                onTap: () async => await TPRoute.openUri(
+                onTap: () => TPRoute.openUri(
                   uri: 'https://taipei-pass-service.vercel.app/fee-payment/scan/',
                 ),
               ),
               _BottomItem(
                 icon: Assets.svg.iconAppBarAccountingRecord.svg(),
                 title: '紀錄',
-                onTap: () async => await TPRoute.openUri(
+                onTap: () => TPRoute.openUri(
                   uri: 'https://taipei-pass-service.vercel.app/fee-payment/history/',
                 ),
               ),
@@ -118,7 +118,7 @@ class _BottomItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: () => onTap?.call(),
+      onTap: onTap,
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
