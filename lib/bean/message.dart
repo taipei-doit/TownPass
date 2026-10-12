@@ -60,6 +60,9 @@ enum MessageType {
   @JsonValue(_tcgType)
   tcg,
   @JsonValue(_systemType)
-  system,
-  ;
+  system;
+
+  bool get isPersonal => this == MessageType.personal;
+  bool get isTcg => this == MessageType.tcg;
+  bool get isSystem => this == MessageType.system;
 }
