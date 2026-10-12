@@ -16,7 +16,8 @@ import 'package:town_pass/main.dart';
 void _verifyCounterValue(WidgetTester tester, int expectedCount) {
   expect(find.text('$expectedCount'), findsOneWidget);
   // Also verify that the *other* possible counter value (0 or 1) is not present.
-  expect(find.text('${expectedCount == 0 ? 1 : 0}'), findsNothing);
+  final unexpectedCount = expectedCount == 0 ? 1 : 0;
+  expect(find.text('$unexpectedCount'), findsNothing);
 }
 
 void main() {
