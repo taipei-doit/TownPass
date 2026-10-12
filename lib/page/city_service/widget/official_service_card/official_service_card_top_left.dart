@@ -10,13 +10,16 @@ class OfficialServiceCardTopLeft extends OfficialServiceCard {
 
   @override
   Widget layoutBuild(BuildContext context, BoxConstraints constraint) {
+    final double cardHeight = constraint.maxWidth / goldenRatio;
+    final double illustrationSize = constraint.maxWidth * 0.67;
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
       onTap: () async {
         // TODO: add url
       },
       child: Container(
-        height: constraint.maxWidth / goldenRatio,
+        height: cardHeight,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6.0),
           gradient: const LinearGradient(
@@ -34,7 +37,7 @@ class OfficialServiceCardTopLeft extends OfficialServiceCard {
             Align(
               alignment: Alignment.bottomLeft,
               child: SizedBox.square(
-                dimension: constraint.maxWidth * 0.67,
+                dimension: illustrationSize,
                 child: Align(
                   alignment: Alignment.bottomLeft,
                   child: Assets.svg.illustrationsGov.svg(),
