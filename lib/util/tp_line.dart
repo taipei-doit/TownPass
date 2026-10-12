@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 
 /// Create strait line, use with [TPLine.horizontal()] or [TPLine.vertical()]
 final class TPLine extends StatelessWidget {
+  static const double _defaultThickness = 1.0;
+  static const Color _defaultColor = TPColors.grayscale100;
+
   /// 線條顏色
   ///
   /// Color of the line.
@@ -46,13 +49,13 @@ final class TPLine extends StatelessWidget {
       child: switch (_axis) {
         _Axis.horizontal => Divider(
             height: 0.0,
-            thickness: thickness ?? 1.0,
-            color: color ?? TPColors.grayscale100,
+            thickness: thickness ?? _defaultThickness,
+            color: color ?? _defaultColor,
           ),
         _Axis.vertical => VerticalDivider(
             width: 0.0,
-            thickness: thickness ?? 1.0,
-            color: color ?? TPColors.grayscale100,
+            thickness: thickness ?? _defaultThickness,
+            color: color ?? _defaultColor,
           ),
       },
     );
