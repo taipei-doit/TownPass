@@ -29,7 +29,7 @@ Here are some quick setup guide.
 2. Generate additional needed dart code for the project.
 
    ``` bash
-   flutter packages pub run build_runner build
+   dart run build_runner build
    ```
 
 3. You are all set now, Run the project from your IDE or the through the command line:
