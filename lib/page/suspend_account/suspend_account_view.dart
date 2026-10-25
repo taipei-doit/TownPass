@@ -33,7 +33,7 @@ class SuspendAccountView extends GetView<SuspendAccountController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: TPAppBar(
+      appBar: const TPAppBar(
         title: '停用帳號',
       ),
       body: TPSettingList(

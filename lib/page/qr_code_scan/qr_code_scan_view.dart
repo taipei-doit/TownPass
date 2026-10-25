@@ -145,19 +145,18 @@ class _ScannerOverlay extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final backgroundPath = Path()..addRect(Rect.largest);
+    final backgroundPath = Path()..addRect(Offset.zero & size);
     final cutoutPath = Path()..addRect(window);
 
-    final Paint backgroundPaint = Paint()
-      ..color = Colors.black.withOpacity(0.5)
-      ..style = PaintingStyle.fill
-      ..blendMode = BlendMode.dstOut;
-
-    final Path backgroundWithCutout = Path.combine(
+    final backgroundWithCutout = Path.combine(
       PathOperation.difference,
       backgroundPath,
       cutoutPath,
     );
+
+    final backgroundPaint = Paint()
+      ..color = Colors.black.withValues(alpha: 0.5)
+      ..style = PaintingStyle.fill;
 
     const double strokeWidth = 5.0;
     final Rect strokeRect = Rect.fromCenter(
@@ -176,6 +175,7 @@ class _ScannerOverlay extends CustomPainter {
     final double cornerStrokeHeight = window.height / 5;
 
     canvas
+      ..drawPath(backgroundWithCutout, backgroundPaint)
       ..drawPath(
         Path()
           // top left corner

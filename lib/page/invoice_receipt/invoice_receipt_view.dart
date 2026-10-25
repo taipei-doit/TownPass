@@ -35,22 +35,22 @@ class InvoiceReceiptView extends StatelessWidget {
                     left: 22.0,
                     child: Assets.svg.iconProtect.svg(),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(24.0),
+                  const Padding(
+                    padding: EdgeInsets.all(24.0),
                     child: Column(
                       children: [
-                        const TPText(
+                        TPText(
                           '發票收據',
                           style: TPTextStyles.h2SemiBold,
                           color: TPColors.primary500,
                         ),
-                        const SizedBox(height: 4.0),
+                        SizedBox(height: 4.0),
                         TPText(
                           '個資使用聲明',
                           style: TPTextStyles.h3Regular,
                           color: TPColors.grayscale700,
                         ),
-                        const SizedBox(height: 32.0),
+                        SizedBox(height: 32.0),
                         TPText(
                           '個資使用聲明可還地？時離地院。'
                           '命人資你別然書城很，是公麼級在！有真得劇那舉'

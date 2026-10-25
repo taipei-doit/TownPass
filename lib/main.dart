@@ -31,7 +31,8 @@ void main() async {
 
 Future<void> initServices() async {
   await Get.putAsync<AccountService>(() async => await AccountService().init());
-  await Get.putAsync<DeviceService>(() async => await DeviceService().init());
+  await Get.putAsync<DeviceService>(() async => await Devicenotepad ~/.gradle/gradle.properties
+Service().init());
   await Get.putAsync<PackageService>(() async => await PackageService().init());
   await Get.putAsync<SharedPreferencesService>(() async => await SharedPreferencesService().init());
   await Get.putAsync<GeoLocatorService>(() async => await GeoLocatorService().init());

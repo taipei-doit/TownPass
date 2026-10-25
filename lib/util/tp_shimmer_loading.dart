@@ -6,6 +6,7 @@ class TPShimmerWidget extends StatelessWidget {
   final bool isLoading;
 
   const TPShimmerWidget({
+    super.key,
     required this.child,
     required this.isLoading,
   });

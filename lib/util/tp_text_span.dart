@@ -1,3 +1,6 @@
+// TPTextSpan stores constructor args separately from the computed super tree.
+// ignore_for_file: overridden_fields
+
 import 'package:flutter/material.dart';
 
 class TPTextSpan extends TextSpan {

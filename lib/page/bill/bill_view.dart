@@ -7,24 +7,22 @@ import 'package:town_pass/util/tp_constant.dart';
 import 'package:town_pass/util/tp_route.dart';
 import 'package:town_pass/util/tp_text.dart';
 
+class _PopularBillItem {
+  final Widget icon;
+  final String name;
+  final String uri;
+
+  const _PopularBillItem({
+    required this.icon,
+    required this.name,
+    required this.uri,
+  });
+}
+
 class BillView extends StatelessWidget {
   const BillView({super.key});
 
-  // 新增一個私有資料模型來表示熱門繳費項目
-  class _PopularBillItem {
-    final Widget icon;
-    final String name;
-    final String uri;
-
-    const _PopularBillItem({
-      required this.icon,
-      required this.name,
-      required this.uri,
-    });
-  }
-
-  // 將熱門繳費的資料定義為一個靜態常數列表
-  static const List<_PopularBillItem> _popularBillItems = [
+  static final List<_PopularBillItem> _popularBillItems = [
     _PopularBillItem(
       icon: Assets.svg.iconBillCar.svg(),
       name: '停車費',
@@ -168,7 +166,7 @@ class BillView extends StatelessWidget {
               name: item.name,
               onTap: () async => await TPRoute.openUri(uri: item.uri),
             ),
-          ).toList(),
+          ),
         ],
       ),
     );

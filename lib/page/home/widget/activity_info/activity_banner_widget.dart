@@ -100,9 +100,7 @@ class _Banner extends StatelessWidget {
 }
 
 class _BannerRectangle extends StatelessWidget {
-  final Widget? child;
-
-  const _BannerRectangle({this.child});
+  const _BannerRectangle();
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +112,6 @@ class _BannerRectangle extends StatelessWidget {
         color: TPColors.white,
       ),
       clipBehavior: Clip.antiAlias,
-      child: child,
     );
   }
 }

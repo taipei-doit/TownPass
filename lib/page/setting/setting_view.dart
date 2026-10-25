@@ -64,7 +64,7 @@ class SettingView extends GetView<SettingViewController> {
                   color: TPColors.primary500,
                 ),
                 const SizedBox(height: 10),
-                TPButton.primary(text: '登出'),
+                const TPButton.primary(text: '登出'),
               ],
             ),
           ),
