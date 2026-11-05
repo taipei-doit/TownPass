@@ -36,14 +36,16 @@ flutter run --dart-define=TEAM_WEB_URL=http://10.0.2.2:5173/
 
 > Windows 若出現「應用程式控制原則已封鎖此檔案」：用 `python -m uvicorn`（如上），不要直接執行 `.venv` 裡的 `uvicorn.exe`。
 
+> 新增功能的方法見 [FRAMEWORK.md](FRAMEWORK.md)：前端一個功能一個 `src/features/<id>/` 資料夾，後端一個 `features/<name>.py`。部署見 [DEPLOY.md](DEPLOY.md)。
+
 ## 分工（每人一個資料夾，避免衝突）
 
 | 角色 | 負責 | 資料夾 |
 |---|---|---|
 | PM／資料／demo | 拆題目、找資料、寫 SOURCES.md、demo 腳本、主持排練 | `docs/` `data/` |
 | Flutter 整合 | 服務入口、bridge 新訊息、打包 APK、準備 demo 手機 | `lib/` `android/` |
-| 前端 ×2 | 依「頁面」分工，先用 mock 開發 | `services/web/src/views/<自己的頁面>` |
-| 後端 | API、資料處理 | `services/backend/` |
+| 前端 ×2 | 依「功能」分工，先用 mock 開發 | `services/web/src/features/<自己的功能>/` |
+| 後端 | API、資料處理 | `services/backend/src/townpass_backend/features/<name>.py` |
 
 ## 題目公布後的前 2 小時：先定合約，不寫程式
 

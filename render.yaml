@@ -1,0 +1,27 @@
+# Render Blueprint: backend web service + Postgres, both on the free plan.
+# Set up once: Render Dashboard -> New -> Blueprint -> pick hackathon-taipei/TownPass (see docs/DEPLOY.md).
+# After that every merge to main that passes CI deploys automatically - no single person needed.
+services:
+  - type: web
+    name: townpass-backend
+    runtime: docker
+    plan: free
+    region: singapore # closest region to Taipei
+    rootDir: services/backend # only changes under here trigger a deploy
+    dockerfilePath: ./services/backend/Dockerfile
+    dockerContext: ./services/backend
+    healthCheckPath: /health
+    autoDeployTrigger: checksPass # deploy only after GitHub CI is green
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: townpass-db
+          property: connectionString
+      - key: CORS_ORIGINS
+        value: '*'
+
+databases:
+  - name: townpass-db
+    plan: free # NOTE: free Postgres expires 30 days after creation
+    region: singapore
+    postgresMajorVersion: '17'

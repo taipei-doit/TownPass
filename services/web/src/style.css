@@ -1,21 +1,98 @@
 @import 'tailwindcss';
 
-/* TownPass brand colours, copied from lib/util/tp_colors.dart in the app */
+/*
+ * Design tokens from the official TownPass web template (taipei-doit/TownPass-Services tailwind.config.js),
+ * which implements the TownPass Figma UI kit:
+ * https://www.figma.com/community/file/1409212309969674409
+ * Use these names only (bg-primary-500, text-grey-700, shadow-card ...). Don't invent new hex colours.
+ */
 @theme {
+  --font-sans: 'PingFang TC', 'Roboto', 'Noto Sans TC', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+  --text-h1: 1.75rem;
+  --shadow-card: 0px 4px 12px 0px rgba(0, 0, 0, 0.1);
+
+  /* brand */
   --color-primary-50: #edf8fa;
   --color-primary-100: #dbf1f5;
   --color-primary-200: #b4e2ea;
   --color-primary-300: #93d4df;
   --color-primary-400: #71c5d5;
-  --color-primary-500: #5ab4c5;
+  --color-primary-500: #2eb6c7;
   --color-primary-600: #468d9b;
   --color-primary-700: #356c77;
   --color-primary-800: #22474e;
   --color-primary-900: #112629;
+  --color-primary-950: #081315;
+
+  --color-secondary-50: #fdf8ed;
+  --color-secondary-100: #fcf2df;
+  --color-secondary-200: #f8e3bc;
+  --color-secondary-300: #f4d69e;
+  --color-secondary-400: #edbb60;
+  --color-secondary-500: #f5ba4b;
+  --color-secondary-600: #e7a43c;
+  --color-secondary-700: #b07d2c;
+  --color-secondary-800: #74521b;
+  --color-secondary-900: #3c2b0b;
+  --color-secondary-950: #1c1304;
+
+  /* neutrals */
+  --color-grey-50: #f1f3f4;
+  --color-grey-100: #e3e7e9;
+  --color-grey-200: #cad1d5;
+  --color-grey-300: #adb8be;
+  --color-grey-400: #91a0a8;
+  --color-grey-500: #738995;
+  --color-grey-600: #5e6d76;
+  --color-grey-700: #475259;
+  --color-grey-800: #30383d;
+  --color-grey-900: #171b1d;
+  --color-grey-950: #080d0e;
+
+  --color-main-50: #eef7f9;
+  --color-main-100: #def0f3;
+  --color-main-200: #bde1e7;
+  --color-main-300: #8ccad6;
+  --color-main-400: #5ab3c4;
+  --color-main-500: #51a1b0;
+  --color-main-600: #488f9d;
+  --color-main-700: #366b76;
+  --color-main-800: #2d5a62;
+  --color-main-900: #24484e;
+
+  --color-mid-50: #ffffff;
+  --color-mid-100: #f5f5f5;
+  --color-mid-200: #f0f0f0;
+  --color-mid-300: #dddddd;
+  --color-mid-400: #959595;
+  --color-mid-500: #434343;
+
+  /* accents */
+  --color-mango: #eac600;
+  --color-banana: #f5ba4b;
+  --color-grape: #5e73b4;
+  --color-orange-50: #fdf3ec;
+  --color-orange-100: #fbe7d9;
+  --color-orange-200: #f7cfb2;
+  --color-orange-300: #f4b992;
+  --color-orange-400: #f1a26d;
+  --color-orange-500: #fd853a;
+  --color-orange-600: #e6692c;
+  --color-orange-700: #ae501f;
+  --color-orange-800: #713311;
+  --color-orange-900: #391a06;
+  --color-orange-950: #1c0c02;
+
+  /* status */
+  --color-warn-100: #ea686f;
+  --color-warn-200: #e5464b;
+  --color-success: #66aa00;
 }
 
 html,
 body {
-  @apply bg-white text-gray-900 antialiased;
-  font-family: 'PingFang TC', 'Noto Sans TC', system-ui, sans-serif;
+  @apply bg-white font-sans text-grey-800 antialiased;
+  -webkit-tap-highlight-color: transparent;
 }

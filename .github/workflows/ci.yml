@@ -45,12 +45,23 @@ jobs:
     if: needs.changes.outputs.backend == 'true'
     runs-on: ubuntu-latest
     defaults: { run: { working-directory: services/backend } }
+    services:
+      postgres:
+        image: postgres:17
+        env: { POSTGRES_PASSWORD: postgres, POSTGRES_DB: townpass }
+        ports: ['5432:5432']
+        options: --health-cmd pg_isready --health-interval 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v6
       - run: uv sync --frozen
       - run: uv run ruff check .
-      - run: uv run pytest -q
+      - name: tests (SQLite)
+        run: uv run pytest -q
+      - name: tests (Postgres, same as Render)
+        run: uv run pytest -q
+        env:
+          TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/townpass
 
   app:
     needs: changes

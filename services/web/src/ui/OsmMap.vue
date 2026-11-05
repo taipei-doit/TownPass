@@ -24,7 +24,7 @@ function drawMarkers() {
   layer?.remove()
   layer = L.layerGroup(
     props.markers.map((m) =>
-      L.circleMarker([m.lat, m.lng], { radius: 8, color: '#468D9B', fillColor: '#5AB4C5', fillOpacity: 0.9 })
+      L.circleMarker([m.lat, m.lng], { radius: 8, color: '#356c77', fillColor: '#2eb6c7', fillOpacity: 0.9 })
         .bindTooltip(m.label ?? '')
         .on('click', () => emit('markerClick', m)),
     ),
@@ -32,7 +32,12 @@ function drawMarkers() {
 }
 
 onMounted(() => {
-  map = L.map(el.value!).setView(props.center, props.zoom)
+  map = L.map(el.value!, {
+    // On phones a one-finger drag should scroll the page, not trap the user in the map.
+    // Pinch-zoom and the +/- buttons still work.
+    dragging: !L.Browser.mobile,
+    scrollWheelZoom: false,
+  }).setView(props.center, props.zoom)
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; OpenStreetMap contributors',
@@ -45,5 +50,6 @@ onBeforeUnmount(() => map?.remove())
 </script>
 
 <template>
-  <div ref="el" class="h-64 w-full rounded-xl" />
+  <!-- isolate: Leaflet panes use z-index 400+, keep them below sticky headers/bars -->
+  <div ref="el" class="isolate h-64 w-full rounded-xl" />
 </template>

@@ -8,9 +8,9 @@
 |---|---|
 | `lib/` `android/` `ios/` | TownPass Flutter App（上游程式碼，僅做最小修改） |
 | `services/web/` | 微服務前端：Vue 3 + Vite + TypeScript + Tailwind + Leaflet/OSM |
-| `services/backend/` | 後端：FastAPI（Python 3.12，uv） |
+| `services/backend/` | 後端：FastAPI + SQLModel，Postgres（Render）／本機 SQLite |
 | `data/SOURCES.md` | 使用的開放資料與出處 |
-| `docs/` | [團隊開發流程](docs/WORKFLOW.md)、[App ↔ 網頁訊息](docs/bridge.md) |
+| `docs/` | [團隊開發流程](docs/WORKFLOW.md)、[UI 框架與新增功能](docs/FRAMEWORK.md)、[部署](docs/DEPLOY.md)、[App ↔ 網頁訊息](docs/bridge.md) |
 | `tools/` | 開發環境安裝與檢查腳本 |
 
 ## 快速開始
