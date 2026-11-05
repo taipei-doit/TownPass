@@ -29,8 +29,17 @@ enum MyServiceItemId {
   library,
   locationSearch,
   zoo,
+  teamService,
   ;
 }
+
+/// Our hackathon microservice. Default: the GitHub Pages deploy of services/web.
+/// Local dev (emulator -> laptop Vite server):
+///   flutter run --dart-define=TEAM_WEB_URL=http://10.0.2.2:5173/
+const String teamWebUrl = String.fromEnvironment(
+  'TEAM_WEB_URL',
+  defaultValue: 'https://hackathon-taipei.github.io/TownPass/',
+);
 
 extension MyServiceIdExt on MyServiceItemId {
   MyServiceItem get item {
@@ -182,6 +191,14 @@ extension MyServiceIdExt on MyServiceItemId {
           icon: Assets.svg.iconZoo24.svg(),
           category: MyServiceCategory.explore,
           destinationUrl: '',
+        ),
+      // TODO(team): rename + pick an icon once the topic is announced
+      MyServiceItemId.teamService => MyServiceItem(
+          title: '城市任務',
+          description: '2026 臺北秋季程式設計節作品',
+          icon: Assets.svg.iconLocationSearch24.svg(),
+          category: MyServiceCategory.cityService,
+          destinationUrl: teamWebUrl,
         ),
     };
   }

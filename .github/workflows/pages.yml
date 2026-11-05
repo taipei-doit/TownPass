@@ -1,0 +1,43 @@
+# Deploys services/web to GitHub Pages on every merge to main.
+# URL: https://hackathon-taipei.github.io/TownPass/  (the app's default TEAM_WEB_URL)
+# Backend URL for the deployed site: set repo variable API_BASE (Settings > Secrets and variables > Actions > Variables).
+name: Deploy web to Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['services/web/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    defaults: { run: { working-directory: services/web } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 10 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 24, cache: pnpm, cache-dependency-path: services/web/pnpm-lock.yaml }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        env:
+          VITE_BASE: /${{ github.event.repository.name }}/
+          VITE_API_BASE: ${{ vars.API_BASE }}
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with: { path: services/web/dist }
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,21 @@
+@import 'tailwindcss';
+
+/* TownPass brand colours, copied from lib/util/tp_colors.dart in the app */
+@theme {
+  --color-primary-50: #edf8fa;
+  --color-primary-100: #dbf1f5;
+  --color-primary-200: #b4e2ea;
+  --color-primary-300: #93d4df;
+  --color-primary-400: #71c5d5;
+  --color-primary-500: #5ab4c5;
+  --color-primary-600: #468d9b;
+  --color-primary-700: #356c77;
+  --color-primary-800: #22474e;
+  --color-primary-900: #112629;
+}
+
+html,
+body {
+  @apply bg-white text-gray-900 antialiased;
+  font-family: 'PingFang TC', 'Noto Sans TC', system-ui, sans-serif;
+}
