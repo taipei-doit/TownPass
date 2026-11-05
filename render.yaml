@@ -8,8 +8,9 @@ services:
     plan: free
     region: singapore # closest region to Taipei
     rootDir: services/backend # only changes under here trigger a deploy
-    dockerfilePath: ./services/backend/Dockerfile
-    dockerContext: ./services/backend
+    # With rootDir set, Render resolves these relative to rootDir (not the repo root)
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
     healthCheckPath: /health
     autoDeployTrigger: checksPass # deploy only after GitHub CI is green
     envVars:
