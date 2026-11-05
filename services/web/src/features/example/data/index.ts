@@ -1,0 +1,100 @@
+/**
+ * DATA LAYER - example feature. The ONLY place this feature talks to the backend.
+ * Pattern: try the backend, fall back to local data, so the feature works in a plain browser,
+ * offline, and on GitHub Pages without a backend.
+ */
+import { api, HttpError } from '@/platform/http'
+import { readJson, writeJson } from '@/platform/storage'
+
+export interface Place {
+  id: number
+  name: string
+  district: string
+  category: string
+  address: string
+  hours: string
+  lat: number
+  lng: number
+  tags: string[]
+  notices: { title: string; body: string }[]
+}
+
+export async function listPlaces(): Promise<Place[]> {
+  try {
+    return await api<Place[]>('/examples/places')
+  } catch {
+    return __MOCK_PLACES
+  }
+}
+
+export async function getPlace(id: number): Promise<Place | undefined> {
+  return (await listPlaces()).find((p) => p.id === id)
+}
+
+/** Requires a session. Falls back to on-device favourites when the backend is unreachable. */
+export async function listFavoriteIds(): Promise<number[]> {
+  try {
+    return await api<number[]>('/examples/favorites')
+  } catch (err) {
+    if (__isAuthError(err)) throw err
+    return readJson<number[]>(__LOCAL_FAV, [])
+  }
+}
+
+export async function setFavorite(placeId: number, on: boolean): Promise<void> {
+  try {
+    await api(`/examples/favorites/${placeId}`, { method: on ? 'PUT' : 'DELETE' })
+  } catch (err) {
+    if (__isAuthError(err)) throw err
+    const ids = new Set(readJson<number[]>(__LOCAL_FAV, []))
+    if (on) ids.add(placeId)
+    else ids.delete(placeId)
+    writeJson(__LOCAL_FAV, [...ids])
+  }
+}
+
+const __LOCAL_FAV = 'example.favorites'
+const __isAuthError = (err: unknown) => err instanceof HttpError && (err.status === 401 || err.status === 403)
+
+// Mock data - clearly fake, replace with real open data on the day.
+const __MOCK_PLACES: Place[] = [
+  {
+    id: 1,
+    name: '範例公園',
+    district: '信義區',
+    category: '公園',
+    address: '臺北市信義區市府路 1 號（範例）',
+    hours: '全天開放',
+    lat: 25.0375,
+    lng: 121.5637,
+    tags: ['免費', '無障礙'],
+    notices: [
+      { title: '開放時間', body: '全天開放，夜間照明至 23:00。' },
+      { title: '寵物', body: '寵物須繫牽繩，並清理排泄物。' },
+    ],
+  },
+  {
+    id: 2,
+    name: '範例運動中心',
+    district: '大安區',
+    category: '運動中心',
+    address: '臺北市大安區（範例）',
+    hours: '06:00–22:00',
+    lat: 25.0263,
+    lng: 121.5434,
+    tags: ['需付費', '室內'],
+    notices: [{ title: '入場規定', body: '泳池須著泳帽，請自備。' }],
+  },
+  {
+    id: 3,
+    name: '範例圖書館分館',
+    district: '中正區',
+    category: '圖書館',
+    address: '臺北市中正區（範例）',
+    hours: '08:30–21:00，週一休館',
+    lat: 25.0322,
+    lng: 121.5185,
+    tags: ['免費', '自習室'],
+    notices: [{ title: '自習座位', body: '採線上預約，保留 15 分鐘。' }],
+  },
+]

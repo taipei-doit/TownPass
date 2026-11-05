@@ -21,6 +21,8 @@ TownPass App (Flutter)                       ← 只改：登記服務入口、�
 
 ## 每天的指令
 
+每個新終端機先啟用隔離環境（[說明](system/08-environment.md)）：`. .\tools\dev-shell.ps1`
+
 ```bash
 # 網頁（瀏覽器開發，bridge 自動用 mock）
 cd services/web && pnpm install && pnpm dev
@@ -36,7 +38,8 @@ flutter run --dart-define=TEAM_WEB_URL=http://10.0.2.2:5173/
 
 > Windows 若出現「應用程式控制原則已封鎖此檔案」：用 `python -m uvicorn`（如上），不要直接執行 `.venv` 裡的 `uvicorn.exe`。
 
-> 新增功能的方法見 [FRAMEWORK.md](FRAMEWORK.md)：前端一個功能一個 `src/features/<id>/` 資料夾，後端一個 `features/<name>.py`。部署見 [DEPLOY.md](DEPLOY.md)。
+> 新增功能的方法見 [FRAMEWORK.md](FRAMEWORK.md)：前端一個功能一個 `src/features/<id>/` 資料夾，後端一個 `features/<name>/` 套件，都分顯示／邏輯／資料三層。部署見 [DEPLOY.md](DEPLOY.md)。
+> 工作用**工單**派發（[docs/tickets](tickets/README.md)）：每張工單擁有不重疊的資料夾，可交給隊友或 AI 平行處理。
 
 ## 分工（每人一個資料夾，避免衝突）
 

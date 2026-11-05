@@ -1,9 +1,14 @@
-"""Feature modules, discovered automatically - same idea as the web's src/features/.
+"""Feature packages, discovered automatically - same idea as the web's src/features/.
 
-Add a file features/<name>.py that defines `router = APIRouter(prefix="/<name>", tags=["<name>"])`
-and it is mounted on the app. Optional `seed(session)` runs once at startup (use it to load
-open data or demo rows). Files starting with "_" are skipped (see _template.py).
-Each teammate owns their own file -> no merge conflicts in main.py.
+A feature is a package features/<name>/ (copy features/_template). Its __init__.py exposes:
+  router           APIRouter, mounted on the app
+  seed(session)    optional, runs at startup (idempotent: check before inserting)
+and anything other features may use (its PUBLIC interface, e.g. auth exposes CurrentUser).
+
+Inside the package, layers only call downwards:
+  api.py (HTTP) -> service.py (logic) -> repo.py (data) -> models.py (tables)
+  schemas.py = request/response types shared by api and service
+Helpers named `__something` are private to their file. Packages starting with "_" are skipped.
 """
 
 import importlib

@@ -1,25 +1,29 @@
 /**
- * Example feature - shows every extension point. Delete this folder once real features exist.
- * To start a new feature: copy src/features/_template to src/features/<your-id>.
+ * Example feature (wiring only) - shows every extension point and the three layers:
+ *   ui/     presentation  (EX-P01, EX-P02 pages; EX-C01, EX-C02 components)
+ *   logic/  use-cases     (usePlaceList, usePlaceDetail, placeSearchItems)
+ *   data/   backend + mock (listPlaces, getPlace, favourites)
+ * Delete this folder once real features exist. New feature: copy src/features/_template.
  */
 import { MapPinned } from 'lucide-vue-next'
-import { defineFeature, featureRoute } from '@/core/feature'
-import { listPlaces } from './data'
+import { defineFeature } from '@/framework'
+import { placeSearchItems } from './logic'
 
 export default defineFeature({
   id: 'example',
+  code: 'EX',
   title: '範例：找設施',
-  description: '列表 → 詳細頁 → 注意事項 → 地圖的完整範例',
+  description: '列表 → 詳細頁 → 注意事項 → 地圖 → 收藏的完整範例',
   icon: MapPinned,
   order: 999,
   keywords: ['設施', '地點', '附近', '公園', '運動', '圖書館'],
 
   routes: [
-    { path: '', name: 'list', component: () => import('./PlaceList.vue') },
+    { path: '', name: 'list', component: () => import('./ui/PlaceListPage.vue') },
     {
       path: ':id',
       name: 'detail',
-      component: () => import('./PlaceDetail.vue'),
+      component: () => import('./ui/PlaceDetailPage.vue'),
       meta: { recentTitle: () => '範例設施' },
     },
   ],
@@ -29,16 +33,7 @@ export default defineFeature({
     { label: '找圖書館', to: { name: 'example.list', query: { category: '圖書館' } } },
   ],
 
-  // Everything returned here can be found from the chat box on the home screen
-  searchItems: async () =>
-    (await listPlaces()).map((p) => ({
-      id: String(p.id),
-      title: p.name,
-      subtitle: `${p.district}・${p.category}`,
-      tags: p.tags,
-      keywords: [p.district, p.category, p.address],
-      to: featureRoute('example', 'detail', { id: p.id }),
-    })),
+  searchItems: placeSearchItems,
 
   sources: [
     {

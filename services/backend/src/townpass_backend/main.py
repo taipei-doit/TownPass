@@ -1,16 +1,13 @@
-"""TownPass microservice backend.
+"""TownPass microservice backend (wiring only - add features in features/, don't edit this file).
 
 Run locally:  uv run python -m uvicorn townpass_backend.main:app --reload --host 0.0.0.0 --port 8000
-API docs:     http://localhost:8000/docs   (share this with the frontend - it is the API contract)
-
-Add endpoints by adding a file in features/ (see features/__init__.py) - don't edit this file.
+API docs:     http://localhost:8000/docs   (the API contract for the frontend)
 
 Competition rule: no LLM inference may happen here. If a feature needs an LLM it must run
 on the phone. Normal backend work (DB, login, file storage, data sync) is fine.
 """
 
 import logging
-import os
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
@@ -19,15 +16,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import text
 from sqlmodel import Session
 
-from townpass_backend import features
-from townpass_backend.db import SessionDep, engine, init_db
+from townpass_backend import config, features
+from townpass_backend.db import SessionDep, engine, sync_schema
 
+logging.basicConfig(level=logging.INFO)
 log = logging.getLogger("townpass")
 
 
 @asynccontextmanager
 async def lifespan(_: FastAPI) -> AsyncIterator[None]:
-    init_db()
+    sync_schema()  # create tables / add new columns declared by any feature
     with Session(engine) as session:
         for mod in features.modules:
             if seed := getattr(mod, "seed", None):
@@ -39,12 +37,11 @@ async def lifespan(_: FastAPI) -> AsyncIterator[None]:
     yield
 
 
-app = FastAPI(title="TownPass microservice API", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="TownPass microservice API", version="0.2.0", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    # Comma-separated list; "*" is fine for the hackathon, tighten before merging upstream.
-    allow_origins=os.getenv("CORS_ORIGINS", "*").split(","),
+    allow_origins=config.CORS_ORIGINS,  # "*" is fine for the hackathon; tighten before merging upstream
     allow_methods=["*"],
     allow_headers=["*"],
 )

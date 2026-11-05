@@ -1,0 +1,109 @@
+name: 工單 Ticket
+description: 派發一項可獨立完成的工作（給隊友或 AI）。規則見 .claude/skills/townpass-ticket/SKILL.md
+title: "[T-___] "
+labels: ["ticket", "status:ready"]
+body:
+  - type: markdown
+    attributes:
+      value: 每一段都要填（不適用寫「無」）。範例：docs/tickets/T-000-example.md
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目標
+      description: 一句話：誰、在什麼情境、得到什麼
+    validations: { required: true }
+  - type: textarea
+    id: scope
+    attributes:
+      label: 範圍（只能改這些路徑）
+      description: 列出這張工單擁有的路徑，以及明確不可改的路徑
+      value: |
+        - services/web/src/features/<id>/**
+        - services/backend/src/townpass_backend/features/<name>/**
+
+        **不可改**：其他功能資料夾、services/web/src/ui/**、CI、tools/
+    validations: { required: true }
+  - type: textarea
+    id: deps
+    attributes:
+      label: 依賴
+      placeholder: blocked by #__ ／ 無
+    validations: { required: true }
+  - type: textarea
+    id: read
+    attributes:
+      label: 必讀
+      value: |
+        - AGENTS.md
+        - docs/system/02-spec.md、docs/system/03-glossary.md
+    validations: { required: true }
+  - type: checkboxes
+    id: skills
+    attributes:
+      label: 要用的 skill
+      options:
+        - label: townpass-feature
+        - label: townpass-ui
+  - type: textarea
+    id: contract
+    attributes:
+      label: 合約（必須完全遵守）
+      description: API 路徑與欄位、bridge 訊息、feature id/code、元件編號。改合約＝偏離，要先停下來回報
+    validations: { required: true }
+  - type: textarea
+    id: tasks
+    attributes:
+      label: 要做的事
+      value: |
+        - [ ]
+        - [ ] 測試：
+    validations: { required: true }
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 驗收標準
+      value: |
+        - [ ]
+        - [ ] node tools/check-arch.mjs、web pnpm build && pnpm test、backend ruff + pytest 全過
+        - [ ] 模擬器截圖：
+    validations: { required: true }
+  - type: textarea
+    id: verify
+    attributes:
+      label: 驗證方式
+      value: |
+        ```bash
+        node tools/check-arch.mjs --catalog
+        cd services/web && pnpm build && pnpm test
+        cd services/backend && uv run ruff check . && uv run pytest -q
+        ```
+        模擬器步驟：
+    validations: { required: true }
+  - type: textarea
+    id: prompt
+    attributes:
+      label: 提示詞（貼給 AI 執行者）
+      value: |
+        ```
+        你是 hackathon-taipei/TownPass 的開發者，負責這張工單（貼上工單網址）。
+        先讀 AGENTS.md，並載入 skill townpass-ticket（B. 執行）與工單列出的其他 skill。
+        完整讀完「必讀」後再開始。只修改「範圍」內的路徑；超出範圍或改到「合約」的需要，
+        依 townpass-ticket 的「D. 偏離」處理。完成後跑「驗證方式」的所有指令並截圖，
+        用 PR 範本回報（Closes 這張工單），逐條對照「驗收標準」。
+        ```
+    validations: { required: true }
+  - type: textarea
+    id: report
+    attributes:
+      label: 回報方式與偏離規則
+      value: |
+        - 開 PR（填 PR 範本，Closes 本工單），標籤 status:review；在本工單留言 PR 連結＋3 行摘要
+        - 卡住或要改合約：在本工單留言並加 blocked
+        - 偏離：依 townpass-ticket D 節；本工單額外規定：無
+    validations: { required: true }
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先級
+      options: ["P0 必須 demo", "P1 加分", "P2 有空再做"]
+    validations: { required: true }

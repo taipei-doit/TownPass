@@ -1,23 +1,32 @@
-## 指示
+<!-- 回報格式：.claude/skills/townpass-ticket/SKILL.md C 節。不適用的段落寫「無」，不要刪。 -->
 
-在您提交 pull request 前請先閱讀並遵守以下指示：
+Closes #
 
-- 創建一個 issue 來說明這個 pull request 解決了什麼事，以防我們覺得這項 pull request 不需要納入專案中。
+## 做了什麼
+<!-- 依層列出：顯示層（元件編號）／邏輯層（公開介面）／資料層（API、資料表、新欄位） -->
+- 顯示層：
+- 邏輯層：
+- 資料層：
 
-**⚠️👆 在您提交 pull request 前刪除這些指示 👆⚠️**
+## 驗收對照
+<!-- 逐條貼工單的驗收標準：✅/❌ + 證據（測試名稱、截圖） -->
+- [ ]
 
-## pull request 類型
+## 驗證
+```
+node tools/check-arch.mjs        →
+pnpm build && pnpm test          →
+uv run ruff check . && pytest -q →
+```
+截圖：
 
-- [ ] Feature
-- [ ] Bug Fix
+## 偏離
+<!-- 和工單不同的地方、改到範圍外的檔案、合約變更、跳過的驗收項目。沒有就寫「無」。有偏離請加標籤 deviation -->
 
-## Checklist
+## 後續
+<!-- 剩下的事、風險、建議開的新工單 -->
 
-在提交 pull request 前請確認下列事項皆已確認。
-
-- [ ] pull request 將會解決 issue 問題
-- [ ] pull request 只解決 issue 提到的問題，並沒有其他額外變更
-
-## 受影響的 issue
-
-## 額外說明
+---
+- [ ] 只改了工單「範圍」內的路徑（或已列在偏離）
+- [ ] 沒有雲端 LLM 呼叫、沒有商用 SDK、沒有新增個資欄位
+- [ ] 用到的開放資料已登記（sources、data/SOURCES.md、SourceNote）

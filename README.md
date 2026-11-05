@@ -10,13 +10,16 @@
 | `services/web/` | 微服務前端：Vue 3 + Vite + TypeScript + Tailwind + Leaflet/OSM |
 | `services/backend/` | 後端：FastAPI + SQLModel，Postgres（Render）／本機 SQLite |
 | `data/SOURCES.md` | 使用的開放資料與出處 |
-| `docs/` | [團隊開發流程](docs/WORKFLOW.md)、[UI 框架與新增功能](docs/FRAMEWORK.md)、[部署](docs/DEPLOY.md)、[App ↔ 網頁訊息](docs/bridge.md) |
-| `tools/` | 開發環境安裝與檢查腳本 |
+| `docs/system/` | **系統文件**：[決策](docs/system/01-decisions.md)、[規格](docs/system/02-spec.md)、[字詞表](docs/system/03-glossary.md)、[顯示層](docs/system/04-presentation-layer.md)／[邏輯層](docs/system/05-logic-layer.md)／[資料層](docs/system/06-data-layer.md)、[測試](docs/system/07-testing.md)、[環境](docs/system/08-environment.md) |
+| `docs/` | [團隊流程](docs/WORKFLOW.md)、[UI 框架](docs/FRAMEWORK.md)、[部署](docs/DEPLOY.md)、[App ↔ 網頁訊息](docs/bridge.md)、[工單](docs/tickets/README.md) |
+| `.claude/skills/` | 給 AI 的工作流程：`townpass-ui`、`townpass-feature`、`townpass-ticket`（其他 AI 從 [AGENTS.md](AGENTS.md) 開始） |
+| `tools/` | 隔離開發環境（安裝／啟用／檢查）、架構檢查 `check-arch.mjs` |
 
 ## 快速開始
 
 ```bash
-powershell -ExecutionPolicy Bypass -File tools/setup-windows.ps1   # 第一次：安裝 Flutter、Android SDK、pnpm、uv
+powershell -ExecutionPolicy Bypass -File tools/setup-windows.ps1   # 第一次：工具全部裝進 %USERPROFILE%\.townpass-dev，不影響既有安裝
+. .\tools\dev-shell.ps1                                           # 每個新終端機：只在這個終端機啟用
 powershell -ExecutionPolicy Bypass -File tools/doctor.ps1          # 檢查環境
 ```
 

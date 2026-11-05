@@ -20,6 +20,8 @@ services:
           property: connectionString
       - key: CORS_ORIGINS
         value: '*'
+      - key: SECRET_KEY # signs login tokens; Render generates a random value once
+        generateValue: true
 
 databases:
   - name: townpass-db

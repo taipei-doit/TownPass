@@ -23,8 +23,17 @@ jobs:
         with:
           filters: |
             app: ['lib/**', 'android/**', 'pubspec.*', 'assets/**']
-            web: ['services/web/**']
+            web: ['services/web/**', 'tools/check-arch.mjs']
             backend: ['services/backend/**']
+
+  # Layer rules, "__" privacy, component IDs (docs/system/02-spec.md §4). Always runs, no install needed.
+  arch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 24 }
+      - run: node tools/check-arch.mjs
 
   web:
     needs: changes
@@ -39,6 +48,7 @@ jobs:
         with: { node-version: 24, cache: pnpm, cache-dependency-path: services/web/pnpm-lock.yaml }
       - run: pnpm install --frozen-lockfile
       - run: pnpm build # vue-tsc type check + vite build
+      - run: pnpm test # Vitest: logic + data layers
 
   backend:
     needs: changes
