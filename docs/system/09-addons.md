@@ -104,7 +104,7 @@ export default defineFeature({ /* ... */ tools: [showShelters] })
 ```
 問題
  ├─ 1. 觸發詞 triggers          不需要模型，所有手機都能用
- ├─ 2. 語意路由 examples         只需要向量模型（需 agent）
+ ├─ 2. 語意路由 examples         只需要向量模型（需 agent）；工具要比資料中最接近的一行更貼近問題
  ├─ 3. 語言模型 function calling 預設關閉（需 agent，toolCalling: true）
  └─ 4. 檢索與搜尋               回答附原文；文件有圖片或座標就一併顯示
 ```
@@ -118,15 +118,14 @@ export default defineFeature({ /* ... */ tools: [showShelters] })
 
 ## 4. 為什麼這樣選（實測）
 
-筆電 Chrome、Radeon 780M WebGPU，範例資料。樣本很小，只能看方向；換上真實資料要重測。
+筆電 Chrome、Radeon 780M WebGPU，虛構的測試集，換上真實資料要重測（[eval/README.md](../../services/web/eval/README.md)）。
 
 | 項目 | 結果 |
 |---|---|
 | Android WebView 133（模擬器） | `navigator.gpu` 存在，但模擬器取不到 GPU；OPFS、Service Worker 可用；**沒有** `speechSynthesis` |
-| 相關度門檻 | 資料涵蓋的問題 0.86–0.90，無關問題 0.82–0.84 → `MIN_RELEVANCE = 0.85` |
-| 語意路由（15 題） | 12 題選對；加上門檻後一般問題不會誤觸工具 |
-| 語言模型選工具 | 350M、1B 都是該呼叫工具的 5 題全錯 → 預設關閉；完整比較見 [model README](../../services/web/src/addons/model/README.md) |
-| 語言模型回答 | 會抄錯或重複問題，所以**原文一定由程式直接顯示**，模型只補一句話 |
+| 真實對話框（132 題） | 回答那行含答案 63／68，答案出現在回覆 68／68，事實題被工具搶走 0，誤觸工具 0 |
+| 語言模型 | 7 個都不夠可靠，最好的也有三分之一答錯 → **預設不用**；完整比較見 [model README](../../services/web/src/addons/model/README.md) |
+| 向量模型 | EmbeddingGemma 91% 對 e5-small 81%；2 GB 手機用 EmbeddingGemma 會閃退 → 依記憶體選擇 |
 | 斷網（模擬器 WebView，關閉網路與伺服器） | 網站可開、繁中街道底圖、標點、圖片都正常 |
 | 朗讀 | 模擬器確認有送到手機語音引擎，沒有驗到聲音。Google 引擎第一次念繁中時會自動下載語音包；App 在非行動網路下開啟就會觸發。`RagLabPage` 的「繁中語音」列顯示是否已可離線，demo 前要確認並開飛航模式試一次 |
 | 尚未實測 | 實體手機的 WebGPU 與語言模型速度（模擬器沒有真實 GPU） |

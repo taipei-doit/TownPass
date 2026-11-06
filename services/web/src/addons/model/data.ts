@@ -185,7 +185,7 @@ export async function generate(
 
 // ---------------------------------------------------------------- caches
 /** Model ids whose weight files are fully stored on the device (i.e. usable offline). */
-export async function cachedModelIds(candidates: string[]): Promise<string[]> {
+export async function cachedModelIds(candidates: { id: string; weights: RegExp }[]): Promise<string[]> {
   try {
     const names: string[] = []
     const dir = await __modelDir()
@@ -193,10 +193,12 @@ export async function cachedModelIds(candidates: string[]): Promise<string[]> {
       if (handle.kind === 'file' && !name.endsWith('.part')) names.push(name)
     }
     // a model counts as offline-ready only when its weights (.onnx_data or a whole .onnx) are there
-    return candidates.filter((id) => {
-      const key = __fileName(`/${id}/resolve/`)
-      return names.some((n) => n.includes(key) && /onnx(_data)?$/.test(n))
-    })
+    return candidates
+      .filter(({ id, weights }) => {
+        const key = __fileName(`/${id}/resolve/`)
+        return names.some((n) => n.includes(key) && weights.test(n) && /onnx(_data)?$/.test(n))
+      })
+      .map((c) => c.id)
   } catch (err) {
     console.warn('[model] cannot read the model folder', err)
     return []

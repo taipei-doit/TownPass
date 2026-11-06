@@ -13,3 +13,9 @@
 - 政府資料開放平臺 https://data.gov.tw/
 - 城市通 https://townpass.taipei/
 - 臺北市資訊局 GitHub https://github.com/taipei-doit
+
+## 裝置端模型
+
+完整清單與授權見 [10-architecture.md](../docs/system/10-architecture.md) §2。Gemma is provided under and subject to the Gemma Terms of Use found at https://ai.google.dev/gemma/terms
+
+`services/web/eval/` 的測試文件全部是虛構資料，只用於評測，不會隨網站提供給使用者。

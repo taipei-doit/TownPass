@@ -4,7 +4,7 @@
 
 ## 做什麼
 - 把各功能的 `searchItems`（含 `text`）切成「一行一事實」的片段並向量化
-- 問題進來時取最相近的片段，交給語言模型回答；沒有語言模型就摘錄原文
+- 問題進來時取最相近的片段，預設直接回答那一行原文；手動選了語言模型才由模型回答
 - `isGrounded` 檢查回答：大多是英文、或跟資料重疊太少，就改顯示原文
 - 回傳來源文件的**原文**、圖片、座標，由呼叫端顯示
 - 過期的文件（`validTo` 已過）不拿來回答
@@ -72,7 +72,8 @@ export default defineFeature({
 
 ## 限制
 - 掃描版 PDF 沒有文字層，要先 OCR；`rag-pdf.py` 會指出哪些檔案
-- `MIN_RELEVANCE = 0.85` 是用範例資料量的，換上真實資料要重測：拿幾題資料有涵蓋、幾題沒涵蓋的問題，看 `a.sources[0].score`
+- 相關度門檻（各向量模型的 `minRelevance`）是用虛構資料量的，換上真實資料要重測，方法見 [eval/README.md](../../../eval/README.md)
+- `pnpm rag:build` 只算 EmbeddingGemma 的向量；用輕量模型的低階手機會自己算，第一次比較慢
 - 向量存在 OPFS；沒有 OPFS 的舊 WebView 每次都要重算
 - 比賽規則：核心資料要是開放資料並標示來源（`source`、`data/SOURCES.md`）
 

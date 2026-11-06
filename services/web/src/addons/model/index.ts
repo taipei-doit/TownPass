@@ -11,10 +11,14 @@ export {
   complete,
   embedPassages,
   embedQuery,
-  EMBEDDING_MODEL,
+  activeEmbedding,
+  chooseEmbedding,
+  EMBEDDING_MODELS,
+  EMBEDDING_NEEDS,
   GENERATORS,
   inspectDevice,
   isOfflineReady,
+  LARGE_MODEL_NEEDS,
   languageModelId,
   languageModelReady,
   modelDisclosure,
@@ -22,7 +26,7 @@ export {
   prepareLanguageModel,
   useModel,
 } from './logic'
-export type { ChatMessage, CompleteOptions, GeneratorKey, HardwareProfile, ModelChoice, ModelKey, ModelTool } from './logic'
+export type { ChatMessage, CompleteOptions, EmbeddingModel, GeneratorKey, HardwareProfile, ModelChoice, ModelKey, ModelTool } from './logic'
 
 /** Hardware, chosen model and disclosure table, for any screen that manages the models. */
 export const DeviceModelCard = () => import('./ui/DeviceModelCard.vue')

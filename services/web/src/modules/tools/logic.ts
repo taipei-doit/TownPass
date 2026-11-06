@@ -29,8 +29,8 @@ const __showMap = defineTool<{ query?: string }>({
   name: 'show_map',
   description: '在對話框的地圖上標出地點，例如施工、活動、設施的位置',
   parameters: __QUERY_PARAMETERS,
-  triggers: [/地圖|標點|標出|標示|在哪|位置在|地點在/],
-  examples: ['在地圖上標出施工的位置', '這個活動在什麼地方', '幫我標出地點', '哪裡有道路施工', '顯示這個地方的位置'],
+  triggers: [/地圖|標點|標出|標示|標給|在哪|位置在|地點在|什麼地方/],
+  examples: ['在地圖上標出施工的位置', '這個活動在什麼地方', '幫我標出地點', '哪裡有道路施工', '顯示這個地方的位置', '指給我看在哪一帶'],
   toArgs: (question) => ({ query: __topicOf(question) }),
   run: ({ query }) => {
     const docs = __matching(query, (d) => !!d.geo && !__isFinished(d)).slice(0, __MAX_MARKERS)
@@ -48,8 +48,8 @@ const __showImage = defineTool<{ query?: string }>({
   name: 'show_image',
   description: '在對話框顯示資料附帶的圖片，例如公文附圖、活動海報',
   parameters: __QUERY_PARAMETERS,
-  triggers: [/圖片|照片|相片|附圖|示意圖|海報/],
-  examples: ['給我看圖片', '顯示公文的附圖', '看現場照片', '這個地方長什麼樣子', '活動海報給我看'],
+  triggers: [/圖片|照片|相片|附圖|示意圖|流程圖|宣傳圖|須知圖|那張圖|海報|長什麼樣子|長怎樣/],
+  examples: ['給我看圖片', '顯示公文的附圖', '看現場照片', '這個地方長什麼樣子', '活動海報給我看', '有沒有流程圖'],
   toArgs: (question) => ({ query: __topicOf(question) }),
   run: ({ query }) => {
     const docs = __matching(query, (d) => !!d.images?.length)
@@ -122,8 +122,8 @@ export async function runTool(name: string, args: ToolArgs = {}): Promise<ToolRe
 /** The search topic left after removing the words that only ask for a map or a picture. */
 function __topicOf(question: string): string {
   return question
-    .replace(/地圖|標點|標出|標示|標在|在哪裡?|位置在|地點在|位置|地點|圖片|照片|相片|附圖|示意圖|海報/g, ' ')
-    .replace(/請|幫我|幫忙|給我|我想|想看|看看|顯示|列出|查詢|告訴我|有哪些|哪些|所有|全部|把|在|上面?|的|嗎|呢|[?？!！,，。、]/g, ' ')
+    .replace(/地圖|標點|標出|標示|標給|標在|在哪裡?|位置在|地點在|什麼地方|位置|地點|圖片|照片|相片|附圖|示意圖|流程圖|宣傳圖|須知圖|那張圖|海報|長什麼樣子|長怎樣/g, ' ')
+    .replace(/請|幫我|幫忙|給我看|給我|我想|我要|想看|看看|有沒有|顯示|列出|查詢|告訴我|有哪些|哪些|所有|全部|可以|把|在|上面?|的|嗎|呢|[?？!！,，。、]/g, ' ')
     .replace(/\s+/g, '')
 }
 

@@ -58,7 +58,7 @@ function __itemDoc(f: Feature, it: FeatureItem): SearchDoc {
     validFrom: it.validFrom,
     validTo: it.validTo,
     source: it.source,
-    text: [it.subtitle, ...(it.tags ?? []), ...(it.keywords ?? []), it.text, f.title].filter(Boolean).join(' '),
+    text: [it.subtitle, ...(it.tags ?? []), ...(it.keywords ?? []), it.text, ...(it.images ?? []).flatMap((image) => [image.alt, image.caption]), f.title].filter(Boolean).join(' '),
     to: it.to,
   }
 }

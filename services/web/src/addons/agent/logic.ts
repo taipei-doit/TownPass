@@ -20,14 +20,14 @@ export interface AgentOptions {
 }
 
 /**
- * Chosen by measurement with multilingual-e5-small on 15 Chinese questions: with these values no
- * ordinary question reached a tool by mistake. A question below them goes to retrieval, which
- * still shows the document's images and location.
+ * Measured on 112 questions through the whole chat box (eval/compare.mjs): with these values no fact
+ * question is taken from retrieval and no tool is picked wrongly. Some tool questions stay with
+ * retrieval, which still shows the document's images and location, so that miss costs little.
  */
-export const SEMANTIC_ROUTING = { minScore: 0.85, minMargin: 0.01 }
+export const SEMANTIC_ROUTING = { minScore: 0.3, minMargin: 0.03 }
 
 /** Ordinary questions: a tool has to beat these to be chosen. */
-const __NO_TOOL_EXAMPLES = ['這個要收費嗎', '幾點開放', '有什麼規定', '要怎麼申請', '內容是什麼']
+const __NO_TOOL_EXAMPLES = ['這個要收費嗎', '幾點開放', '有什麼規定', '要怎麼申請', '內容是什麼', '要準備哪些文件', '多少錢', '可以帶寵物嗎', '什麼時候結束', '有什麼節目', '需要報名嗎']
 
 export function createAgent(options: AgentOptions = {}): AssistantProvider {
   return { id: 'agent', answer: (context) => __answer(context, options) }
@@ -38,22 +38,26 @@ export interface ToolCall {
   args: ToolArgs
 }
 
-/** Scores are each tool's best similarity to the question. Null when nothing clearly wins. */
-export function pickBySimilarity(toolScores: { name: string; score: number }[], noToolScore: number): string | null {
+/**
+ * Scores are each tool's best similarity to the question. Null when nothing clearly wins. A tool must
+ * also be closer than the best line in the data: otherwise "幾點開始" about a roadwork would get a
+ * map instead of its answer.
+ */
+export function pickBySimilarity(toolScores: { name: string; score: number }[], noToolScore: number, bestLineScore = -1): string | null {
   const [best, second] = [...toolScores].sort((a, b) => b.score - a.score)
-  if (!best || best.score < SEMANTIC_ROUTING.minScore) return null
+  if (!best || best.score < SEMANTIC_ROUTING.minScore || best.score < bestLineScore) return null
   const rival = Math.max(noToolScore, second?.score ?? -1)
   return best.score - rival >= SEMANTIC_ROUTING.minMargin ? best.name : null
 }
 
 /** The tool whose examples are closest in meaning to the question, or null. */
-export async function routeByMeaning(question: string, tools: ToolDefinition[]): Promise<ToolDefinition | null> {
+export async function routeByMeaning(question: string, tools: ToolDefinition[], bestLineScore = -1): Promise<ToolDefinition | null> {
   const withExamples = tools.filter((t) => t.examples?.length)
   if (!withExamples.length) return null
   const q = await embedQuery(question)
   const best = async (key: string, examples: string[]) => Math.max(...(await __vectorsOf(key, examples)).map((v) => __dot(q, v)))
   const toolScores = await Promise.all(withExamples.map(async (t) => ({ name: t.name, score: await best(`tool:${t.name}`, t.examples!) })))
-  const name = pickBySimilarity(toolScores, await best('no-tool', __NO_TOOL_EXAMPLES))
+  const name = pickBySimilarity(toolScores, await best('no-tool', __NO_TOOL_EXAMPLES), bestLineScore)
   return withExamples.find((t) => t.name === name) ?? null
 }
 
@@ -107,7 +111,7 @@ async function __answer(context: AssistantContext, options: AgentOptions): Promi
     if (__hasContent(result)) return result
   }
   if (options.semanticRouting !== false) {
-    const tool = await routeByMeaning(question, tools)
+    const tool = await routeByMeaning(question, tools, await rag.bestScore(question))
     if (tool) {
       const result = await context.runTool(tool.name, tool.toArgs ? tool.toArgs(question) : { query: question })
       if (__hasContent(result)) return result

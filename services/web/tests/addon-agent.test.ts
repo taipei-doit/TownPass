@@ -8,6 +8,7 @@ const state = vi.hoisted(() => ({
   modelOutput: '',
   answer: null as unknown,
   completeCalls: 0,
+  bestLine: 0,
 }))
 
 // Fake embedding: each test question or example points along the axis of the word it contains.
@@ -23,7 +24,7 @@ vi.mock('@/addons/model', () => ({
   }),
 }))
 vi.mock('@/addons/rag', () => ({
-  useRag: () => ({ status: { value: state.status }, ask: vi.fn(async () => state.answer) }),
+  useRag: () => ({ status: { value: state.status }, ask: vi.fn(async () => state.answer), bestScore: vi.fn(async () => state.bestLine) }),
 }))
 
 const { answerToResult, chooseTool, createAgent, parseToolCall, pickBySimilarity, routeByMeaning } = await import('@/addons/agent')
@@ -98,12 +99,17 @@ describe('pickBySimilarity', () => {
   const tools = (map: number, image: number) => [{ name: 'map', score: map }, { name: 'image', score: image }]
   it.each([
     ['clear winner', tools(0.9, 0.8), 0.8, 'map'],
-    ['below the minimum', tools(0.84, 0.7), 0.7, null],
+    ['below the minimum', tools(0.25, 0.1), 0.1, null],
     ['too close to another tool', tools(0.88, 0.875), 0.7, null],
     ['too close to an ordinary question', tools(0.88, 0.7), 0.875, null],
     ['an ordinary question wins', tools(0.86, 0.7), 0.9, null],
     ['no tools', [], 0.5, null],
   ])('%s', (_n, scores, noTool, expected) => expect(pickBySimilarity(scores, noTool)).toBe(expected))
+
+  it('a line in the data closer than the tool keeps the question with retrieval', () => {
+    expect(pickBySimilarity(tools(0.9, 0.8), 0.8, 0.95)).toBeNull()
+    expect(pickBySimilarity(tools(0.9, 0.8), 0.8, 0.85)).toBe('map')
+  })
 })
 
 describe('routeByMeaning', () => {
@@ -165,6 +171,16 @@ describe('createAgent', () => {
     expect(await createAgent().answer(ctx)).toEqual(mapResult)
     expect(ctx.runTool).toHaveBeenCalledWith('show_map', { query: '施工' })
     expect(state.completeCalls).toBe(0)
+  })
+
+  it('a fact question closer to the data than to any tool is answered from retrieval', async () => {
+    state.bestLine = 2
+    state.answer = answer
+    const tool = { ...showMap, examples: ['看地圖'] }
+    const ctx = context({ question: '我要地圖', tools: [tool] })
+    expect((await createAgent().answer(ctx))?.text).toBe('寵物須繫牽繩。')
+    expect(ctx.runTool).not.toHaveBeenCalled()
+    state.bestLine = 0
   })
 
   it('otherwise answers from retrieval', async () => {

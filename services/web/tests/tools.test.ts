@@ -65,6 +65,11 @@ describe('chat tools', async () => {
 
     it('圖書館 is not a request for a picture', () => expect(routeByRules('圖書館幾點開')).toBeNull())
 
+    it('a picture request finds documents by what the picture shows', async () => {
+      const r = await runTool('show_image', { query: '封路範圍圖' })
+      expect(r.blocks?.[0]).toMatchObject({ src: '/doc.png' })
+    })
+
     it('takes the topic out of the question', () => {
       expect(routeByRules('把信義區的施工標在地圖上')?.args).toEqual({ query: '信義區施工' })
     })

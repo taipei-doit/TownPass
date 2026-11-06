@@ -28,8 +28,8 @@ defineEmits<{ override: [value: 'auto' | 'none' | 'small' | 'large'] }>()
     <ChipRail>
       <BaseChip :active="override === 'auto'" @click="$emit('override', 'auto')">自動選擇</BaseChip>
       <BaseChip :active="override === 'none'" @click="$emit('override', 'none')">只摘錄</BaseChip>
-      <BaseChip :active="override === 'small'" @click="$emit('override', 'small')">350M</BaseChip>
-      <BaseChip :active="override === 'large'" @click="$emit('override', 'large')">1B</BaseChip>
+      <BaseChip :active="override === 'small'" @click="$emit('override', 'small')">Granite 350M</BaseChip>
+      <BaseChip :active="override === 'large'" @click="$emit('override', 'large')">Gemma 1B</BaseChip>
     </ChipRail>
     <InfoTable :rows="hardware" />
     <InfoTable :rows="disclosure" />

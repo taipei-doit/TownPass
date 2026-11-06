@@ -14,7 +14,7 @@ import {
   complete,
   embedPassages,
   embedQuery,
-  EMBEDDING_MODEL,
+  activeEmbedding,
   inspectDevice,
   languageModelId,
   languageModelReady,
@@ -26,12 +26,6 @@ import {
 } from '@/addons/model'
 import { fetchCollection, loadVectors, saveVectors } from './data'
 
-/**
- * A retrieved chunk below this similarity is treated as "the data doesn't cover this".
- * Measured with multilingual-e5-small on the example data: questions it covers scored 0.86-0.90,
- * unrelated ones 0.82-0.84. Check it again against the real data (README.md).
- */
-export const MIN_RELEVANCE = 0.85
 /** Longest original text returned with an answer; the source page has the rest. */
 const __MAX_ORIGINAL_CHARS = 1200
 
@@ -93,10 +87,10 @@ const docsCount = ref(0)
 const error = ref('')
 let __chunks: __Chunk[] = []
 let __docs = new Map<string, __Doc>()
-const __prebuilt: Record<string, number[]> = {}
+const __prebuilt: Record<string, Record<string, number[]>> = {}
 
 export function useRag() {
-  return { status, docsCount, error, inspect, prepare, ask }
+  return { status, docsCount, error, inspect, prepare, ask, bestScore }
 }
 
 /** Probe the phone and pick a model without downloading anything. */
@@ -133,15 +127,20 @@ export async function prepare(override?: ModelKey): Promise<void> {
  */
 export async function collectionItems(url: string, to: (doc: RagCollectionDocument) => RouteLocationRaw): Promise<FeatureItem[]> {
   const collection = await fetchCollection<__Collection>(url)
-  if (collection.model === EMBEDDING_MODEL.id) Object.assign(__prebuilt, collection.vectors)
+  __prebuilt[collection.model] = { ...__prebuilt[collection.model], ...collection.vectors }
   return collection.documents.map((d) => ({ ...d, to: to(d) }))
+}
+
+/** How close the best line in the data is to the question; lets callers compare it with other options. */
+export async function bestScore(question: string): Promise<number> {
+  return __topK(await embedQuery(question), __chunks.filter(__isCurrent), 1)[0]?.score ?? 0
 }
 
 /** Retrieve + answer. Works with only the embedder (extractive) if the LLM isn't loaded. */
 export async function ask(
   question: string,
   onText?: (t: string) => void,
-  { k = 4, minRelevance = MIN_RELEVANCE }: { k?: number; minRelevance?: number } = {},
+  { k = 4, minRelevance = activeEmbedding().minRelevance }: { k?: number; minRelevance?: number } = {},
 ): Promise<RagAnswer> {
   const t0 = performance.now()
   if (!__chunks.length) throw new Error('請先準備模型（prepare）')
@@ -152,7 +151,7 @@ export async function ask(
   const extractive = best && relevant ? `「${best.chunk.title}」${best.chunk.text}` : '目前資料沒有提到。'
   if (!relevant || !languageModelReady()) {
     if (relevant) onText?.(extractive)
-    return { ...base, answer: extractive, mode: 'extractive', model: EMBEDDING_MODEL.id, ms: performance.now() - t0 }
+    return { ...base, answer: extractive, mode: 'extractive', model: activeEmbedding().id, ms: performance.now() - t0 }
   }
   const facts = top.map(({ chunk }) => `${chunk.title}：${chunk.text}`)
   const answer = __tidied(await complete(__messages(question, facts), { onText }))
@@ -210,8 +209,9 @@ async function __indexChunks(): Promise<__Chunk[]> {
   const docs = await __docsFromFeatures()
   __docs = new Map(docs.map((d) => [d.key, d]))
   const raw = docs.flatMap(__chunksOf)
-  const cacheKey = `vectors.${EMBEDDING_MODEL.id}`
-  const cache = { ...(await loadVectors(cacheKey)), ...__prebuilt }
+  const model = activeEmbedding().id
+  const cacheKey = `vectors.${model}`
+  const cache = { ...(await loadVectors(cacheKey)), ...__prebuilt[model] }
   const id = (c: Omit<__Chunk, 'vec'>) => __hash(`${c.title}\n${c.text}`)
   const missing = raw.filter((c) => !cache[id(c)])
   const { progress } = useModel()

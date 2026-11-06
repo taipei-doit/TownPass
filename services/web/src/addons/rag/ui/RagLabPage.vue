@@ -4,14 +4,14 @@ import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
 import { BaseButton, ChatComposer, EmptyState, PageContainer, type InfoRow } from '@/ui'
 import { voiceStatus, type VoiceStatus } from '@/modules/env'
-import { DeviceModelCard as loadDeviceModelCard, EMBEDDING_MODEL, useModel, type ModelKey } from '@/addons/model'
+import { DeviceModelCard as loadDeviceModelCard, useModel, type ModelKey } from '@/addons/model'
 import { useRag, type RagAnswer } from '../index'
 import AnswerCard from './AnswerCard.vue'
 
 const DeviceModelCard = defineAsyncComponent(loadDeviceModelCard)
 
 const { status, docsCount, error: prepareError, inspect, prepare, ask } = useRag()
-const { progress, message, hardware, choice, disclosure, isOffline } = useModel()
+const { progress, message, hardware, choice, disclosure, isOffline, embedding } = useModel()
 const override = ref<'auto' | ModelKey>('auto')
 const query = ref('')
 const answering = ref(false)
@@ -81,7 +81,7 @@ onMounted(async () => {
 
       <div v-if="status !== 'ready'" class="space-y-2">
         <BaseButton block :icon="Download" :loading="busy" @click="prepare(ov())">
-          {{ isOffline ? '載入模型' : `下載並載入（約 ${(choice?.sizeMB ?? 0) + EMBEDDING_MODEL.sizeMB} MB，只需一次）` }}
+          {{ isOffline ? '載入模型' : `下載並載入（約 ${(choice?.sizeMB ?? 0) + embedding.sizeMB} MB，只需一次）` }}
         </BaseButton>
         <div v-if="busy" class="h-2 overflow-hidden rounded-full bg-grey-100">
           <div class="h-full bg-primary-500 transition-all" :style="{ width: `${Math.round(progress * 100)}%` }" />

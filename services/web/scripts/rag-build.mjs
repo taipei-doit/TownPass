@@ -27,7 +27,10 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const EMBEDDING_MODEL = 'Xenova/multilingual-e5-small' // same as src/addons/model/logic.ts
+// same as EMBEDDING_MODEL in src/addons/model/logic.ts
+const EMBEDDING_MODEL = 'onnx-community/embeddinggemma-300m-ONNX'
+const EMBEDDING_DTYPE = 'q8'
+const PASSAGE_PREFIX = 'title: none | text: '
 const MAX_LINE_CHARS = 120
 
 const args = process.argv.slice(2).filter((a) => a !== '--')
@@ -103,11 +106,11 @@ if (ids.size !== documents.length) throw new Error('two documents have the same 
 const vectors = {}
 if (!noVectors) {
   const { pipeline } = await import('@huggingface/transformers')
-  const embedder = await pipeline('feature-extraction', EMBEDDING_MODEL, { dtype: 'q8' })
+  const embedder = await pipeline('feature-extraction', EMBEDDING_MODEL, { dtype: EMBEDDING_DTYPE })
   const chunks = documents.flatMap(chunksOf)
   for (let i = 0; i < chunks.length; i += 16) {
     const batch = chunks.slice(i, i + 16)
-    const output = await embedder(batch.map((c) => `passage: ${c.title}：${c.text}`), { pooling: 'mean', normalize: true })
+    const output = await embedder(batch.map((c) => `${PASSAGE_PREFIX}${c.title}：${c.text}`), { pooling: 'mean', normalize: true })
     output.tolist().forEach((v, j) => {
       const c = batch[j]
       vectors[hash(`${c.title}\n${c.text}`)] = v.map((x) => Math.round(x * 1e4) / 1e4)

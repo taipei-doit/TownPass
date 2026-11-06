@@ -6,7 +6,7 @@
  */
 export const ADDON_CODE = 'RG'
 
-export { collectionItems, isGrounded, MIN_RELEVANCE, useRag } from './logic'
+export { bestScore, collectionItems, isGrounded, useRag } from './logic'
 export type { RagAnswer, RagCollectionDocument, RagDocument, RagSource } from './logic'
 
 /** Lazy route component: the model runtime is only downloaded when this page opens. */

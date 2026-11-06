@@ -12,6 +12,7 @@
 | 前端邏輯／資料 | composable、模組介面、隱私 | Vitest + happy-dom，`services/web/tests/` | `pnpm test` |
 | 型別 | 前端型別 | vue-tsc | `pnpm build` |
 | 畫面 | 實際操作 | Android 模擬器（本機後端） | 見 §5 |
+| 模型與 RAG 準確度 | 檢索、工具選擇、語言模型；**不在 CI，換模型或資料時手動跑** | `services/web/eval/` | `pnpm rag:eval`，見 [eval/README.md](../../services/web/eval/README.md) |
 
 CI 會跑全部自動測試；後端測試**在 SQLite 與 Postgres 17 各跑一次**。
 

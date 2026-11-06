@@ -9,6 +9,7 @@
     "preview": "vite preview",
     "test": "vitest run",
     "rag:build": "node scripts/rag-build.mjs",
+    "rag:eval": "node eval/compare.mjs",
     "basemap:build": "node scripts/build-basemap.mjs"
   },
   "dependencies": {

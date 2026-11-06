@@ -39,9 +39,10 @@ TownPass App（Flutter）                      lib/、android/：只改服務入
 
 | 用途 | 使用 | 授權 | 大小 | 備註 |
 |---|---|---|---|---|
-| 向量（檢索、語意選工具） | `intfloat/multilingual-e5-small`（`Xenova/multilingual-e5-small`，q8） | MIT | 118 MB | 在 WASM 上跑，所有手機都能用 |
-| 生成（語言模型） | `ibm-granite/granite-4.0-350m`（`onnx-community/granite-4.0-350m-ONNX-web`，q4f16） | Apache-2.0 | 334 MB | 需要 WebGPU；沒有就不用語言模型 |
-| 生成（手動指定） | `ibm-granite/granite-4.0-1b`（q4f16） | Apache-2.0 | 1.2 GB | 實測較差，不建議 |
+| 向量（檢索、語意選工具） | `google/embeddinggemma-300m`（`onnx-community/embeddinggemma-300m-ONNX`，q8） | Gemma Terms | 295 MB | 在 WASM 上跑；記憶體 4 GB 以上 |
+| 向量（低階手機） | `intfloat/multilingual-e5-small`（`Xenova/multilingual-e5-small`，q8） | MIT | 118 MB | 記憶體不到 4 GB |
+| 生成（語言模型） | **預設不用**：回答是檢索到的原文（ADR-019）。可手動選 `google/gemma-3-1b-it`（q4f16，728 MB，Gemma Terms）或 `ibm-granite/granite-4.0-350m`（q4f16，334 MB，Apache-2.0） | | | 需要 WebGPU |
+| 選工具 | 不用語言模型：觸發詞，加上向量語意比對 | | | |
 | 推論框架 | Transformers.js 4.3.2 + ONNX Runtime Web | Apache-2.0 | | WebGPU 或 WASM |
 | 語音（文字轉語音） | **不用語音模型**：手機內建引擎，透過 `flutter_tts` 4.2.5 呼叫（Android 上通常是 Google TTS 的 `cmn-TW` 語音） | | 引擎自行下載 | WebView 沒有 `speechSynthesis`（016） |
 | 語音辨識 | 無 | | | 尚未實作 |
@@ -71,6 +72,7 @@ TownPass/
    │  ├─ public/             sw.js、maps/taipei.pmtiles、examples/
    │  ├─ scripts/            build-basemap.mjs、rag-build.mjs、rag-pdf.py
    │  ├─ tests/              Vitest
+   │  ├─ eval/               模型評測：測試集、compare.mjs、llm-compare.js、chat-check.js
    │  └─ src/
    │     ├─ main.ts、App.vue、style.css（官方色票）
    │     ├─ app/router.ts
@@ -107,9 +109,9 @@ TownPass/
 | 入口 | 介面 | 功能 |
 |---|---|---|
 | `@/addons/auth` | `requireUser()`、`ensureSession()`、`user`、`profile`、`signOut()` | 登入 |
-| `@/addons/model` | `prepareEmbedding()`、`prepareLanguageModel()`、`embedQuery()`、`embedPassages()`、`complete()`、`chooseGenerator()`、`inspectDevice()`、`useModel()`、`modelDisclosure()` | 裝置端模型 |
-| `@/addons/rag` | `useRag()`（`prepare`、`ask`）、`collectionItems()`、`isGrounded()`、`RagLabPage` | 檢索與回答 |
-| `@/addons/agent` | `createAgent()`、`routeByMeaning()`、`chooseTool()`、`parseToolCall()`、`answerToResult()` | 模型接進對話框 |
+| `@/addons/model` | `prepareEmbedding()`、`prepareLanguageModel()`、`embedQuery()`、`embedPassages()`、`complete()`、`chooseEmbedding()`、`activeEmbedding()`、`chooseGenerator()`、`inspectDevice()`、`useModel()`、`modelDisclosure()` | 裝置端模型 |
+| `@/addons/rag` | `useRag()`（`prepare`、`ask`、`bestScore`）、`bestScore()`、`collectionItems()`、`isGrounded()`、`RagLabPage` | 檢索與回答 |
+| `@/addons/agent` | `createAgent()`、`routeByMeaning()`、`pickBySimilarity()`、`chooseTool()`、`parseToolCall()`、`answerToResult()` | 模型接進對話框 |
 
 ### 後端
 | 入口 | 介面 | 功能 |

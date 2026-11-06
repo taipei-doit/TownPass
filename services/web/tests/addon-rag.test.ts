@@ -7,7 +7,7 @@ vi.mock('@/addons/model/data', () => {
   const DIM = 8192
   const vec = (s: string) => {
     const v = new Array(DIM).fill(0)
-    const t = s.replace(/^(query|passage):\s*/, '')
+    const t = s.replace(/^(task: search result \| query: |title: none \| text: |query: |passage: )/, '')
     for (let i = 0; i < t.length - 1; i++) v[(t.charCodeAt(i) * 31 + t.charCodeAt(i + 1)) % DIM] += 1
     const n = Math.hypot(...v) || 1
     return v.map((x) => x / n)
@@ -45,26 +45,40 @@ const base: HardwareProfile = { webgpu: true, shaderF16: true, maxBufferMB: 2048
 describe('chooseGenerator (hardware policy)', async () => {
   const { chooseGenerator, GENERATORS } = await import('@/addons/model')
 
-  it('WebGPU + fp16 -> 350M on the GPU, even on a flagship', () => {
-    const c = chooseGenerator(base)
-    expect([c.key, c.device, c.dtype, c.id]).toEqual(['small', 'webgpu', 'q4f16', GENERATORS.small.id])
+  it('embedding model: light under 4 GB, because the standard one ran a 2 GB phone out of memory', async () => {
+    const { chooseEmbedding, EMBEDDING_MODELS } = await import('@/addons/model')
+    expect(chooseEmbedding({ ...base, memoryGB: 2 })).toBe(EMBEDDING_MODELS.light)
+    expect(chooseEmbedding({ ...base, memoryGB: 4 })).toBe(EMBEDDING_MODELS.standard)
+    expect(chooseEmbedding({ ...base, memoryGB: null })).toBe(EMBEDDING_MODELS.standard)
   })
 
-  it('no WebGPU -> no LLM (extractive); 350M on CPU only when asked; never 1B on CPU', () => {
-    const hw = { ...base, webgpu: false, shaderF16: false }
-    expect(chooseGenerator(hw)).toMatchObject({ key: 'none', sizeMB: 0 })
-    expect(chooseGenerator(hw, 'small')).toMatchObject({ key: 'small', device: 'wasm', dtype: 'q4' })
-    expect(chooseGenerator(hw, 'large').key).toBe('small')
+  it('by default no language model, on any phone: original text is more accurate', () => {
+    expect(chooseGenerator(base)).toMatchObject({ key: 'none', sizeMB: 0 })
+    expect(chooseGenerator({ ...base, webgpu: false, shaderF16: false })).toMatchObject({ key: 'none', sizeMB: 0 })
   })
 
-  it('WebGPU without fp16 counts as no usable GPU', () => {
-    expect(chooseGenerator({ ...base, shaderF16: false }).key).toBe('none')
-  })
-
-  it('manual override wins when the GPU can run it', () => {
-    expect(chooseGenerator({ ...base, memoryGB: 4 }, 'large').key).toBe('large')
-    expect(chooseGenerator(base, 'small').key).toBe('small')
+  it('a language model is an explicit choice, and runs on the GPU when there is one', () => {
+    const c = chooseGenerator(base, 'large')
+    expect([c.key, c.device, c.dtype, c.id]).toEqual(['large', 'webgpu', 'q4f16', GENERATORS.large.id])
+    expect(chooseGenerator(base, 'small')).toMatchObject({ key: 'small', device: 'webgpu', id: GENERATORS.small.id })
     expect(chooseGenerator(base, 'none').key).toBe('none')
+  })
+
+  it('without WebGPU or fp16: 350M on the CPU when asked, never Gemma 3 1B', () => {
+    for (const hw of [{ ...base, webgpu: false, shaderF16: false }, { ...base, shaderF16: false }]) {
+      expect(chooseGenerator(hw, 'small')).toMatchObject({ key: 'small', device: 'wasm', dtype: 'q4' })
+      expect(chooseGenerator(hw, 'large').key).toBe('small')
+    }
+  })
+
+  it.each([
+    ['memory', { memoryGB: 3 }],
+    ['storage', { freeStorageMB: 800 }],
+    ['gpu buffer', { maxBufferMB: 512 }],
+  ])('choosing Gemma 3 1B on a phone with weak %s warns but obeys', (_n, patch) => {
+    const c = chooseGenerator({ ...base, ...patch }, 'large')
+    expect(c.key).toBe('large')
+    expect(c.reasons.length).toBe(2)
   })
 })
 
