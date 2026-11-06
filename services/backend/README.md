@@ -9,5 +9,5 @@ uv run ruff check --fix .    # lint
 ```
 
 - API docs / contract: http://localhost:8000/docs
-- From the Android emulator the backend is at `http://10.0.2.2:8000`
+- From the Android emulator the backend is at `http://localhost:8000` after `adb reverse tcp:8000 tcp:8000`
 - No LLM inference here (competition rule) - on-device only.

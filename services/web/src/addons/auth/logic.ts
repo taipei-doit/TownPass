@@ -2,7 +2,7 @@
  * LOGIC LAYER - session lifecycle.
  * - profile: who the app says the user is (works offline / without backend)
  * - user:    the backend account, available once /auth/login succeeded
- * Features call `requireUser()` before protected actions (e.g. favourites).
+ * ADD-ON auth: a feature calls `requireUser()` before a protected action.
  */
 import { ref } from 'vue'
 import { fetchMe, loadToken, loginOnBackend, readAppProfile, storeToken, type SessionUser, type TownPassProfile } from './data'

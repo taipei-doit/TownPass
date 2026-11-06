@@ -27,10 +27,12 @@ cp -r services/web/src/features/_template services/web/src/features/<id>
 | `logic/*.ts` | logic | `vue`, `vue-router`, `@/framework`, `@/modules/<x>`, `../data` |
 | `data/*.ts` | data | `@/platform/*` only |
 
-- `index.ts`: `defineFeature({ id: '<folder>', code: 'XX', title, description, icon, routes, keywords, quickActions, searchItems, sources })`. `code` = 2-4 capitals, unique (component ID prefix).
+- `index.ts`: `defineFeature({ id: '<folder>', code: 'XX', title, description, icon, routes, keywords, quickActions, searchItems, tools, sources })`. `code` = 2-4 capitals, unique (component ID prefix).
+- Map or pictures in the chat box: give search items `geo` / `images` (built-in `show_map`, `show_image`), or add `tools: [defineTool({...})]`. Tools take search text or ids, never coordinates or image URLs. See `docs/system/09-addons.md` §3.
 - logic exports the interface (`useXxx()` composables, `xxxSearchItems()`, route helpers). Private helpers `function __x()` - never exported.
 - data: try backend via `api()`, fall back to clearly-labelled mock (`範例`) for reads / device storage for writes; **re-throw 401/403**.
-- Protected actions: `await requireUser()` from `@/modules/session` in the logic layer.
+- Protected actions: enable the auth add-on (`docs/system/09-addons.md`), then `await requireUser()` from `@/addons/auth` in the logic layer.
+- On-device models, RAG, AI in the chat box: pre-written add-ons in `src/addons/`, off by default. Load them as `docs/system/09-addons.md` says; don't write new model code.
 - Never import another feature. Need something shared → it belongs in `src/modules/<x>/` (index.ts, logic.ts, data.ts only).
 
 ## Backend feature (`services/backend/src/townpass_backend/features/<name>/`)
@@ -48,7 +50,7 @@ cp -r services/backend/src/townpass_backend/features/_template services/backend/
 
 - Table names `<feature>_<noun>`; user FK `user_id -> app_user.id`.
 - **Need a column? Add it to `models.py` and restart** - `sync_schema()` adds missing tables/columns/indexes (additive only: never rename/drop/retype; rename = new column).
-- Protect an endpoint: `from townpass_backend.features.auth import CurrentUser` then `def x(user: CurrentUser, ...)`. Always filter personal data by `user.id`.
+- Protect an endpoint: enable the auth add-on, then `from townpass_backend.addons.auth import CurrentUser` and `def x(user: CurrentUser, ...)`. Always filter personal data by `user.id`.
 - Another feature's functionality: import from its package root only (`from townpass_backend.features.opendata import taipei_dataset`).
 - Private helpers are module-level `def __x()` (not class methods - Python name-mangles `__` in classes).
 - `seed(session)` must be idempotent.

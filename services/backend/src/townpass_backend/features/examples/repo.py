@@ -2,7 +2,7 @@
 
 from sqlmodel import Session, col, select
 
-from .models import Favorite, Place
+from .models import Place
 
 
 def list_places(session: Session, category: str | None = None) -> list[Place]:
@@ -22,24 +22,4 @@ def has_any_place(session: Session) -> bool:
 
 def add_places(session: Session, places: list[Place]) -> None:
     session.add_all(places)
-    session.commit()
-
-
-def favorite_place_ids(session: Session, user_id: int) -> list[int]:
-    stmt = select(Favorite.place_id).where(Favorite.user_id == user_id).order_by(col(Favorite.id))
-    return list(session.exec(stmt))
-
-
-def get_favorite(session: Session, user_id: int, place_id: int) -> Favorite | None:
-    stmt = select(Favorite).where(Favorite.user_id == user_id, Favorite.place_id == place_id)
-    return session.exec(stmt).first()
-
-
-def add_favorite(session: Session, user_id: int, place_id: int) -> None:
-    session.add(Favorite(user_id=user_id, place_id=place_id))
-    session.commit()
-
-
-def delete_favorite(session: Session, fav: Favorite) -> None:
-    session.delete(fav)
     session.commit()

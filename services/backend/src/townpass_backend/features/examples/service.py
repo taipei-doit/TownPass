@@ -19,20 +19,6 @@ def get_place(session: Session, place_id: int) -> PlaceOut:
     return __to_out(__require_place(session, place_id))
 
 
-def favorite_ids(session: Session, user_id: int) -> list[int]:
-    return repo.favorite_place_ids(session, user_id)
-
-
-def set_favorite(session: Session, user_id: int, place_id: int, on: bool) -> None:
-    """Idempotent: adding twice or removing a missing favourite is not an error."""
-    __require_place(session, place_id)
-    fav = repo.get_favorite(session, user_id, place_id)
-    if on and fav is None:
-        repo.add_favorite(session, user_id, place_id)
-    elif not on and fav is not None:
-        repo.delete_favorite(session, fav)
-
-
 def seed(session: Session) -> None:
     if not repo.has_any_place(session):
         repo.add_places(session, __seed_places())

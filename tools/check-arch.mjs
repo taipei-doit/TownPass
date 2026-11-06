@@ -16,6 +16,10 @@
  *   B1-B4 backend layers: api/deps -/-> repo, service -/-> api/deps, repo -/-> service/api, models -/-> others
  *   B5 another backend feature is used only through its package root
  *   B6 backend "__" names are never imported or called from another module
+ *   W10 add-ons (src/addons/x/) are optional: core (framework/, app/, modules/, ui/, platform/, main.ts,
+ *       App.vue) never imports them; features/pages may, but only through @/addons/x (index)
+ *   B7 backend add-ons (townpass_backend/addons/x/) are never imported by core (main.py, db.py,
+ *       config.py, features/__init__.py); others use only the package root townpass_backend.addons.x
  * Uses only Node built-ins (no install needed).
  */
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
@@ -44,9 +48,9 @@ const lineOf = (text, index) => text.slice(0, index).split('\n').length
 // ---------------------------------------------------------------- web
 function webLayer(file) {
   const r = norm(relative(WEB, file))
-  if (r === 'App.vue' || /^(ui|pages)\//.test(r) || /^features\/[^/]+\/ui\//.test(r)) return 'presentation'
-  if (/^modules\/[^/]+\/logic\.ts$/.test(r) || /^features\/[^/]+\/logic\//.test(r)) return 'logic'
-  if (/^platform\//.test(r) || /^modules\/[^/]+\/data\.ts$/.test(r) || /^features\/[^/]+\/data\//.test(r)) return 'data'
+  if (r === 'App.vue' || /^(ui|pages)\//.test(r) || /^(features|addons)\/[^/]+\/ui\//.test(r)) return 'presentation'
+  if (/^(modules|addons)\/[^/]+\/logic\.ts$/.test(r) || /^features\/[^/]+\/logic\//.test(r)) return 'logic'
+  if (/^platform\//.test(r) || /^(modules|addons)\/[^/]+\/data\.ts$/.test(r) || /^features\/[^/]+\/data\//.test(r)) return 'data'
   return 'wiring'
 }
 
@@ -67,6 +71,8 @@ function checkWebFile(file) {
   const r = norm(relative(WEB, file))
   const myFeature = r.match(/^features\/([^/]+)\//)?.[1]
   const myModule = r.match(/^modules\/([^/]+)\//)?.[1]
+  const myAddon = r.match(/^addons\/([^/]+)\//)?.[1]
+  const isCore = /^(framework|app|modules|ui|platform)\//.test(r) || r === 'main.ts' || r === 'App.vue'
 
   for (const m of text.matchAll(IMPORT_RE)) {
     const spec = m[3] ?? m[4]
@@ -83,6 +89,7 @@ function checkWebFile(file) {
     const tLayer = webLayer(target)
     const tFeature = t.match(/^features\/([^/]+)\//)?.[1]
     const tModule = t.match(/^modules\/([^/]+)\//)?.[1]
+    const tAddon = t.match(/^addons\/([^/]+)\//)?.[1]
 
     if (layer === 'presentation' && tLayer === 'data') flag('W1', file, line, `presentation imports data layer ${t}`)
     if (layer === 'logic' && tLayer === 'presentation') flag('W2', file, line, `logic imports presentation ${t}`)
@@ -93,6 +100,10 @@ function checkWebFile(file) {
     if (tFeature && tFeature !== myFeature)
       flag('W5', file, line, `${myFeature ? `feature "${myFeature}"` : r} imports feature "${tFeature}" (features are independent)`)
     if (/^modules\/[^/]+\/index\.ts$/.test(r) && !spec.startsWith('./logic')) flag('W6', file, line, `module index re-exports from ${spec} (only ./logic allowed)`)
+    if (tAddon && isCore) flag('W10', file, line, `core code must not import add-on "${tAddon}" (add-ons are optional; enable them from a feature)`)
+    else if (tAddon && tAddon !== myAddon && !/^addons\/[^/]+\/index\.ts$/.test(t))
+      flag('W10', file, line, `reach add-on "${tAddon}" through @/addons/${tAddon}, not ${t}`)
+    if (myAddon && tFeature) flag('W10', file, line, `add-on "${myAddon}" must not import feature "${tFeature}" (use @/framework)`)
   }
   // W7 exporting private names
   for (const m of text.matchAll(/export\s+(?:const|let|var|function|async\s+function|class|type|interface)\s+(__\w+)/g))
@@ -112,6 +123,14 @@ for (const idx of walk(join(WEB, 'features'), ['index.ts'])) {
   else if ([...featureCodes.values()].includes(code) && !m[1].startsWith('_')) flag('W8', idx, 1, `feature code ${code} already used`)
   featureCodes.set(m[1], code)
 }
+for (const idx of walk(join(WEB, 'addons'), ['index.ts'])) {
+  const m = norm(relative(WEB, idx)).match(/^addons\/([^/]+)\/index\.ts$/)
+  if (!m) continue
+  const code = readFileSync(idx, 'utf8').match(/export const ADDON_CODE\s*=\s*['"]([^'"]+)['"]/)?.[1]
+  if (!code || !/^[A-Z]{2,4}$/.test(code)) flag('W8', idx, 1, `add-on "${m[1]}" needs export const ADDON_CODE = 'XX' (2-4 capital letters)`)
+  else if ([...featureCodes.values()].includes(code)) flag('W8', idx, 1, `code ${code} already used by a feature or add-on`)
+  featureCodes.set(`addon:${m[1]}`, code)
+}
 const catalog = []
 const seenIds = new Map()
 for (const file of walk(WEB, ['.vue'])) {
@@ -123,7 +142,9 @@ for (const file of walk(WEB, ['.vue'])) {
     r.match(/^ui\/atoms\//) ? /^A\d{2}$/ : r.match(/^ui\/molecules\//) ? /^M\d{2}$/ : r.match(/^ui\/organisms\//) ? /^O\d{2}$/
     : r.match(/^ui\/templates\//) ? /^T\d{2}$/ : r.match(/^pages\//) ? /^P\d{2}$/ : null
   const feat = r.match(/^features\/([^/]+)\/ui\//)?.[1]
-  const featRe = feat && featureCodes.get(feat) ? new RegExp(`^${featureCodes.get(feat)}-[PC]\\d{2}$`) : null
+  const addon = r.match(/^addons\/([^/]+)\/ui\//)?.[1]
+  const ownerCode = feat ? featureCodes.get(feat) : addon ? featureCodes.get(`addon:${addon}`) : null
+  const featRe = ownerCode ? new RegExp(`^${ownerCode}-[PC]\\d{2}$`) : null
   if (!m) { flag('W8', file, 1, 'missing `/** @component <ID> <Name> — 說明 */` header'); continue }
   const [, id, name, desc] = m
   const re = expect ?? featRe
@@ -141,6 +162,8 @@ for (const f of walk(WEB, ['.ts', '.vue'])) {
     flag('W9', f, 1, 'a module folder may only contain index.ts, logic.ts, data.ts')
   if (/^features\//.test(r) && !/^features\/[^/]+\/(index\.ts|ui\/.+\.vue|(logic|data)\/.+\.ts)$/.test(r))
     flag('W9', f, 1, 'a feature folder may only contain index.ts, ui/*.vue, logic/*.ts, data/*.ts')
+  if (/^addons\//.test(r) && !/^addons\/[^/]+\/((index|logic|data)\.ts|ui\/[^/]+\.vue)$/.test(r))
+    flag('W9', f, 1, 'an add-on folder may only contain index.ts, logic.ts, data.ts, ui/*.vue')
 }
 
 // ---------------------------------------------------------------- backend
@@ -154,7 +177,9 @@ const BE_LAYER_RULES = {
 for (const file of walk(BE, ['.py'])) {
   const r = norm(relative(BE, file))
   const text = readFileSync(file, 'utf8')
-  const feat = r.match(/^features\/([^/]+)\//)?.[1]
+  const feat = r.match(/^(?:features|addons)\/([^/]+)\//)?.[1]
+  const myAddon = r.match(/^addons\/([^/]+)\//)?.[1]
+  const isCore = ['main.py', 'db.py', 'config.py', 'features/__init__.py'].includes(r)
   const base = r.split('/').at(-1)
   for (const m of text.matchAll(/^\s*from\s+(\S+)\s+import\s+([^\n(]+|\([\s\S]*?\))/gm)) {
     const [mod, names] = [m[1], m[2]]
@@ -166,6 +191,10 @@ for (const file of walk(BE, ['.py'])) {
     }
     const other = mod.match(/^townpass_backend\.features\.([^.]+)\.(.+)$/)
     if (other && other[1] !== feat) flag('B5', file, line, `use townpass_backend.features.${other[1]} (package root), not .${other[2]}`)
+    const addonImport = mod.match(/^townpass_backend\.addons(?:\.([^.]+))?(?:\.(.+))?$/)
+    if (addonImport && isCore) flag('B7', file, line, 'core code must not import add-ons (add-ons are optional; enable them from a feature)')
+    else if (addonImport?.[2] && addonImport[1] !== myAddon)
+      flag('B7', file, line, `use townpass_backend.addons.${addonImport[1]} (package root), not .${addonImport[2]}`)
     for (const n of names.replace(/[()]/g, ' ').split(','))
       if (/^__[a-z]\w*[a-z0-9]$/.test(n.trim().split(/\s+as\s+/)[0])) flag('B6', file, line, `imports private name ${n.trim()}`)
   }

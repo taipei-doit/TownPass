@@ -89,3 +89,5 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+# Claude Code subagent worktrees
+.claude/worktrees/

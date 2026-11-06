@@ -10,10 +10,10 @@
 - `services/backend/src/townpass_backend/features/examples/**`
 - `services/backend/tests/test_examples.py`、`services/web/tests/`（新增檔案）
 
-**不可改**：其他功能資料夾、`services/web/src/ui/**`、`features/auth/**`、CI、`tools/`
+**不可改**：其他功能資料夾、`services/web/src/ui/**`、`addons/auth/**`、CI、`tools/`
 
 ## 依賴
-無（`auth` 模組已提供 `CurrentUser` 與前端 `requireUser()`）
+auth 加購件（已提供 `CurrentUser` 與前端 `requireUser()`，要先依 `docs/system/09-addons.md` 啟用）
 
 ## 必讀
 - `AGENTS.md`

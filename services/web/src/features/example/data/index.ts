@@ -1,10 +1,10 @@
 /**
  * DATA LAYER - example feature. The ONLY place this feature talks to the backend.
- * Pattern: try the backend, fall back to local data, so the feature works in a plain browser,
- * offline, and on GitHub Pages without a backend.
+ * Pattern: try the backend, fall back to local mock data, so the feature works in a plain
+ * browser, offline, and on GitHub Pages without a backend.
  */
-import { api, HttpError } from '@/platform/http'
-import { readJson, writeJson } from '@/platform/storage'
+import type { ItemImage } from '@/framework'
+import { api } from '@/platform/http'
 
 export interface Place {
   id: number
@@ -31,30 +31,11 @@ export async function getPlace(id: number): Promise<Place | undefined> {
   return (await listPlaces()).find((p) => p.id === id)
 }
 
-/** Requires a session. Falls back to on-device favourites when the backend is unreachable. */
-export async function listFavoriteIds(): Promise<number[]> {
-  try {
-    return await api<number[]>('/examples/favorites')
-  } catch (err) {
-    if (__isAuthError(err)) throw err
-    return readJson<number[]>(__LOCAL_FAV, [])
-  }
+/** Pictures that belong to a place. Files in public/ are stored for offline use by the service worker. */
+export function imagesOfPlace(id: number): ItemImage[] {
+  if (id !== 1) return []
+  return [{ src: `${import.meta.env.BASE_URL}examples/park-rules.svg`, alt: '範例公園園區須知：寵物繫牽繩、清理排泄物', caption: '範例公園園區須知（範例圖）' }]
 }
-
-export async function setFavorite(placeId: number, on: boolean): Promise<void> {
-  try {
-    await api(`/examples/favorites/${placeId}`, { method: on ? 'PUT' : 'DELETE' })
-  } catch (err) {
-    if (__isAuthError(err)) throw err
-    const ids = new Set(readJson<number[]>(__LOCAL_FAV, []))
-    if (on) ids.add(placeId)
-    else ids.delete(placeId)
-    writeJson(__LOCAL_FAV, [...ids])
-  }
-}
-
-const __LOCAL_FAV = 'example.favorites'
-const __isAuthError = (err: unknown) => err instanceof HttpError && (err.status === 401 || err.status === 403)
 
 // Mock data - clearly fake, replace with real open data on the day.
 const __MOCK_PLACES: Place[] = [

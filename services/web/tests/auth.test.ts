@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 async function freshSession() {
   vi.resetModules()
   localStorage.clear()
-  return import('@/modules/session')
+  return import('@/addons/auth')
 }
 
 const okJson = (body: unknown) => new Response(JSON.stringify(body), { status: 200, headers: { 'Content-Type': 'application/json' } })
@@ -50,7 +50,7 @@ describe('session (login flow + privacy)', () => {
       .mockResolvedValueOnce(okJson({ token: 'new.token', user: { id: 2, townpass_id: 'mock-user', name: '王小明' } }))
     vi.stubGlobal('fetch', fetchMock)
     vi.resetModules()
-    const s = await import('@/modules/session')
+    const s = await import('@/addons/auth')
     await s.ensureSession()
     expect(JSON.parse(localStorage.getItem('townpass.session.v1')!)).toBe('new.token')
   })

@@ -2,3 +2,21 @@
 export { defineFeature, featureRoute } from './feature'
 export type { DataSource, Feature, FeatureItem } from './feature'
 export { allFeatures, features, featureEntry, featureRoutes, getFeature } from './registry'
+export { defineTool } from './tool'
+export type {
+  AssistantContext,
+  AssistantProvider,
+  GeoPoint,
+  ImageBlock,
+  ItemImage,
+  MapBlock,
+  MapBlockMarker,
+  QuoteBlock,
+  ToolArgs,
+  ToolBlock,
+  ToolCard,
+  ToolDefinition,
+  ToolParameters,
+  ToolResult,
+  ToolRoute,
+} from './tool'

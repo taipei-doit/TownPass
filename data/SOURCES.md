@@ -6,6 +6,7 @@
 | 資料集 | 提供機關 | 網址 | 授權 | 用途 | 真實/模擬 |
 |---|---|---|---|---|---|
 | （範例）YouBike 2.0 即時資訊 | 臺北市交通局 | https://data.taipei/ | 政府資料開放授權條款 1.0 | 地圖顯示站點 | 真實 |
+| OpenStreetMap 地圖（線上圖磚、隨附的大臺北底圖 `maps/taipei.pmtiles`，由 Protomaps 建置） | OpenStreetMap contributors | https://www.openstreetmap.org/copyright | ODbL 1.0 | 地圖底圖 | 真實 |
 
 可用平台：
 - 臺北資料大平台 https://data.taipei/ — API：`https://data.taipei/api/v1/dataset/<resource_id>?scope=resourceAquire`

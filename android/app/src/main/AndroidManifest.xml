@@ -54,6 +54,10 @@
     </queries>
     <!-- Provide required visibility configuration for API level 30 and above -->
     <queries>
+        <!-- text-to-speech engines (flutter_tts) -->
+        <intent>
+            <action android:name="android.intent.action.TTS_SERVICE" />
+        </intent>
         <!-- checks for Mail support -->
         <intent>
             <action android:name="android.intent.action.VIEW" />

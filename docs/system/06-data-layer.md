@@ -9,6 +9,7 @@
 | `platform/http.ts` | `api<T>(path, init)`：呼叫後端，自動帶 token；錯誤丟 `HttpError(status)` |
 | `platform/bridge.ts` | `request(name, data)`、`send(name, data)`：與 App 溝通；瀏覽器自動用 mock |
 | `platform/storage.ts` | `readJson`、`writeJson`：裝置端儲存，永遠不丟例外 |
+| `platform/offline.ts` | 註冊 Service Worker（`public/sw.js`），讓網站與隨附底圖斷網可用 |
 | `modules/x/data.ts`、`features/x/data/` | 各模組／功能的資料存取 |
 
 **規則**
@@ -16,7 +17,7 @@
 - **後端失敗要有後備**：讀取 → 回傳 mock；寫入 → 存裝置端（見 `features/example/data`）。但 **401/403 不可吞掉**，要往上丟讓邏輯層處理登入。
 - Mock 必須明顯標示（名稱含「範例」），且形狀與後端回應完全一致（同一個 TS 型別）。
 - 型別定義在資料層並由邏輯層轉出（`export type { Place }`），顯示層從邏輯層拿型別。
-- 呼叫 bridge 只取需要的欄位（session 只取 `id`、`realName`）。
+- 呼叫 bridge 只取需要的欄位（auth 加購件只取 `id`、`realName`）。
 
 ## 2. 後端資料層
 
@@ -42,7 +43,7 @@
 | 別的模組也要這張表的資料 | 呼叫對方的公開介面，不直接查對方的表 |
 
 ### 命名
-- 資料表：`<功能名>_<名詞>`（`example_place`、`example_favorite`）；共用的使用者表 `app_user`
+- 資料表：`<功能名>_<名詞>`（`example_place`）；auth 加購件的使用者表 `app_user`
 - 外鍵：`<表>_id`，指向 `app_user.id` 時用 `user_id`
 - JSON 欄位：`Field(sa_column=Column(JSON))`（SQLite 與 Postgres 都可用）
 
@@ -51,6 +52,7 @@
 - 單一功能的 seed 失敗只記錄錯誤，不影響其他功能
 
 ## 3. 開放資料
+- 地點要能標在對話框地圖：項目帶 `geo`（WGS84 經緯度）；開放資料若是 TWD97 或只有地址，先在匯入時轉好，不要在手機上呼叫商用地理編碼
 - 上游 API 只在資料層呼叫（例：`features/opendata/repo.py`，有 10 分鐘快取）
 - 每個資料集同時登記在：功能的 `sources`、`data/SOURCES.md`、頁面上的 `SourceNote`
 - 臺北資料大平台 API：`https://data.taipei/api/v1/dataset/<resource_id>?scope=resourceAquire`

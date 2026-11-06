@@ -16,7 +16,7 @@ TownPass App (Flutter)                       ← 只改：登記服務入口、�
 |---|---|
 | 瀏覽器 → 網頁 | http://localhost:5173 |
 | 瀏覽器 → 後端 / API 文件 | http://localhost:8000 / http://localhost:8000/docs |
-| Android 模擬器 → 筆電 | 把 `localhost` 換成 `10.0.2.2` |
+| Android 模擬器 → 筆電 | 先 `adb reverse tcp:5173 tcp:5173`（後端再加 `tcp:8000`），網址維持 `localhost`；不要用 `10.0.2.2`（不是安全來源，WebGPU、OPFS 不能用） |
 | 實體手機（同一個 Wi-Fi）→ 筆電 | 換成筆電的區網 IP |
 
 ## 每天的指令
@@ -33,7 +33,8 @@ cd services/backend && uv sync && uv run python -m uvicorn townpass_backend.main
 # App（模擬器開網頁 dev server）
 flutter emulators --launch townpass
 flutter pub get && dart run build_runner build --delete-conflicting-outputs
-flutter run --dart-define=TEAM_WEB_URL=http://10.0.2.2:5173/
+adb reverse tcp:5173 tcp:5173
+flutter run --dart-define=TEAM_WEB_URL=http://localhost:5173/
 ```
 
 > Windows 若出現「應用程式控制原則已封鎖此檔案」：用 `python -m uvicorn`（如上），不要直接執行 `.venv` 裡的 `uvicorn.exe`。

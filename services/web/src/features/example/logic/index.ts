@@ -6,8 +6,7 @@ import { computed, onMounted, ref } from 'vue'
 import { useRoute, useRouter, type RouteLocationRaw } from 'vue-router'
 import { featureRoute, type FeatureItem } from '@/framework'
 import { openMap, shareLink } from '@/modules/env'
-import { requireUser } from '@/modules/session'
-import { getPlace, listFavoriteIds, listPlaces, setFavorite, type Place } from '../data'
+import { getPlace, imagesOfPlace, listPlaces, type Place } from '../data'
 
 export type { Place }
 
@@ -31,28 +30,9 @@ export function usePlaceList() {
 /** Detail page. place: undefined = loading, null = not found. */
 export function usePlaceDetail(id: number) {
   const place = ref<Place | null>()
-  const favorite = ref(false)
-  const favoriteBusy = ref(false)
   const message = ref('')
 
-  onMounted(async () => {
-    place.value = (await getPlace(id)) ?? null
-    favorite.value = await __isFavorite(id)
-  })
-
-  async function toggleFavorite() {
-    favoriteBusy.value = true
-    message.value = ''
-    try {
-      await requireUser() // protected action
-      await setFavorite(id, !favorite.value)
-      favorite.value = !favorite.value
-    } catch (err) {
-      message.value = err instanceof Error ? err.message : '收藏失敗'
-    } finally {
-      favoriteBusy.value = false
-    }
-  }
+  onMounted(async () => (place.value = (await getPlace(id)) ?? null))
 
   const navigate = () => place.value && openMap(place.value.lat, place.value.lng, place.value.name)
   const share = async () => {
@@ -61,12 +41,12 @@ export function usePlaceDetail(id: number) {
     if (r === 'copied') message.value = '已複製連結'
   }
 
-  return { place, favorite, favoriteBusy, message, toggleFavorite, navigate, share }
+  return { place, message, navigate, share }
 }
 
 export const placeDetailRoute = (id: number): RouteLocationRaw => featureRoute('example', 'detail', { id })
 
-/** Feeds the home chat box. */
+/** Feeds the home chat box (and any add-on that reads search items, e.g. RAG). */
 export async function placeSearchItems(): Promise<FeatureItem[]> {
   return (await listPlaces()).map(__toSearchItem)
 }
@@ -79,21 +59,17 @@ function __matches(p: Place, category: string): boolean {
   return category === ALL || p.category === category
 }
 
-async function __isFavorite(id: number): Promise<boolean> {
-  try {
-    return (await listFavoriteIds()).includes(id)
-  } catch {
-    return false // not logged in -> nothing is a favourite yet
-  }
-}
-
 function __toSearchItem(p: Place): FeatureItem {
   return {
     id: String(p.id),
     title: p.name,
     subtitle: `${p.district}・${p.category}`,
     tags: p.tags,
-    keywords: [p.district, p.category, p.address],
+    keywords: [p.district, p.category],
+    text: [`地址：${p.address}`, `開放時間：${p.hours}`, ...p.notices.map((n) => `${n.title}：${n.body}`)].join('\n'),
+    geo: { lat: p.lat, lng: p.lng },
+    images: imagesOfPlace(p.id),
+    source: '（範例）臺北市公園基本資料',
     to: placeDetailRoute(p.id),
   }
 }

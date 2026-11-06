@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
@@ -279,5 +280,43 @@ class QRCodeScanMessageHandler extends TPWebMessageHandler {
     onReply?.call(
       replyWebMessage(data: result),
     );
+  }
+}
+
+/// Android WebView has no speechSynthesis, so the web page reads text aloud through these messages.
+/// Uses the phone's own text-to-speech engine, so nothing leaves the device.
+final FlutterTts _tts = FlutterTts();
+
+class TtsSpeakMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'tts_speak';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    if (message is! Map) return;
+    final Object? text = message['text'];
+    if (text is! String || text.isEmpty) return;
+    await _tts.setLanguage(message['lang'] is String ? message['lang'] as String : 'zh-TW');
+    await _tts.speak(text);
+  }
+}
+
+class TtsStopMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'tts_stop';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    await _tts.stop();
   }
 }

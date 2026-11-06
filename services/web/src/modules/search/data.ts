@@ -5,6 +5,7 @@
  */
 import MiniSearch from 'minisearch'
 import type { RouteLocationRaw } from 'vue-router'
+import type { GeoPoint, ItemImage } from '@/framework'
 
 export interface SearchDoc {
   key: string
@@ -14,7 +15,14 @@ export interface SearchDoc {
   subtitle?: string
   tags?: string[]
   text: string
+  geo?: GeoPoint
+  images?: ItemImage[]
+  validFrom?: string
+  validTo?: string
+  source?: string
   to: RouteLocationRaw
+  /** relevance, set on search results */
+  score?: number
 }
 
 const __CJK = /[㐀-鿿豈-﫿]/
@@ -44,19 +52,26 @@ export function tokenize(text: string): string[] {
 const __index = new MiniSearch<SearchDoc>({
   idField: 'key',
   fields: ['title', 'text'],
-  storeFields: ['kind', 'featureId', 'title', 'subtitle', 'tags', 'to'],
+  storeFields: ['kind', 'featureId', 'title', 'subtitle', 'tags', 'geo', 'images', 'validFrom', 'validTo', 'source', 'to'],
   tokenize,
   searchOptions: { boost: { title: 3 }, combineWith: 'OR', fuzzy: (t) => (__CJK.test(t) ? false : 0.2) },
 })
 
+const __docs = new Map<string, SearchDoc>()
+
 export function resetDocs(docs: SearchDoc[]): void {
   __index.removeAll()
-  __index.addAll(docs)
+  __docs.clear()
+  addDocs(docs)
 }
 
 export function addDocs(docs: SearchDoc[]): void {
-  __index.addAll(docs.filter((d) => !__index.has(d.key)))
+  const fresh = docs.filter((d) => !__index.has(d.key))
+  __index.addAll(fresh)
+  for (const d of fresh) __docs.set(d.key, d)
 }
+
+export const allDocs = (): SearchDoc[] => [...__docs.values()]
 
 export function queryDocs(query: string, limit: number): SearchDoc[] {
   if (!query.trim()) return []

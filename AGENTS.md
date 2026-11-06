@@ -10,7 +10,8 @@ Write user-facing text and docs in **Traditional Chinese**.
 | `services/web/` | Vue 3 + Vite + TS + Tailwind microservice (the product) |
 | `services/backend/` | FastAPI + SQLModel (Postgres on Render, SQLite locally) |
 | `lib/`, `android/` | TownPass Flutter app - change only the service entry / bridge handlers |
-| `docs/system/` | **Specs, decisions, glossary, layer rules, testing** - read README there first |
+| `services/web/src/addons/` | Pre-written optional modules, OFF by default: `auth`, `model`, `rag`, `agent`. Each has a README; load them as `docs/system/09-addons.md` says |
+| `docs/system/` | **Specs, decisions, glossary, layer rules, testing, add-ons** - read README there first |
 | `docs/tickets/` | Ticket template + example; tickets themselves are GitHub issues labelled `ticket` |
 | `.claude/skills/` | `townpass-ui`, `townpass-feature`, `townpass-ticket` - workflows (plain markdown, any AI can read them) |
 | `tools/` | isolated toolchain setup (`setup-windows.ps1`, `dev-shell.ps1`, `doctor.ps1`), `check-arch.mjs` |
@@ -30,4 +31,5 @@ cd services/web && pnpm build && pnpm test
 cd services/backend && uv run ruff check . && uv run pytest -q
 ```
 UI changes: run on the Android emulator and look at a screenshot (`docs/system/07-testing.md` §5).
+On-device models and offline features need a secure context: on the emulator use `adb reverse` + `http://localhost`, never `http://10.0.2.2`.
 Windows: open terminals with `. .\tools\dev-shell.ps1` first (isolated toolchain, `docs/system/08-environment.md`).

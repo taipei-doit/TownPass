@@ -4,10 +4,9 @@ import { useRoute } from 'vue-router'
 import { Navigation, Share2 } from 'lucide-vue-next'
 import { BaseButton, DetailPage, EmptyState, PageContainer, SkeletonBlock } from '@/ui'
 import { usePlaceDetail } from '../logic'
-import FavoriteButton from './FavoriteButton.vue'
 
 const route = useRoute()
-const { place, favorite, favoriteBusy, message, toggleFavorite, navigate, share } = usePlaceDetail(Number(route.params.id))
+const { place, message, navigate, share } = usePlaceDetail(Number(route.params.id))
 </script>
 
 <template>
@@ -26,9 +25,6 @@ const { place, favorite, favoriteBusy, message, toggleFavorite, navigate, share 
     :notices="place.notices"
     source="（範例）臺北市公園基本資料，臺北資料大平台"
   >
-    <template #headerAction>
-      <FavoriteButton :active="favorite" :busy="favoriteBusy" @toggle="toggleFavorite" />
-    </template>
     這是範例詳細頁：摘要、資訊列、地圖、注意事項與底部按鈕都由 DetailPage（T02）組合而成，功能只需要填資料。
     <p v-if="message" class="mt-2 text-sm text-warn-200" role="status">{{ message }}</p>
     <template #actions>

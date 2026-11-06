@@ -34,13 +34,13 @@ def __distance_km(a, b) -> float: ...                        # 私有
 |---|---|---|
 | 頁面用的狀態＋動作 | composable `useXxx()` 回傳 refs 與函式 | `usePlaceList()`、`usePlaceDetail(id)`、`useAssistant()` |
 | 給框架的資料 | async 函式 | `placeSearchItems()` |
-| 共用狀態 | 模組層級 `ref`（單例） | `recent`、`session.user` |
+| 共用狀態 | 模組層級 `ref`（單例） | `recent`、`appUserName` |
 | 平台能力 | 包成有意義的動作 | `openMap()`、`shareLink()`（modules/env） |
 
 - 可以用 `vue` 的反應式 API 與 `vue-router`；**不可以** import `.vue`、`@/ui`、`@/pages`（W2）。
 - 呼叫資料層取得資料；**不直接** `fetch`、不碰 `localStorage`、不呼叫 bridge。
 - 錯誤處理在這層：把資料層的例外轉成使用者看得懂的訊息（例：`requireUser()` 拋出「需要登入台北通…」）。
-- 需要登入的動作先 `await requireUser()`（`@/modules/session`）。
+- 需要登入的動作先 `await requireUser()`（`@/addons/auth`，要先依 [09-addons.md](09-addons.md) 啟用）。
 
 ## 4. 後端邏輯層寫法
 
@@ -54,10 +54,11 @@ def __distance_km(a, b) -> float: ...                        # 私有
 
 | 模組 | 介面 | 說明 |
 |---|---|---|
-| `@/modules/assistant` | `useAssistant()`、`featureEntryRoute(id)` | 對話框：問→答＋結果卡片／建議 |
-| `@/modules/search` | `buildSearchIndex()`、`search(q, limit)`、`searchReady` | 裝置端搜尋 |
+| `@/modules/assistant` | `useAssistant()`、`featureEntryRoute(id)` | 對話框：問→答＋地圖／圖片／結果卡片／建議 |
+| `@/modules/tools` | `listTools()`、`routeByRules(q)`、`runTool(name, args)`、`validateToolArgs()` | 對話框工具；內建 `show_map`、`show_image` |
+| `@/modules/search` | `buildSearchIndex()`、`search(q, limit)`、`searchDocuments()`、`searchReady` | 裝置端搜尋 |
 | `@/modules/recent` | `recent`、`addRecent()`、`clearRecent()` | 近期使用 |
-| `@/modules/session` | `ensureSession()`、`requireUser()`、`profile`、`user`、`signOut()` | 登入流程 |
-| `@/modules/env` | `inApp`、`openMap()`、`shareLink()` | 平台能力 |
-| `features.auth` | `CurrentUser`、`AppUser`、`router` | 受保護端點 |
+| `@/modules/env` | `inApp`、`appUserName`、`openMap()`、`shareLink()`、`speak()`、`stopSpeaking()`、`canSpeak`、`enableOfflineUse()` | 平台能力 |
 | `features.opendata` | `taipei_dataset()`、`UpstreamError` | 臺北資料大平台 |
+
+加購件（登入、模型、RAG、代理）的介面見 [09-addons.md](09-addons.md)。

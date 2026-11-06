@@ -1,8 +1,8 @@
 /**
  * Example feature (wiring only) - shows every extension point and the three layers:
- *   ui/     presentation  (EX-P01, EX-P02 pages; EX-C01, EX-C02 components)
+ *   ui/     presentation  (EX-P01, EX-P02 pages; EX-C01 component; EX-C02 retired - numbers are never reused)
  *   logic/  use-cases     (usePlaceList, usePlaceDetail, placeSearchItems)
- *   data/   backend + mock (listPlaces, getPlace, favourites)
+ *   data/   backend + mock (listPlaces, getPlace)
  * Delete this folder once real features exist. New feature: copy src/features/_template.
  */
 import { MapPinned } from 'lucide-vue-next'
@@ -13,7 +13,7 @@ export default defineFeature({
   id: 'example',
   code: 'EX',
   title: '範例：找設施',
-  description: '列表 → 詳細頁 → 注意事項 → 地圖 → 收藏的完整範例',
+  description: '列表 → 詳細頁 → 注意事項 → 地圖的完整範例',
   icon: MapPinned,
   order: 999,
   keywords: ['設施', '地點', '附近', '公園', '運動', '圖書館'],

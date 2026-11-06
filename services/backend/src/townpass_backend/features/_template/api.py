@@ -1,10 +1,10 @@
-"""PRESENTATION (HTTP) - only calls service. Protect endpoints with CurrentUser when needed."""
+"""PRESENTATION (HTTP) - only calls service. Login is an optional add-on (addons/auth); see its __init__.py before protecting endpoints."""
 
 from fastapi import APIRouter
 
 from townpass_backend.db import SessionDep
 
-# from townpass_backend.features.auth import CurrentUser
+# Optional add-on (only after the team enabled it): from townpass_backend.addons.auth import CurrentUser
 from . import service
 from .schemas import ItemOut
 

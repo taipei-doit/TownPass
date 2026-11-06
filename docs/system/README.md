@@ -13,6 +13,7 @@
 | [06-data-layer.md](06-data-layer.md) | 資料層：API、mock 後備、資料表、動態欄位擴充 | 接資料、加欄位時 |
 | [07-testing.md](07-testing.md) | 測試準則：層級、登入驗證清單、手動驗收 | 交 PR 之前 |
 | [08-environment.md](08-environment.md) | 隔離開發環境：安裝、啟用、排錯 | 第一次開發、環境出問題時 |
+| [09-addons.md](09-addons.md) | **加購件（登入、模型、RAG、代理）的載入方式；對話框工具（地圖、圖片）** | 要用模型、登入，或要在對話框顯示地圖／圖片時 |
 | [components.md](components.md) | 元件目錄（自動產生） | 找現成元件時 |
 
 其他：[團隊流程](../WORKFLOW.md)・[部署](../DEPLOY.md)・[App ↔ 網頁訊息](../bridge.md)・[工單](../tickets/README.md)・[資料來源](../../data/SOURCES.md)
@@ -31,7 +32,8 @@ TownPass App (Flutter) ── WebView ──┐
  │ 資料層  modules/x/data.ts  features/x/data/   │              │ 資料層  features/x/repo.py         │
  │         platform/ (http, bridge, storage)     │              │         models.py → Postgres/SQLite │
  └──────────────────────────────────────────────┘              └──────────────────────────────────┘
- framework/ = 功能註冊（自動發現 features/*）                    features/__init__.py = 自動發現 features/*
+ framework/ = 功能與工具註冊（自動發現 features/*）              features/__init__.py = 自動發現 features/*
+ addons/    = 預設關閉的模組，功能需要時才 import                addons/ = 同左
 ```
 
 規則由 `node tools/check-arch.mjs` 在 CI 自動檢查。

@@ -28,10 +28,14 @@ import {
   SectionTitle,
   SkeletonBlock,
   SourceNote,
+  ChatImage,
+  ChatMap,
+  ChatQuote,
   type ThreadMessage,
 } from '@/ui'
 
 const text = ref('')
+const exampleImage = `${import.meta.env.BASE_URL}examples/park-rules.svg`
 const draft = ref('')
 const sheet = ref(false)
 const chip = ref('全部')
@@ -118,6 +122,11 @@ const thread: ThreadMessage[] = [
         <ChatBubble role="bot">系統的回覆</ChatBubble>
         <ChipRail><BaseChip v-for="n in 8" :key="n">選項 {{ n }}</BaseChip></ChipRail>
       </section>
+      <section class="space-y-2">
+        <SectionTitle title="M10 ChatImage ・ M11 ChatQuote" />
+        <ChatImage :src="exampleImage" alt="範例公園園區須知" caption="圖說" source="範例資料" />
+        <ChatQuote title="原文：範例公告" text="第一行內容。&#10;第二行內容。" source="範例資料" speakable />
+      </section>
 
       <h2 class="border-b border-grey-100 pb-1 text-sm font-bold tracking-wide text-grey-400">ORGANISMS</h2>
       <section class="space-y-3">
@@ -131,6 +140,20 @@ const thread: ThreadMessage[] = [
       <section>
         <SectionTitle title="O02 OsmMap" />
         <OsmMap :markers="[{ lat: 25.0375, lng: 121.5637, label: '臺北市政府' }]" />
+      </section>
+      <section>
+        <SectionTitle title="O02 OsmMap（隨附底圖）" />
+        <OsmMap basemap="offline" :markers="[{ lat: 25.0375, lng: 121.5637, label: '臺北市政府' }]" />
+      </section>
+      <section>
+        <SectionTitle title="O08 ChatMap" />
+        <ChatMap
+          title="對話框內的地圖"
+          :markers="[
+            { lat: 25.0375, lng: 121.5637, label: '臺北市政府', detail: '信義區' },
+            { lat: 25.0263, lng: 121.5434, label: '施工地點', detail: '大安區', tone: 'warning' },
+          ]"
+        />
       </section>
       <NoticeList :notices="[{ title: 'O03 NoticeList', body: '第一項預設展開' }, { title: '第二項', body: '內容' }]" />
       <section>

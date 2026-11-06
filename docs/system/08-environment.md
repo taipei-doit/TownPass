@@ -46,7 +46,7 @@ Remove-Item -LiteralPath "\\?\$env:USERPROFILE\.townpass-dev" -Recurse -Force   
 | **第一次換成隔離環境**，或打包出現 `Unable to delete directory`／`AccessDeniedException`／`PathAccessException … .dart_tool` | 舊環境的 Gradle／Kotlin daemon 還開著、`build_runner` 的輸出是唯讀、`build\` 裡的路徑超過 260 字元。執行 `powershell -ExecutionPolicy Bypass -File tools\clean.ps1`，再 `flutter pub get` → `dart run build_runner build` → 打包 |
 | 「應用程式控制原則已封鎖此檔案」（Windows 智慧型應用程式控制） | 後端用 `uv run python -m uvicorn ...`，不要直接執行 `.venv\Scripts\*.exe` |
 | Gradle「Unable to delete directory … build\」 | `tools\clean.ps1`（見下一列） |
-| 模擬器打不開網頁 `ERR_CLEARTEXT_NOT_PERMITTED` | 用 debug 版 App（已允許 http）；網址用 `10.0.2.2` |
+| 模擬器打不開網頁 `ERR_CLEARTEXT_NOT_PERMITTED` | 用 debug 版 App（已允許 http）；網址用 `localhost` 搭配 `adb reverse`（`07-testing.md` §5），不要用 `10.0.2.2` |
 | 你另外裝過 Android Studio | Flutter 可能改用 Android Studio 內建的 JDK，一樣可以打包，不影響 |
 | 你曾執行過 `flutter config --jdk-dir …` | 那是使用者全域設定，Flutter 會優先使用它；不需要的話 `flutter config --jdk-dir=""` |
 | Mac 隊友 | 目前只有 Windows 腳本；Mac 版尚未撰寫 |

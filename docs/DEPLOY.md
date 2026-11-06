@@ -1,5 +1,7 @@
 # 部署
 
+目前後端：https://townpass-backend-dmk2.onrender.com（倉庫變數 `API_BASE` 已設定）
+
 | 部分 | 平台 | 何時更新 |
 |---|---|---|
 | 網頁 `services/web` | GitHub Pages：https://hackathon-taipei.github.io/TownPass/ | 合併到 `main` 自動部署 |
@@ -39,6 +41,7 @@ CI 會用真的 Postgres 17 跑一次測試，確保跟 Render 一致。
 筆電跑後端與網頁，App 用 debug 版連筆電：
 ```bash
 cd services/backend && uv run python -m uvicorn townpass_backend.main:app --host 0.0.0.0 --port 8000
-cd services/web && VITE_API_BASE=http://10.0.2.2:8000 pnpm dev
-flutter run --dart-define=TEAM_WEB_URL=http://10.0.2.2:5173/
+cd services/web && pnpm dev
+adb reverse tcp:5173 tcp:5173 && adb reverse tcp:8000 tcp:8000
+flutter run --dart-define=TEAM_WEB_URL=http://localhost:5173/
 ```

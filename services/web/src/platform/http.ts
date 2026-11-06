@@ -1,6 +1,6 @@
 /**
  * DATA LAYER - platform adapter: HTTP to our backend.
- * Base URL from VITE_API_BASE. Sends the session token when one is set (see modules/session).
+ * Base URL from VITE_API_BASE. Sends a bearer token when one is set (only the optional auth add-on sets it).
  */
 const __BASE = (import.meta.env.VITE_API_BASE ?? 'http://localhost:8000').replace(/\/$/, '')
 let __token: string | null = null

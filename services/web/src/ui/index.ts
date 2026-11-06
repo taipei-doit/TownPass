@@ -22,6 +22,8 @@ export { default as InfoTable } from './molecules/InfoTable.vue' // M06
 export { default as ResultCard } from './molecules/ResultCard.vue' // M07
 export { default as ChatBubble } from './molecules/ChatBubble.vue' // M08
 export { default as ChipRail } from './molecules/ChipRail.vue' // M09
+export { default as ChatImage } from './molecules/ChatImage.vue' // M10
+export { default as ChatQuote } from './molecules/ChatQuote.vue' // M11
 
 // Organisms
 export { default as BaseSheet } from './organisms/BaseSheet.vue' // O01
@@ -31,6 +33,7 @@ export { default as ChatComposer } from './organisms/ChatComposer.vue' // O04
 export { default as ChatThread } from './organisms/ChatThread.vue' // O05
 export { default as FeatureGrid } from './organisms/FeatureGrid.vue' // O06
 export { default as RecentStrip } from './organisms/RecentStrip.vue' // O07
+export { default as ChatMap } from './organisms/ChatMap.vue' // O08
 
 // Templates
 export { default as PageContainer } from './templates/PageContainer.vue' // T01
@@ -38,7 +41,7 @@ export { default as DetailPage } from './templates/DetailPage.vue' // T02
 
 export type { InfoRow } from './molecules/InfoTable.vue'
 export type { Notice } from './organisms/NoticeList.vue'
-export type { ThreadMessage, ThreadResult, ThreadSuggestion } from './organisms/ChatThread.vue'
+export type { ThreadBlock, ThreadMessage, ThreadResult, ThreadSuggestion } from './organisms/ChatThread.vue'
 export type { GridItem } from './organisms/FeatureGrid.vue'
 export type { RecentItem } from './organisms/RecentStrip.vue'
 export type { QuickAction } from './organisms/ChatComposer.vue'
