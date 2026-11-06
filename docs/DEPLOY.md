@@ -10,17 +10,29 @@
 
 ## 誰能部署？隊員怎麼部署？
 
-**合併到 `main` 就是部署，隊員不需要登入 Render 或 Pages。** 流程見 [WORKFLOW.md](WORKFLOW.md) 第 9 步：
+**合併到 `main` 就是部署，所以只有整合者能合併。** 其他隊員和他們的 AI 只開 PR，不需要登入 Render 或 Pages。流程見 [WORKFLOW.md](WORKFLOW.md) 第 9 步。
+
+- **整合者：** `n753951f`
+- **備援：** 尚未指定（整合者不在時由誰合併，指定後寫在這裡，並加進 `tools/protect-main.ps1` 的 `-Backup`）
+
+整合者執行（CI 全綠、自己檢查過之後）：
 ```powershell
-gh pr checks <編號>                               # 全綠
-gh pr merge <編號> --squash --delete-branch       # 合併，GitHub Actions 與 Render 接手
+gh pr checks <編號>
+gh pr merge <編號> --squash --delete-branch       # GitHub Actions 與 Render 接手
 ```
 
 | 誰 | 能做什麼 |
 |---|---|
 | 公開網路上的任何人 | 看程式碼、fork、開 PR 或 Issue。**不能合併，也不能部署** |
 | 外人開的 PR | 第一次的貢獻者要維護者核准才跑 CI；fork 的 CI 拿不到部署權限與密鑰；合併要有寫入權限的人按 |
-| 有寫入權限的隊員 | 自己的 PR 在必要 CI 通過後可合併，因此可以部署 |
+| 有寫入權限的隊員 | 推分支、開 PR。**不能合併，也不能部署** |
+| 整合者與備援 | CI 通過且分支是最新的之後合併，因此可以部署 |
+| 組織擁有者 | 可以改保護設定，所以只留給整合者與備援 |
+
+**GitHub 設定**由 `tools/protect-main.ps1` 套用：`main` 的必過檢查是 `arch`、`web`、`backend`、`app`，分支要是最新的，只有整合者與備援能合併，管理員也不能繞過。
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\protect-main.ps1 -Merger n753951f -DryRun     # 只顯示會做什麼
+```
 
 **公開倉庫的規則**
 - **絕不提交密鑰、密碼、真實個資。** 密鑰放 Render 環境變數（`SECRET_KEY`）；前端的 `VITE_*` 會進公開網頁，不是祕密
@@ -42,7 +54,7 @@ gh pr merge <編號> --squash --delete-branch       # 合併，GitHub Actions �
    ```
 6. （建議）在 Render 的 workspace 設定把隊友加為成員，讓大家都能看 log。
 
-設定完之後，**任何人合併 PR 都會觸發部署**，不需要特定人操作。
+設定完之後，**整合者合併 PR 就會觸發部署**，不需要再操作 Render。
 
 ## 必須知道的限制
 

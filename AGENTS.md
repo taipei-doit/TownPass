@@ -6,7 +6,7 @@ Write user-facing text and docs in **Traditional Chinese**.
 
 ## First thing in every session
 Follow `.claude/skills/townpass-start/SKILL.md`: run `tools/start.ps1`, read the docs, list the tickets, let the user pick.
-**You are the main agent: you check and merge. Subagents write the implementation.** When done, update the system docs and push them back.
+**You are the main agent: you delegate, check and open the PR. Subagents write the implementation. Never merge unless the integrator (`docs/DEPLOY.md`) tells you in this session to merge that PR.** When done, update the system docs and push them back.
 
 ## Where things are
 | Path | What |
@@ -26,9 +26,9 @@ Follow `.claude/skills/townpass-start/SKILL.md`: run `tools/start.ps1`, read the
 3. **DB:** a module declares only the columns it needs in its `models.py`; missing tables/columns are added on startup; never drop/rename/retype. → `docs/system/06-data-layer.md`
 4. **Competition rules** (https://codefest.taipei/2026-fall/rules): no cloud LLM calls at runtime (on-device only, no PRC-brand models, judges may test with the network off), open-source software only, no commercial SDKs (no Google Maps), core data must be open data with cited sources, disclose on-device models, our code is AGPL-3.0. Models stay open-licensed until the organiser confirms otherwise (ADR-020).
 5. **Privacy:** from the TownPass account use only `id` and `realName`. Never store/send ID number, phone, address, birthday.
-6. **Working on a ticket:** follow `.claude/skills/townpass-ticket/SKILL.md` - the main agent delegates implementation to a subagent, then checks and merges; stay inside the ticket's scope, report deviations in the PR.
+6. **Working on a ticket:** follow `.claude/skills/townpass-ticket/SKILL.md` - the main agent delegates implementation to a subagent, checks it and opens a PR for the integrator to merge; stay inside the ticket's scope, report deviations in the PR.
 7. **Docs ship with code:** new or changed interfaces, components, decisions, terms and data sources go into the system docs in the same PR (`docs/WORKFLOW.md` step 8). CI checks this.
-8. **Public repo:** never commit secrets or real personal data. Merging to `main` deploys (`docs/DEPLOY.md`).
+8. **Public repo:** never commit secrets or real personal data. Merging to `main` deploys, so only the integrator merges (`docs/DEPLOY.md`).
 
 ## Before you say "done"
 ```bash

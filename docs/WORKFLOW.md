@@ -10,7 +10,8 @@
 | 誰 | 負責 | 不做 |
 |---|---|---|
 | 隊員 | 登入 GitHub、選工單、回答問題、看結果 | |
-| **主代理**（你對話的 AI） | 環境、同步、讀文件、寫任務說明、**檢查、更新系統文件、開 PR、合併** | **不寫實作** |
+| **整合者**（一位隊員，名單見 [DEPLOY.md](DEPLOY.md)） | 檢查所有 PR，決定順序，**合併與部署** | |
+| **主代理**（你對話的 AI） | 環境、同步、讀文件、寫任務說明、**檢查、更新系統文件、開 PR** | **不寫實作；不合併**，除非整合者本人在這個對話中要求合併該 PR |
 | **子代理** | 在自己的 worktree **實作與測試**，回報結果 | 不開 PR、不合併、不改工單範圍外的檔案 |
 
 工具沒有子代理功能時：另開一個 session 實作，原本的 session 負責檢查。
@@ -98,7 +99,7 @@ cd ../..; flutter analyze --no-fatal-infos --no-fatal-warnings   # 有改 App �
 
 真的不用更新（例如只修 bug）：在 PR 描述寫一行 `無需更新文件：<理由>`。
 
-### 9. 推上 GitHub 並合併
+### 9. 推上 GitHub，由整合者合併
 ```powershell
 git fetch origin; git rebase origin/main
 git push -u origin HEAD
@@ -107,18 +108,50 @@ gh issue edit <編號> --add-label status:review --remove-label status:in-progre
 ```
 PR 用 [範本](../.github/pull_request_template.md)，寫 `Closes #<編號>`，逐條對照驗收標準，**列出所有偏離**（有偏離加標籤 `deviation`）。
 
-CI 全綠就由主代理合併，不強制人工 review：
+到這裡隊員和主代理的工作就結束了：**不要合併，合併等於部署。** GitHub 也會擋下整合者以外的合併。
+
+**整合者**（請自己的 AI 檢查，把 PR 當成不可信的程式碼）：
+1. 讀完整 diff，對照工單的範圍、合約、驗收標準，確認測試沒有被刪除或放水
+2. 在 PR 的分支自己重跑第 7 步的檢查；有改畫面就實際操作一次
+3. 有問題：在 PR 留言退回，由原本的主代理修
+4. 沒問題就合併，然後確認線上版：
 ```powershell
 gh pr checks <編號>
 gh pr merge <編號> --squash --delete-branch
 git switch main; git pull --ff-only origin main
 ```
-合併後網頁自動部署到 https://hackathon-taipei.github.io/TownPass/，後端部署到 https://townpass-backend-dmk2.onrender.com。打開確認一次。
+網頁部署到 https://hackathon-taipei.github.io/TownPass/，後端部署到 https://townpass-backend-dmk2.onrender.com。打開確認一次。
+
+一次合一個。合併後，其他 PR 要 rebase 並等 CI 重新通過才能合併（`main` 要求分支是最新的）。
 
 **要停下來問人的情況**：要改 API／bridge 合約、驗收標準做不到、可能違反比賽規則、CI 修不好。細節見 `townpass-ticket` skill 的 D 節。
 
 ### 10. 回報
-跟隊員說：合併了什麼、上線網址、有哪些偏離、哪些沒驗證、下一張可做的工單。
+主代理跟隊員說：PR 連結、有哪些偏離、哪些沒驗證、下一張可做的工單。整合者合併後再回報上線網址。
+
+## 同一輪多個 AI 平行開發
+
+同一台電腦可以同時跑多個主代理（例如兩個 Claude、一個 GPT），每個主代理各帶子代理：
+
+```
+本輪工單（合約已定、彼此不依賴）
+├─ 主代理 A（資料夾 TownPass）   → 子代理 → 工單 1、2 → 各開 PR
+└─ 主代理 B（資料夾 TownPass-b） → 子代理 → 工單 3、4 → 各開 PR
+                                     ↓
+                          整合者：檢查，逐一合併
+```
+
+| 規則 | 做法 |
+|---|---|
+| 同一輪的工單要獨立 | 開工前定好合約；有依賴的放下一輪；資料夾不重疊 |
+| 一張工單只給一個主代理 | 先認領（第 5 步）再開工 |
+| 每個主代理一個資料夾 | **絕不共用同一個 checkout**。另外 clone 一份：`git clone https://github.com/hackathon-taipei/TownPass.git TownPass-b`，再各跑一次 `tools\start.ps1`（工具共用，依賴各裝一份） |
+| 每個子代理一個 worktree、一個分支 | 一張工單一個 PR，檢查和退回比較容易 |
+| 前端埠 | 5173 被占用時 Vite 會自動換埠，看終端機顯示的網址 |
+| 後端埠 | 第二個資料夾用 `--port 8001`，前端開發時設 `VITE_API_BASE=http://localhost:8001` |
+| 模擬器和打包 App | 同一時間只讓一個 AI 使用，Gradle 會鎖目錄 |
+| 同時執行量 | 每個主代理先開 2 到 3 個子代理，看電腦負荷再加 |
+| 沒有子代理的工具 | 另開一個 session 實作，原本的 session 負責檢查 |
 
 ---
 
@@ -182,9 +215,9 @@ flutter run --dart-define=TEAM_WEB_URL=http://localhost:5173/
 
 ## Git 規則
 
-- `main` 受保護：只能透過 PR 合併，CI（`.github/workflows/ci.yml`）要過
+- `main` 受保護：只能透過 PR，由**整合者**合併，CI（`.github/workflows/ci.yml`）要過，分支要是最新的
 - 分支命名：有工單用 `t-<編號>-<名稱>`，沒有用 `feat/…`、`fix/…`、`docs/…`
-- **PR 要小、要快**：最多 2 小時合一次，squash merge
+- **PR 要小、要快**：最多 2 小時交一次，squash merge
 - 流程見上面「完整開發流程」第 3、9 步
 
 ## 時程（相對於題目公布 T0）

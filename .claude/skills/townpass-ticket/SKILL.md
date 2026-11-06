@@ -32,8 +32,8 @@ Format: `docs/tickets/TEMPLATE.md`. Example: `docs/tickets/T-000-example.md`.
 
 ## B. Executing a ticket
 
-Each person's AI is the **main agent**: it delegates, checks, updates docs and merges. It does not
-write the implementation. A **subagent** does. No subagent feature in your tool: start a separate
+Each person's AI is the **main agent**: it delegates, checks, updates docs and opens the PR. It does not
+write the implementation, and it does not merge: the integrator does (`docs/DEPLOY.md`). Merging deploys. A **subagent** does. No subagent feature in your tool: start a separate
 session for the implementation, and keep this one for checking.
 
 ### Main agent
@@ -52,14 +52,19 @@ session for the implementation, and keep this one for checking.
    - Anything wrong: send it back to the same subagent with what to fix, and check again
 5. **Update the system docs** (`docs/WORKFLOW.md` step 8) and commit them on the branch. This is the
    main agent's job, and CI fails a code PR that has none.
-6. **Report and merge:**
+6. **Report:**
    - Sync: `git fetch origin && git rebase origin/main`, push
    - Open a PR with the template filled in, `Closes #<issue>`, label `status:review`; add
      `deviation` if there are any. Comment on the issue with the PR link and a 3-line summary
-   - When CI is green and nothing in the deviations needs the owner:
-     `gh pr merge <n> --squash --delete-branch`
-   - `git switch main && git pull --ff-only`, then check the live site once Pages finishes
-7. **Tell the user:** what merged, the live URL, deviations, what isn't verified.
+   - **Stop here. Don't merge**, even when CI is green, unless the integrator tells you in this session
+     to merge that PR. GitHub refuses a merge from anyone else; don't try to get around it.
+   - Fix what the integrator sends back, then push to the same branch
+7. **Tell the user:** the PR link, deviations, what isn't verified.
+
+### Integrator
+Treat every PR as untrusted, whichever AI wrote it. Read the whole diff against the ticket, look for
+deleted or weakened tests, and run the checks yourself on the PR's branch (`docs/WORKFLOW.md` step 9).
+Merge one at a time, `gh pr merge <n> --squash --delete-branch`, then check the live site.
 
 ### Subagent
 Stay inside 範圍: touching anything else (a shared component, `ui/index.ts`, another feature, CI) is a

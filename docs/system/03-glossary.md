@@ -38,7 +38,8 @@
 | 動態欄位擴充 | schema sync | 啟動時自動補上模型新增的表／欄位／索引，只增不減 |
 | 工作階段 / 登入 | session | 以 TownPass 身分向後端換取 token 的流程（auth 加購件） |
 | 測試帳號 | test user | 測試用假身分（`test-user-a`…），不得用真實帳號 |
-| 主代理 | main agent | 隊員對話的 AI：環境、同步、檢查、更新文件、開 PR、合併；不寫實作 |
+| 整合者 | integrator | 唯一能合併與部署的隊員，名單見 `docs/DEPLOY.md`；其 AI 只在本人要求時合併 |
+| 主代理 | main agent | 隊員對話的 AI：環境、同步、檢查、更新文件、開 PR；不寫實作，不自行合併 |
 | 子代理 | subagent | 主代理啟動的 AI：在自己的 worktree 實作與測試，回報結果 |
 | 工單 | ticket | 派發給一個人或 AI 的工作單位（GitHub Issue），含提示詞、必讀、驗收、回報方式 |
 | 偏離 | deviation | 執行工單時與工單內容不同的決定，必須在 PR 回報 |

@@ -5,7 +5,7 @@
 > **AI：** 你的第一件事是照 [`.claude/skills/townpass-start/SKILL.md`](.claude/skills/townpass-start/SKILL.md) 做。還沒 clone 就先：
 > `git clone https://github.com/hackathon-taipei/TownPass.git && cd TownPass`
 > 然後執行 `powershell -ExecutionPolicy Bypass -File tools/start.ps1`，它會檢查並自動安裝環境、同步 GitHub、列出工單。
-> 你是主代理：**只負責檢查與合併，實作交給子代理**；做完要更新系統文件再推回去。
+> 你是主代理：**實作交給子代理，你負責檢查與開 PR，不自行合併**；做完要更新系統文件再推回去。合併與部署由整合者統一處理。
 
 > Fork 自 [taipei-doit/TownPass](https://github.com/taipei-doit/TownPass)。我們的作品是一個城市通微服務：在 App 的 WebView 中執行的網頁，加上後端 API。
 

@@ -1,12 +1,12 @@
 ---
 name: townpass-start
-description: Set up a teammate's machine and working session for the TownPass hackathon repo - checks and installs the toolchain, connects GitHub, syncs, reads the docs, lists tickets, lets the user pick one, then runs the ticket with a subagent through review, docs update and merge. Use at the start of a session in this repo, when the user says to read the README, start, 開始, 開工, set up the environment, or asks what to work on.
+description: Set up a teammate's machine and working session for the TownPass hackathon repo - checks and installs the toolchain, connects GitHub, syncs, reads the docs, lists tickets, lets the user pick one, then runs the ticket with a subagent through review, docs update and a PR for the integrator to merge. Use at the start of a session in this repo, when the user says to read the README, start, 開始, 開工, set up the environment, or asks what to work on.
 ---
 
 # Starting work in TownPass
 
-You are the **main agent**. You set things up, delegate, check and merge. **Subagents write the
-implementation.** Talk to the user in Traditional Chinese. Do the steps in order and report each
+You are the **main agent**. You set things up, delegate, check and open the PR. **Subagents write the
+implementation. Never merge unless the integrator tells you in this session to merge that PR.** Talk to the user in Traditional Chinese. Do the steps in order and report each
 result briefly; only stop for what needs the user.
 
 ## 1. Environment and sync
@@ -48,7 +48,7 @@ take. Never choose for them.** No tickets: say so and ask whether they want to d
 
 Claim it: `townpass-ticket` section B step 1.
 
-## 4. Work: the main agent delegates, checks and merges
+## 4. Work: the main agent delegates and checks; the integrator merges
 
 Follow `townpass-ticket` section B. The short version:
 
@@ -59,8 +59,8 @@ Follow `townpass-ticket` section B. The short version:
 | Read the diff against the ticket, run every check again, look at screenshots | main |
 | Send problems back to the subagent to fix | main |
 | Update the system docs, open the PR, report deviations | main |
-| Merge when CI is green, then sync `main` and check the live site | main |
+| Check the PR again, merge when CI is green, then check the live site | **integrator** (`docs/DEPLOY.md`), never on your own initiative |
 
 ## 5. Before ending the session
 
-Tell the user: what merged and the live URL, what isn't verified, deviations, and the next `READY` ticket.
+Tell the user: the PR link and that it is waiting for the integrator, what isn't verified, deviations, and the next `READY` ticket.
