@@ -22,7 +22,25 @@
 | 語意搜尋公文或資料 | model + rag |
 | 首頁對話框用 AI 回答 | model + rag + agent（下方範例） |
 
-開啟「AI 問答」的完整範例，只要新增一個功能資料夾：
+### 開啟 AI 問答
+
+**目前關閉，範本已備妥**（`features/_ai`，CI 會持續檢查它能編譯）。要開時：
+
+```powershell
+Copy-Item -Recurse services/web/src/features/_ai services/web/src/features/ai
+```
+
+1. 把複本的 `id: '_ai'` 改成 `id: 'ai'`
+2. 確認文件已經是某個功能的 `searchItems`；或用 `pnpm rag:build` 做成集合，接到 `searchItems`
+3. 在模擬器（`adb reverse` + `localhost`）開 `/#/f/ai` 載入模型，回首頁提問，再關網路問一次
+4. 拿真實資料跑評測，更新門檻（[eval/README.md](../../services/web/eval/README.md)）
+5. 走一般工單流程合併
+
+**比賽檢查**：評審可能關掉 Wi-Fi 和行動網路，用全新題目驗證，所以模型要先下載好；實驗頁已有要揭露的模型資訊。預設回答是檢索到的原文，**不是語言模型生成，介紹時不要說成 LLM 即時生成**。
+
+**模型授權**：`ONLY_OPEN_SOURCE_MODELS`（`addons/model/logic.ts`）預設 `true`，只用 MIT 與 Apache-2.0 模型。主辦單位書面確認 Gemma Terms 可用後才改成 `false`，集合也要用 `--model=standard` 重建（ADR-020）。
+
+範本內容：
 
 ```ts
 // services/web/src/features/ai/index.ts
@@ -125,7 +143,7 @@ export default defineFeature({ /* ... */ tools: [showShelters] })
 | Android WebView 133（模擬器） | `navigator.gpu` 存在，但模擬器取不到 GPU；OPFS、Service Worker 可用；**沒有** `speechSynthesis` |
 | 真實對話框（132 題） | 回答那行含答案 63／68，答案出現在回覆 68／68，事實題被工具搶走 0，誤觸工具 0 |
 | 語言模型 | 7 個都不夠可靠，最好的也有三分之一答錯 → **預設不用**；完整比較見 [model README](../../services/web/src/addons/model/README.md) |
-| 向量模型 | EmbeddingGemma 91% 對 e5-small 81%；2 GB 手機用 EmbeddingGemma 會閃退 → 依記憶體選擇 |
+| 向量模型 | EmbeddingGemma 91% 對 e5-small 81%；但前者授權待確認，且 2 GB 手機會閃退 → 目前都用 e5-small |
 | 斷網（模擬器 WebView，關閉網路與伺服器） | 網站可開、繁中街道底圖、標點、圖片都正常 |
 | 朗讀 | 模擬器確認有送到手機語音引擎，沒有驗到聲音。Google 引擎第一次念繁中時會自動下載語音包；App 在非行動網路下開啟就會觸發。`RagLabPage` 的「繁中語音」列顯示是否已可離線，demo 前要確認並開飛航模式試一次 |
 | 尚未實測 | 實體手機的 WebGPU 與語言模型速度（模擬器沒有真實 GPU） |

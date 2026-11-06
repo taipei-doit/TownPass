@@ -92,3 +92,8 @@
 - **決策**：回答預設用檢索到的原文，語言模型改為手動選用（Gemma 3 1B 或 Granite 350M）。向量模型 4 GB 以上用 EmbeddingGemma（q8），以下用 e5-small。選工具時，工具要比資料中最接近的一行更貼近問題才接手。
 - **後果**：內容準確、沒有講錯的風險，但回答只是原文一行，不會整理。向量模型第一次要下載 295 MB。**EmbeddingGemma 與 Gemma 3 是 Gemma Terms，不是 OSI 開源授權**：如果比賽規則不接受，把 `EMBEDDING_MODELS.standard` 換成 `light`（準確度 91% → 81%）。
 
+### ADR-020 只用開源授權模型，等主辦單位確認 Gemma Terms ✅
+- **背景**：[競賽規則](https://codefest.taipei/2026-fall/rules) 伍、二、（三）限定開源軟體或套件，違反得扣分或取消資格；（四）規範裝置端 LLM 但沒提模型授權。Gemma Terms 免費但帶使用限制與衍生規定，不是 OSI 開源授權，規則與 FAQ 都沒有說明。
+- **決策**：`ONLY_OPEN_SOURCE_MODELS = true`，只用 e5-small（MIT）與 Granite 350M（Apache-2.0）。補充 ADR-019：EmbeddingGemma 與 Gemma 3 1B 的選用規則要等設為 `false` 才生效；要有主辦單位的書面回覆才改。
+- **後果**：檢索準確度從 91% 降到 81%，沒答案問題的處理從 19/20 降到 14/20（虛構測試集），但不用冒取消資格的風險。切換只改一行，集合要用 `--model=standard` 重建。
+

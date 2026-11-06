@@ -73,7 +73,7 @@ export default defineFeature({
 ## 限制
 - 掃描版 PDF 沒有文字層，要先 OCR；`rag-pdf.py` 會指出哪些檔案
 - 相關度門檻（各向量模型的 `minRelevance`）是用虛構資料量的，換上真實資料要重測，方法見 [eval/README.md](../../../eval/README.md)
-- `pnpm rag:build` 只算 EmbeddingGemma 的向量；用輕量模型的低階手機會自己算，第一次比較慢
+- `pnpm rag:build` 預設算 e5-small 的向量；要和網站使用的模型一致，否則手機會自己重算
 - 向量存在 OPFS；沒有 OPFS 的舊 WebView 每次都要重算
 - 比賽規則：核心資料要是開放資料並標示來源（`source`、`data/SOURCES.md`）
 

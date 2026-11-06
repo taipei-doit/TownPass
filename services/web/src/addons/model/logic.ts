@@ -68,8 +68,16 @@ export const EMBEDDING_MODELS: Record<'standard' | 'light', EmbeddingModel> = {
 }
 export const EMBEDDING_NEEDS = { memoryGB: 4 }
 
+/**
+ * The competition allows only open-source software and may penalise or disqualify otherwise, and it
+ * doesn't address the Gemma Terms of Use (usage restrictions, not an OSI licence). So EmbeddingGemma
+ * and Gemma 3 stay off. Set this to false only after the organiser confirms in writing (ADR-020).
+ */
+export const ONLY_OPEN_SOURCE_MODELS = true
+
 /** Pure policy. Unknown memory counts as enough: browsers that hide it are not low-end Android. */
-export function chooseEmbedding(hw: HardwareProfile): EmbeddingModel {
+export function chooseEmbedding(hw: HardwareProfile, openSourceOnly = ONLY_OPEN_SOURCE_MODELS): EmbeddingModel {
+  if (openSourceOnly) return EMBEDDING_MODELS.light
   return hw.memoryGB !== null && hw.memoryGB < EMBEDDING_NEEDS.memoryGB ? EMBEDDING_MODELS.light : EMBEDDING_MODELS.standard
 }
 
@@ -115,7 +123,7 @@ export const LARGE_MODEL_NEEDS = { memoryGB: 4, freeStorageMB: 1200, maxBufferMB
  *   'large' Gemma 3 1B, GPU only
  *   'small' Granite 350M, on the GPU, or very slowly on the CPU when there is no GPU
  */
-export function chooseGenerator(hw: HardwareProfile, override?: ModelKey): ModelChoice {
+export function chooseGenerator(hw: HardwareProfile, override?: ModelKey, openSourceOnly = ONLY_OPEN_SOURCE_MODELS): ModelChoice {
   const gpu = hw.webgpu && hw.shaderF16
   const reasons: string[] = []
   const need = LARGE_MODEL_NEEDS
@@ -126,6 +134,9 @@ export function chooseGenerator(hw: HardwareProfile, override?: ModelKey): Model
     reasons.push(gpu ? '這支手機有 WebGPU，可以手動選用語言模型' : '這個 WebView 沒有可用的 WebGPU，語言模型會很慢')
   } else if (override === 'none') {
     reasons.push('手動指定只摘錄')
+  } else if (override === 'large' && openSourceOnly) {
+    key = 'small'
+    reasons.push('Gemma 3 1B 的授權待主辦單位確認，改用 Granite 350M（Apache-2.0）')
   } else if (!gpu) {
     key = 'small'
     reasons.push(override === 'large' ? '沒有 GPU 不能跑 Gemma 3 1B，改用 350M（CPU，每題約 30 秒）' : '手動指定 350M（CPU，每題約 30 秒）')
@@ -146,7 +157,7 @@ export function chooseGenerator(hw: HardwareProfile, override?: ModelKey): Model
 }
 
 /** What the competition requires us to disclose about on-device models. */
-export function modelDisclosure(choice: ModelChoice | null, embedding: EmbeddingModel = EMBEDDING_MODELS.standard) {
+export function modelDisclosure(choice: ModelChoice | null, embedding: EmbeddingModel = EMBEDDING_MODELS.light) {
   const g = choice && choice.key !== 'none' ? GENERATORS[choice.key] : null
   return [
     { label: '向量模型', value: `${embedding.base}（${embedding.vendor}，${embedding.licence}）` },
@@ -164,7 +175,7 @@ const message = ref('')
 const hardware = ref<HardwareProfile | null>(null)
 const choice = ref<ModelChoice | null>(null)
 const offlineReady = ref<string[]>([])
-const embedding = shallowRef<EmbeddingModel>(EMBEDDING_MODELS.standard)
+const embedding = shallowRef<EmbeddingModel>(ONLY_OPEN_SOURCE_MODELS ? EMBEDDING_MODELS.light : EMBEDDING_MODELS.standard)
 
 export function useModel() {
   return {

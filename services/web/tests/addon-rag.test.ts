@@ -47,9 +47,9 @@ describe('chooseGenerator (hardware policy)', async () => {
 
   it('embedding model: light under 4 GB, because the standard one ran a 2 GB phone out of memory', async () => {
     const { chooseEmbedding, EMBEDDING_MODELS } = await import('@/addons/model')
-    expect(chooseEmbedding({ ...base, memoryGB: 2 })).toBe(EMBEDDING_MODELS.light)
-    expect(chooseEmbedding({ ...base, memoryGB: 4 })).toBe(EMBEDDING_MODELS.standard)
-    expect(chooseEmbedding({ ...base, memoryGB: null })).toBe(EMBEDDING_MODELS.standard)
+    expect(chooseEmbedding({ ...base, memoryGB: 2 }, false)).toBe(EMBEDDING_MODELS.light)
+    expect(chooseEmbedding({ ...base, memoryGB: 4 }, false)).toBe(EMBEDDING_MODELS.standard)
+    expect(chooseEmbedding({ ...base, memoryGB: null }, false)).toBe(EMBEDDING_MODELS.standard)
   })
 
   it('by default no language model, on any phone: original text is more accurate', () => {
@@ -58,7 +58,7 @@ describe('chooseGenerator (hardware policy)', async () => {
   })
 
   it('a language model is an explicit choice, and runs on the GPU when there is one', () => {
-    const c = chooseGenerator(base, 'large')
+    const c = chooseGenerator(base, 'large', false)
     expect([c.key, c.device, c.dtype, c.id]).toEqual(['large', 'webgpu', 'q4f16', GENERATORS.large.id])
     expect(chooseGenerator(base, 'small')).toMatchObject({ key: 'small', device: 'webgpu', id: GENERATORS.small.id })
     expect(chooseGenerator(base, 'none').key).toBe('none')
@@ -76,7 +76,7 @@ describe('chooseGenerator (hardware policy)', async () => {
     ['storage', { freeStorageMB: 800 }],
     ['gpu buffer', { maxBufferMB: 512 }],
   ])('choosing Gemma 3 1B on a phone with weak %s warns but obeys', (_n, patch) => {
-    const c = chooseGenerator({ ...base, ...patch }, 'large')
+    const c = chooseGenerator({ ...base, ...patch }, 'large', false)
     expect(c.key).toBe('large')
     expect(c.reasons.length).toBe(2)
   })

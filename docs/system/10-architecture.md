@@ -35,13 +35,13 @@ TownPass App（Flutter）                      lib/、android/：只改服務入
 
 ### AI 與語音
 
-**全部在裝置上執行**；後端不做任何模型推論；不用大陸廠牌模型。
+**全部在裝置上執行**；後端不做任何模型推論；不用大陸廠牌模型。AI 問答目前關閉，範本在 `features/_ai`（[09-addons.md](09-addons.md) §2）。
 
 | 用途 | 使用 | 授權 | 大小 | 備註 |
 |---|---|---|---|---|
-| 向量（檢索、語意選工具） | `google/embeddinggemma-300m`（`onnx-community/embeddinggemma-300m-ONNX`，q8） | Gemma Terms | 295 MB | 在 WASM 上跑；記憶體 4 GB 以上 |
-| 向量（低階手機） | `intfloat/multilingual-e5-small`（`Xenova/multilingual-e5-small`，q8） | MIT | 118 MB | 記憶體不到 4 GB |
-| 生成（語言模型） | **預設不用**：回答是檢索到的原文（ADR-019）。可手動選 `google/gemma-3-1b-it`（q4f16，728 MB，Gemma Terms）或 `ibm-granite/granite-4.0-350m`（q4f16，334 MB，Apache-2.0） | | | 需要 WebGPU |
+| 向量（檢索、語意選工具） | `intfloat/multilingual-e5-small`（`Xenova/multilingual-e5-small`，q8） | MIT | 118 MB | 在 WASM 上跑，**目前使用** |
+| 向量（授權確認後） | `google/embeddinggemma-300m`（`onnx-community/embeddinggemma-300m-ONNX`，q8） | Gemma Terms | 295 MB | `ONLY_OPEN_SOURCE_MODELS = false` 才用；記憶體 4 GB 以上（ADR-020） |
+| 生成（語言模型） | **預設不用**：回答是檢索到的原文（ADR-019）。可手動選 `ibm-granite/granite-4.0-350m`（q4f16，334 MB，Apache-2.0）；授權確認後另可選 `google/gemma-3-1b-it`（q4f16，728 MB） | | | 需要 WebGPU |
 | 選工具 | 不用語言模型：觸發詞，加上向量語意比對 | | | |
 | 推論框架 | Transformers.js 4.3.2 + ONNX Runtime Web | Apache-2.0 | | WebGPU 或 WASM |
 | 語音（文字轉語音） | **不用語音模型**：手機內建引擎，透過 `flutter_tts` 4.2.5 呼叫（Android 上通常是 Google TTS 的 `cmn-TW` 語音） | | 引擎自行下載 | WebView 沒有 `speechSynthesis`（016） |
@@ -81,7 +81,7 @@ TownPass/
    │     ├─ modules/         共用能力：assistant、search、tools、recent、env
    │     ├─ ui/              共用元件：atoms、molecules、organisms、templates（components.md）
    │     ├─ pages/           框架頁面：HomePage、SourcesPage、UiGalleryPage
-   │     ├─ features/        一個資料夾一個功能：example、_template（ui/、logic/、data/、index.ts）
+   │     ├─ features/        一個資料夾一個功能：example、_template、_ai（底線開頭的不會啟用）
    │     └─ addons/          預設關閉：auth、model、rag、agent（各有 README）
    └─ backend/
       ├─ tests/              pytest

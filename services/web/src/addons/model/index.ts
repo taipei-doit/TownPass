@@ -22,6 +22,7 @@ export {
   languageModelId,
   languageModelReady,
   modelDisclosure,
+  ONLY_OPEN_SOURCE_MODELS,
   prepareEmbedding,
   prepareLanguageModel,
   useModel,

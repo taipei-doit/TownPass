@@ -8,6 +8,27 @@
 | 後端 `services/backend` | Render（免費 web service，Docker） | 合併到 `main` 且 CI 通過後自動部署 |
 | 資料庫 | Render Postgres 17（免費） | — |
 
+## 誰能部署？隊員怎麼部署？
+
+**合併到 `main` 就是部署，隊員不需要登入 Render 或 Pages。** 流程見 [WORKFLOW.md](WORKFLOW.md) 第 9 步：
+```powershell
+gh pr checks <編號>                               # 全綠
+gh pr merge <編號> --squash --delete-branch       # 合併，GitHub Actions 與 Render 接手
+```
+
+| 誰 | 能做什麼 |
+|---|---|
+| 公開網路上的任何人 | 看程式碼、fork、開 PR 或 Issue。**不能合併，也不能部署** |
+| 外人開的 PR | 第一次的貢獻者要維護者核准才跑 CI；fork 的 CI 拿不到部署權限與密鑰；合併要有寫入權限的人按 |
+| 有寫入權限的隊員 | 自己的 PR 在必要 CI 通過後可合併，因此可以部署 |
+
+**公開倉庫的規則**
+- **絕不提交密鑰、密碼、真實個資。** 密鑰放 Render 環境變數（`SECRET_KEY`）；前端的 `VITE_*` 會進公開網頁，不是祕密
+- Issues、PR 都是公開的：比賽期間的工單別寫不想外流的想法
+- 看不懂的外部 PR 不要合併：工作流程與建置腳本會在合併後執行
+
+**出問題時回復**：`git revert <合併的 commit>` 開 PR 合併，或在 GitHub 重跑前一版的 Pages 部署；Render 後台可 Rollback。Demo 前功能凍結（WORKFLOW「時程」），避免現場部署壞掉。
+
 ## 第一次設定 Render（只要做一次，由組織管理員操作）
 
 1. 用 GitHub 登入 https://dashboard.render.com

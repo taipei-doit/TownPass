@@ -6,6 +6,7 @@
  *   pnpm rag:build <folder of .md files> <collection name>
  *   pnpm rag:build ../../data/rag/notices notices        ->  public/rag/notices.json
  *   pnpm rag:build ../../data/rag/notices notices --no-vectors
+ *   pnpm rag:build ../../data/rag/notices notices --model=standard   # EmbeddingGemma; default light (e5-small)
  *
  * Document format (PDFs: scripts/rag-pdf.py writes this for you; `images` is JSON on one line):
  *   ---
@@ -27,14 +28,18 @@ import { mkdirSync, readdirSync, readFileSync, writeFileSync } from 'node:fs'
 import { basename, dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-// same as EMBEDDING_MODEL in src/addons/model/logic.ts
-const EMBEDDING_MODEL = 'onnx-community/embeddinggemma-300m-ONNX'
+// same as EMBEDDING_MODELS in src/addons/model/logic.ts; use the model the site is set to
+const MODELS = {
+  light: { id: 'Xenova/multilingual-e5-small', prefix: 'passage: ' },
+  standard: { id: 'onnx-community/embeddinggemma-300m-ONNX', prefix: 'title: none | text: ' },
+}
 const EMBEDDING_DTYPE = 'q8'
-const PASSAGE_PREFIX = 'title: none | text: '
 const MAX_LINE_CHARS = 120
 
 const args = process.argv.slice(2).filter((a) => a !== '--')
 const noVectors = args.includes('--no-vectors')
+const chosen = MODELS[args.find((a) => a.startsWith('--model='))?.split('=')[1] ?? 'light']
+if (!chosen) throw new Error('--model must be light or standard')
 const [folder, name] = args.filter((a) => !a.startsWith('--'))
 if (!folder || !name) {
   console.error('usage: pnpm rag:build <folder of .md files> <collection name> [--no-vectors]')
@@ -106,11 +111,11 @@ if (ids.size !== documents.length) throw new Error('two documents have the same 
 const vectors = {}
 if (!noVectors) {
   const { pipeline } = await import('@huggingface/transformers')
-  const embedder = await pipeline('feature-extraction', EMBEDDING_MODEL, { dtype: EMBEDDING_DTYPE })
+  const embedder = await pipeline('feature-extraction', chosen.id, { dtype: EMBEDDING_DTYPE })
   const chunks = documents.flatMap(chunksOf)
   for (let i = 0; i < chunks.length; i += 16) {
     const batch = chunks.slice(i, i + 16)
-    const output = await embedder(batch.map((c) => `${PASSAGE_PREFIX}${c.title}：${c.text}`), { pooling: 'mean', normalize: true })
+    const output = await embedder(batch.map((c) => `${chosen.prefix}${c.title}：${c.text}`), { pooling: 'mean', normalize: true })
     output.tolist().forEach((v, j) => {
       const c = batch[j]
       vectors[hash(`${c.title}\n${c.text}`)] = v.map((x) => Math.round(x * 1e4) / 1e4)
@@ -121,5 +126,5 @@ if (!noVectors) {
 
 const output = join(dirname(fileURLToPath(import.meta.url)), `../public/rag/${name}.json`)
 mkdirSync(dirname(output), { recursive: true })
-writeFileSync(output, JSON.stringify({ model: EMBEDDING_MODEL, documents, vectors }))
+writeFileSync(output, JSON.stringify({ model: chosen.id, documents, vectors }))
 console.log(`${output}: ${documents.length} documents, ${Object.keys(vectors).length} vectors`)
