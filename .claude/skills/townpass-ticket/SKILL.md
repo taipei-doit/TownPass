@@ -30,19 +30,41 @@ Format: `docs/tickets/TEMPLATE.md`. Example: `docs/tickets/T-000-example.md`.
    ```
 7. Dependencies: write `blocked by #<issue>`; label `blocked` until they merge.
 
-## B. Executing a ticket (you are the assignee - human or AI)
+## B. Executing a ticket
 
-1. **Claim:** comment `開始處理`, add label `status:in-progress`, branch `t-<number>-<short-name>` from latest `main`.
-2. **Read** everything under 必讀 before writing code. Load the skills the ticket names
-   (`townpass-ui`, `townpass-feature`).
-3. **Stay inside 範圍.** Only edit the paths the ticket owns. Need to touch anything else
-   (a shared component, `ui/index.ts`, another feature, CI, docs outside your area) → that is a
-   **deviation** (see D).
-4. **Implement** following the layer rules; keep the contract exactly.
-5. **Verify** with the commands in 驗證方式 (always includes `node tools/check-arch.mjs`, web build+test,
-   backend ruff+pytest) and the emulator steps; take screenshots. Look at them.
-6. **Report** - open a PR with `.github/pull_request_template.md` filled in, `Closes #<issue>`, label
-   `status:review`. Comment on the issue with the PR link and a 3-line summary.
+Each person's AI is the **main agent**: it delegates, checks, updates docs and merges. It does not
+write the implementation. A **subagent** does. No subagent feature in your tool: start a separate
+session for the implementation, and keep this one for checking.
+
+### Main agent
+1. **Claim:** comment `開始處理`, assign yourself, swap the label to `status:in-progress`
+   (`gh issue edit <n> --add-assignee @me --add-label status:in-progress --remove-label status:ready`),
+   then branch `t-<number>-<short-name>` from the latest `origin/main`.
+2. **Read** the ticket and everything under 必讀, and load the skills it names.
+3. **Start a subagent** on that branch in its own worktree (Claude Code: Agent tool with
+   `isolation: "worktree"`). Its brief needs: the ticket URL, the branch, 範圍, 合約, 驗收標準,
+   what already exists and must be reused, and the report it must return (files changed, commands
+   run with results, deviations, anything unverified). It may not merge or edit outside 範圍.
+4. **Check its work yourself. Its report is a claim, not proof.**
+   - Read the whole diff against 範圍, 合約 and each 驗收標準
+   - Run every command in 驗證方式 again yourself
+   - UI: run it on the emulator and look at the screenshot
+   - Anything wrong: send it back to the same subagent with what to fix, and check again
+5. **Update the system docs** (`docs/WORKFLOW.md` step 8) and commit them on the branch. This is the
+   main agent's job, and CI fails a code PR that has none.
+6. **Report and merge:**
+   - Sync: `git fetch origin && git rebase origin/main`, push
+   - Open a PR with the template filled in, `Closes #<issue>`, label `status:review`; add
+     `deviation` if there are any. Comment on the issue with the PR link and a 3-line summary
+   - When CI is green and nothing in the deviations needs the owner:
+     `gh pr merge <n> --squash --delete-branch`
+   - `git switch main && git pull --ff-only`, then check the live site once Pages finishes
+7. **Tell the user:** what merged, the live URL, deviations, what isn't verified.
+
+### Subagent
+Stay inside 範圍: touching anything else (a shared component, `ui/index.ts`, another feature, CI) is a
+**deviation** (see D). Follow the layer rules, keep the contract exactly, write the tests, run 驗證方式
+and report honestly. Don't open the PR or merge.
 
 ## C. Report format (PR body)
 - **做了什麼** - what changed, by layer (顯示/邏輯/資料), with component IDs and public interfaces

@@ -61,4 +61,4 @@ def __distance_km(a, b) -> float: ...                        # 私有
 | `@/modules/env` | `inApp`、`appUserName`、`openMap()`、`shareLink()`、`speak()`、`stopSpeaking()`、`canSpeak`、`voiceStatus()`、`enableOfflineUse()` | 平台能力 |
 | `features.opendata` | `taipei_dataset()`、`UpstreamError` | 臺北資料大平台 |
 
-加購件（登入、模型、RAG、代理）的介面見 [09-addons.md](09-addons.md)。
+全部介面（含加購件與後端）見 [10-architecture.md](10-architecture.md) §4；加購件的載入方式見 [09-addons.md](09-addons.md)。

@@ -3,6 +3,7 @@
  * Architecture guard - run in CI and before every PR:
  *   node tools/check-arch.mjs                 check rules (exit 1 on violations)
  *   node tools/check-arch.mjs --catalog       also (re)write docs/system/components.md
+ *   Without --catalog, a components.md that doesn't match the code is a violation.
  *
  * Rules (docs/system/02-spec.md §4, 05/06 layer docs):
  *   W1 presentation (ui/, pages/, features/x/ui/) must not import the data layer (platform/, modules/x/data.ts, features/x/data/)
@@ -203,14 +204,14 @@ for (const file of walk(BE, ['.py'])) {
 }
 
 // ---------------------------------------------------------------- output
+const catalogFile = join(ROOT, 'docs/system/components.md')
+const catalogRows = [...catalog].sort((a, b) => a.id.localeCompare(b.id)).map((c) => `| ${c.id} | ${c.name} | ${c.desc} | \`${c.file}\` |`)
+const catalogText = `# 元件目錄（自動產生）\n\n> 由 \`node tools/check-arch.mjs --catalog\` 從各元件的 \`@component\` 標頭產生，請勿手動編輯。\n\n| 編號 | 元件 | 說明 | 檔案（services/web/src/） |\n|---|---|---|---|\n${catalogRows.join('\n')}\n`
 if (process.argv.includes('--catalog')) {
-  const out = join(ROOT, 'docs/system/components.md')
-  const rows = catalog.sort((a, b) => a.id.localeCompare(b.id)).map((c) => `| ${c.id} | ${c.name} | ${c.desc} | \`${c.file}\` |`)
-  writeFileSync(
-    out,
-    `# 元件目錄（自動產生）\n\n> 由 \`node tools/check-arch.mjs --catalog\` 從各元件的 \`@component\` 標頭產生，請勿手動編輯。\n\n| 編號 | 元件 | 說明 | 檔案（services/web/src/） |\n|---|---|---|---|\n${rows.join('\n')}\n`,
-  )
-  console.log(`wrote ${rel(out)} (${catalog.length} components)`)
+  writeFileSync(catalogFile, catalogText)
+  console.log(`wrote ${rel(catalogFile)} (${catalog.length} components)`)
+} else if (!existsSync(catalogFile) || readFileSync(catalogFile, 'utf8').replace(/\r\n/g, '\n') !== catalogText) {
+  flag('DOC', catalogFile, 1, 'out of date: run node tools/check-arch.mjs --catalog')
 }
 if (violations.length) {
   console.error(`architecture check: ${violations.length} violation(s)\n` + violations.map((v) => '  ' + v).join('\n'))

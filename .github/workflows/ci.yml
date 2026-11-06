@@ -2,6 +2,7 @@ name: CI
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened, edited]
   push:
     branches: [main]
 
@@ -31,9 +32,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with: { fetch-depth: 0 }
       - uses: actions/setup-node@v4
         with: { node-version: 24 }
       - run: node tools/check-arch.mjs
+      # Code changes must come with documentation changes (docs/WORKFLOW.md step 8)
+      - if: github.event_name == 'pull_request'
+        run: node tools/check-docs.mjs ${{ github.event.pull_request.base.sha }}
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
 
   web:
     needs: changes

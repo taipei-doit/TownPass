@@ -3,7 +3,9 @@
 > 所有工具裝在一個資料夾，只在你啟用的終端機生效。**不改系統 PATH、不需管理員、不需 Android Studio、不影響你已經裝的任何版本。**（ADR-010）
 
 ## 1. 安裝（第一次，約 10 GB、20–40 分鐘）
-需要：git、網路。
+**通常不用手動裝**：`tools/start.ps1` 發現缺工具會自動執行這一步。
+
+需要：git、網路。macOS／Linux 沒有安裝腳本，照 `tools/versions.ps1` 的版本自行安裝。
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\setup-windows.ps1
 ```
@@ -24,6 +26,7 @@ VS Code（讓終端機與 Flutter 外掛都用隔離版本）：`powershell -Exe
 |---|---|---|
 | Node.js + pnpm | 24.22.2 + 10.34.9 | `node\` |
 | uv + Python | 0.13.7 + 3.12（uv 管理） | `uv\`、`python\` |
+| GitHub CLI | 2.103.2（已有 `gh` 就用既有的） | `gh\` |
 | JDK（Temurin） | 21.0.13 | `jdk\` |
 | Flutter | 3.47.6（= TownPass `.fvmrc`） | `flutter\` |
 | Android SDK | API 36、build-tools 36.0.0、NDK 29.0.13113456 | `android-sdk\` |
@@ -45,8 +48,8 @@ Remove-Item -LiteralPath "\\?\$env:USERPROFILE\.townpass-dev" -Recurse -Force   
 | Flutter clone 出現 `Filename too long` | 腳本已用 `core.longpaths`；若仍失敗，刪掉 `flutter` 資料夾重跑 |
 | **第一次換成隔離環境**，或打包出現 `Unable to delete directory`／`AccessDeniedException`／`PathAccessException … .dart_tool` | 舊環境的 Gradle／Kotlin daemon 還開著、`build_runner` 的輸出是唯讀、`build\` 裡的路徑超過 260 字元。執行 `powershell -ExecutionPolicy Bypass -File tools\clean.ps1`，再 `flutter pub get` → `dart run build_runner build` → 打包 |
 | 「應用程式控制原則已封鎖此檔案」（Windows 智慧型應用程式控制） | 後端用 `uv run python -m uvicorn ...`，不要直接執行 `.venv\Scripts\*.exe` |
-| Gradle「Unable to delete directory … build\」 | `tools\clean.ps1`（見下一列） |
+| Gradle「Unable to delete directory … build\」 | `tools\clean.ps1`（見上一列），再 `flutter pub get`；確認看到 `Built build` 才安裝，否則裝到的是舊版 |
 | 模擬器打不開網頁 `ERR_CLEARTEXT_NOT_PERMITTED` | 用 debug 版 App（已允許 http）；網址用 `localhost` 搭配 `adb reverse`（`07-testing.md` §5），不要用 `10.0.2.2` |
 | 你另外裝過 Android Studio | Flutter 可能改用 Android Studio 內建的 JDK，一樣可以打包，不影響 |
 | 你曾執行過 `flutter config --jdk-dir …` | 那是使用者全域設定，Flutter 會優先使用它；不需要的話 `flutter config --jdk-dir=""` |
-| Mac 隊友 | 目前只有 Windows 腳本；Mac 版尚未撰寫 |
+| Mac／Linux 隊友 | 不提供安裝腳本：照 `tools/versions.ps1` 的版本自行安裝，再手動走 `tools/start.ps1` 的步驟 |

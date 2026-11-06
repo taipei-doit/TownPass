@@ -25,6 +25,9 @@ Check java    java.exe    ($V.Jdk -replace '\+.*') { java -version }
 Check flutter flutter.bat $V.Flutter              { flutter --version }
 Check adb     adb.exe     ''                      { adb version }
 
+if (Get-Command gh -ErrorAction SilentlyContinue) { Write-Host "[ OK ] gh       $((gh --version | Select-Object -First 1))" -ForegroundColor Green }
+else { Write-Host '[FAIL] gh       not found - run tools\setup-windows.ps1' -ForegroundColor Red; $fail++ }
+
 $py = uv python find $V.Python 2>$null
 if ($py -and $py.StartsWith($R, [StringComparison]::OrdinalIgnoreCase)) { Write-Host "[ OK ] python   $py" -ForegroundColor Green }
 else { Write-Host "[WARN] python   uv will use: $py (not the isolated one; fine if it is $($V.Python)+)" -ForegroundColor Yellow }

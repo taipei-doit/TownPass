@@ -21,7 +21,7 @@ $env:npm_config_store_dir = "$R\pnpm-store"
 $env:FLUTTER_SUPPRESS_ANALYTICS = 'true'
 
 $ours = @(
-  "$R\node", "$R\uv", "$R\jdk\bin", "$R\flutter\bin", "$R\pub-cache\bin",
+  "$R\node", "$R\uv", "$R\gh\bin", "$R\jdk\bin", "$R\flutter\bin", "$R\pub-cache\bin",
   "$R\android-sdk\platform-tools", "$R\android-sdk\emulator", "$R\android-sdk\cmdline-tools\latest\bin"
 )
 if (-not $env:TOWNPASS_ORIGINAL_PATH) { $env:TOWNPASS_ORIGINAL_PATH = $env:Path }

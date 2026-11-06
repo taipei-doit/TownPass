@@ -87,9 +87,9 @@ body:
         ```
         你是 hackathon-taipei/TownPass 的開發者，負責這張工單（貼上工單網址）。
         先讀 AGENTS.md，並載入 skill townpass-ticket（B. 執行）與工單列出的其他 skill。
-        完整讀完「必讀」後再開始。只修改「範圍」內的路徑；超出範圍或改到「合約」的需要，
-        依 townpass-ticket 的「D. 偏離」處理。完成後跑「驗證方式」的所有指令並截圖，
-        用 PR 範本回報（Closes 這張工單），逐條對照「驗收標準」。
+        你是主代理：實作交給子代理，你負責檢查、更新系統文件、開 PR 與合併。
+        只修改「範圍」內的路徑；超出範圍或改到「合約」的需要，依 townpass-ticket 的「D. 偏離」處理。
+        自己重跑「驗證方式」的所有指令並看截圖，用 PR 範本回報（Closes 這張工單），逐條對照「驗收標準」。
         ```
     validations: { required: true }
   - type: textarea

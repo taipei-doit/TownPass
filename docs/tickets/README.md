@@ -13,11 +13,15 @@
 ## 流程
 ```
 派發者：定合約 → 依「檔案擁有權」切工單 → gh issue create（status:ready）
-執行者：留言「開始處理」+ status:in-progress → 分支 t-<編號>-<名稱> → 實作 → 驗證 → PR（Closes #）+ status:review
-派發者：看 PR 的「驗收對照」與「偏離」→ 合併 → 工單自動關閉
+主代理：認領（status:in-progress）→ 分支 t-<編號>-<名稱> → 啟動子代理
+子代理：在自己的 worktree 實作與測試 → 回報
+主代理：讀 diff、自己重跑檢查 → 更新系統文件 → PR（Closes #）+ status:review → CI 綠燈 → 合併 → 工單自動關閉
+派發者：看合併後的「偏離」與「後續」，需要時開新工單
 ```
 
 ## 標籤
+標籤已在 GitHub 建好，不用自己建。`main` 要求 `web`、`backend`、`app` 三項 CI 通過，不要求人工審核。
+
 | 標籤 | 意思 |
 |---|---|
 | `ticket` | 這是工單 |
@@ -28,7 +32,7 @@
 | `deviation` | PR 含偏離，審的人要特別看 |
 
 ## 交給 AI
-- **本機 Claude Code**：在倉庫內開新 session，貼上工單的「提示詞」段落（skills 會自動載入）
-- **雲端**（Claude Code on the web 等）：選這個倉庫，貼上提示詞與工單網址
-- **其他 AI 工具**：讓它先讀 `AGENTS.md`，再貼提示詞
-- 一張工單一個 session／一個分支；不要讓兩個 AI 同時做會改到同一檔案的工單
+- 跟 AI 說「請看 README 開始」，它會列出工單讓你選，完整流程見 [WORKFLOW.md](../WORKFLOW.md)
+- 每個人的 AI 是**主代理**，只負責檢查與合併；**實作由子代理完成**
+- 沒有子代理功能的工具：另開一個 session 實作，原本的 session 負責檢查
+- 一張工單一個分支；不要讓兩個 AI 同時做會改到同一檔案的工單

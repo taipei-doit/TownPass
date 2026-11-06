@@ -4,6 +4,7 @@ $Versions = @{
   Node             = 'v24.22.2'
   Pnpm             = '10.34.9'
   Uv               = '0.13.7'
+  Gh               = '2.103.2'     # only installed when the machine has no gh
   Python           = '3.12'
   Jdk              = '21.0.13+9'   # Eclipse Temurin
   Flutter          = '3.47.6'

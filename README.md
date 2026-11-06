@@ -1,5 +1,12 @@
 # 城市通微服務｜2026 臺北秋季程式設計節
 
+> **隊員：** 把這個 repo 給你的 AI，跟它說「請看 README 開始」。環境、同步、工單它都會帶你走完。
+>
+> **AI：** 你的第一件事是照 [`.claude/skills/townpass-start/SKILL.md`](.claude/skills/townpass-start/SKILL.md) 做。還沒 clone 就先：
+> `git clone https://github.com/hackathon-taipei/TownPass.git && cd TownPass`
+> 然後執行 `powershell -ExecutionPolicy Bypass -File tools/start.ps1`，它會檢查並自動安裝環境、同步 GitHub、列出工單。
+> 你是主代理：**只負責檢查與合併，實作交給子代理**；做完要更新系統文件再推回去。
+
 > Fork 自 [taipei-doit/TownPass](https://github.com/taipei-doit/TownPass)。我們的作品是一個城市通微服務：在 App 的 WebView 中執行的網頁，加上後端 API。
 
 ![App 開啟微服務的畫面](docs/images/e2e-emulator.png)
@@ -10,20 +17,24 @@
 | `services/web/` | 微服務前端：Vue 3 + Vite + TypeScript + Tailwind + Leaflet/OSM |
 | `services/backend/` | 後端：FastAPI + SQLModel，Postgres（Render）／本機 SQLite |
 | `data/SOURCES.md` | 使用的開放資料與出處 |
-| `docs/system/` | **系統文件**：[決策](docs/system/01-decisions.md)、[規格](docs/system/02-spec.md)、[字詞表](docs/system/03-glossary.md)、[顯示層](docs/system/04-presentation-layer.md)／[邏輯層](docs/system/05-logic-layer.md)／[資料層](docs/system/06-data-layer.md)、[測試](docs/system/07-testing.md)、[環境](docs/system/08-environment.md) |
+| `docs/system/` | **系統文件**：[架構與技術棧](docs/system/10-architecture.md)、[決策](docs/system/01-decisions.md)、[規格](docs/system/02-spec.md)、[字詞表](docs/system/03-glossary.md)、[顯示層](docs/system/04-presentation-layer.md)／[邏輯層](docs/system/05-logic-layer.md)／[資料層](docs/system/06-data-layer.md)、[測試](docs/system/07-testing.md)、[環境](docs/system/08-environment.md)、[加購件與工具](docs/system/09-addons.md) |
 | `docs/` | [團隊流程](docs/WORKFLOW.md)、[UI 框架](docs/FRAMEWORK.md)、[部署](docs/DEPLOY.md)、[App ↔ 網頁訊息](docs/bridge.md)、[工單](docs/tickets/README.md) |
-| `.claude/skills/` | 給 AI 的工作流程：`townpass-ui`、`townpass-feature`、`townpass-ticket`（其他 AI 從 [AGENTS.md](AGENTS.md) 開始） |
-| `tools/` | 隔離開發環境（安裝／啟用／檢查）、架構檢查 `check-arch.mjs` |
+| `.claude/skills/` | 給 AI 的工作流程：`townpass-start`、`townpass-ticket`、`townpass-feature`、`townpass-ui`（其他 AI 從 [AGENTS.md](AGENTS.md) 開始） |
+| `tools/` | `start.ps1` 一鍵開工、隔離開發環境、架構與文件檢查 |
 
 ## 快速開始
 
-```bash
-powershell -ExecutionPolicy Bypass -File tools/setup-windows.ps1   # 第一次：工具全部裝進 %USERPROFILE%\.townpass-dev，不影響既有安裝
-. .\tools\dev-shell.ps1                                           # 每個新終端機：只在這個終端機啟用
-powershell -ExecutionPolicy Bypass -File tools/doctor.ps1          # 檢查環境
+```powershell
+powershell -ExecutionPolicy Bypass -File tools/start.ps1   # 檢查並安裝環境、登入檢查、同步、裝依賴、列工單；隨時可重跑
+. .\tools\dev-shell.ps1                                    # 每個新終端機：只在這個終端機啟用工具
 ```
 
-每天的開發指令見 [docs/WORKFLOW.md](docs/WORKFLOW.md)。
+完整開發流程見 [docs/WORKFLOW.md](docs/WORKFLOW.md)。工具全部裝在 `%USERPROFILE%\.townpass-dev`，不影響既有安裝。
+
+| 上線網址 | |
+|---|---|
+| 微服務 | https://hackathon-taipei.github.io/TownPass/ |
+| 後端 | https://townpass-backend-dmk2.onrender.com（[API 文件](https://townpass-backend-dmk2.onrender.com/docs)） |
 
 ## 授權 License
 
@@ -39,6 +50,8 @@ You should have received a copy of the GNU Affero General Public License along w
 ```
 
 ---
+
+> 以下是上游 TownPass 的原始說明。**開發本專案請用上面的 `tools/start.ps1`**，不要照下面的步驟裝全域工具。
 
 # What is Town Pass?
 

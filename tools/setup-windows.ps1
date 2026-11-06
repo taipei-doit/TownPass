@@ -63,6 +63,14 @@ if (-not (Test-Path "$R\uv\uv.exe")) {
 }
 Done "$R\uv"
 
+Step "GitHub CLI"
+if (Get-Command gh -ErrorAction SilentlyContinue) {
+  Done "using your existing gh"
+} elseif (-not (Test-Path "$R\gh\bin\gh.exe")) {
+  Get-Zip "https://github.com/cli/cli/releases/download/v$($V.Gh)/gh_$($V.Gh)_windows_amd64.zip" "$R\gh"
+  Done "$R\gh"
+}
+
 Step "JDK $($V.Jdk) (Eclipse Temurin)"
 if (-not (Test-Path "$R\jdk\bin\java.exe")) {
   $jv = $V.Jdk -replace '\+', '_'

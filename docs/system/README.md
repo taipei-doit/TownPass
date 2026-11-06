@@ -5,6 +5,7 @@
 
 | 文件 | 內容 | 什麼時候讀 |
 |---|---|---|
+| [10-architecture.md](10-architecture.md) | **架構總覽：技術棧（含模型）、原始碼結構、介面一覽** | 第一次看專案、找東西時 |
 | [01-decisions.md](01-decisions.md) | 決策紀錄（ADR）：為什麼這樣設計 | 想改架構、選技術之前 |
 | [02-spec.md](02-spec.md) | 系統規格：功能、介面合約、非功能需求、驗收標準 | 開發任何功能之前 |
 | [03-glossary.md](03-glossary.md) | 字詞表：統一用語 | 寫程式、文件、工單時 |
@@ -16,7 +17,7 @@
 | [09-addons.md](09-addons.md) | **加購件（登入、模型、RAG、代理）的載入方式；對話框工具（地圖、圖片）** | 要用模型、登入，或要在對話框顯示地圖／圖片時 |
 | [components.md](components.md) | 元件目錄（自動產生） | 找現成元件時 |
 
-其他：[團隊流程](../WORKFLOW.md)・[部署](../DEPLOY.md)・[App ↔ 網頁訊息](../bridge.md)・[工單](../tickets/README.md)・[資料來源](../../data/SOURCES.md)
+其他：[團隊流程（完整開發流程）](../WORKFLOW.md)・[部署](../DEPLOY.md)・[App ↔ 網頁訊息](../bridge.md)・[工單](../tickets/README.md)・[資料來源](../../data/SOURCES.md)
 
 ## 一張圖看懂
 
