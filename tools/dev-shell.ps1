@@ -19,6 +19,9 @@ $env:UV_PYTHON_INSTALL_DIR = "$R\python"
 $env:npm_config_cache   = "$R\npm-cache"
 $env:npm_config_store_dir = "$R\pnpm-store"
 $env:FLUTTER_SUPPRESS_ANALYTICS = 'true'
+# Windows Smart App Control blocks unsigned .pyd files: run SQLAlchemy in pure-Python mode
+# (same behaviour, slightly slower). docs/system/08-environment.md §5
+$env:DISABLE_SQLALCHEMY_CEXT_RUNTIME = '1'
 
 $ours = @(
   "$R\node", "$R\uv", "$R\gh\bin", "$R\jdk\bin", "$R\flutter\bin", "$R\pub-cache\bin",

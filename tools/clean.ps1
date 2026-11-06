@@ -25,4 +25,4 @@ foreach ($name in 'build', '.dart_tool') {
   if (Test-Path -LiteralPath $dir) { Write-Host "could not fully remove $name - close Android Studio/VS Code and retry" -ForegroundColor Red }
   else { Write-Host "removed $name" -ForegroundColor Green }
 }
-Write-Host "Next: flutter pub get; dart run build_runner build --delete-conflicting-outputs; flutter run"
+Write-Host "Next: flutter pub get; dart run build_runner build --force-jit; flutter run"

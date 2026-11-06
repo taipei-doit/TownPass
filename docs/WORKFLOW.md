@@ -152,7 +152,7 @@ cd services/backend && uv sync && uv run python -m uvicorn townpass_backend.main
 
 # App（模擬器開網頁 dev server）
 flutter emulators --launch townpass
-flutter pub get && dart run build_runner build --delete-conflicting-outputs
+flutter pub get && dart run build_runner build --force-jit
 adb reverse tcp:5173 tcp:5173
 flutter run --dart-define=TEAM_WEB_URL=http://localhost:5173/
 ```

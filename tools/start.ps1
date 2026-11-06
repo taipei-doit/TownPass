@@ -99,7 +99,9 @@ if ($CheckOnly) {
   & flutter pub get *> "$env:TEMP\townpass-app.log"
   if ($LASTEXITCODE -eq 0) { Ok 'app (flutter pub)' } else { Fail "app install failed, see $env:TEMP\townpass-app.log" }
   if (-not (Test-Path 'lib\gen\assets.gen.dart')) {
-    & dart run build_runner build --delete-conflicting-outputs *> "$env:TEMP\townpass-gen.log"
+    # --force-jit: the default AOT build script can't read/write paths with non-ASCII characters
+    # (e.g. a Chinese Windows user name), see docs/system/08-environment.md §5
+    & dart run build_runner build --force-jit *> "$env:TEMP\townpass-gen.log"
     if ($LASTEXITCODE -eq 0) { Ok 'app generated code' } else { Fail "build_runner failed, see $env:TEMP\townpass-gen.log" }
   }
   & node tools\check-arch.mjs *> $null
