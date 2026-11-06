@@ -1,7 +1,7 @@
 /** LOGIC LAYER - runtime environment facts that presentation may need. */
 import { ref } from 'vue'
 import { isInApp, request, send } from '@/platform/bridge'
-import { registerOfflineWorker } from '@/platform/offline'
+import { isUnmetered, registerOfflineWorker } from '@/platform/offline'
 
 /** True when running inside the TownPass app WebView (false in a normal browser). */
 export const inApp: boolean = isInApp()
@@ -44,9 +44,24 @@ export function stopSpeaking(): void {
   else if (canSpeak) speechSynthesis.cancel()
 }
 
-/** Keeps the site, its images and the offline map usable with no network. Production builds only. */
+export type VoiceStatus = 'offline-ready' | 'needs-download' | 'unavailable'
+
+/** Whether reading aloud works with no network. Null outside the app, or in an older app version. */
+export async function voiceStatus(): Promise<VoiceStatus | null> {
+  if (!inApp) return null
+  const status = await request<{ available?: boolean; installed?: boolean }>('tts_status', null, 3000).catch(() => null)
+  if (!status) return null
+  if (status.installed) return 'offline-ready'
+  return status.available ? 'needs-download' : 'unavailable'
+}
+
+/**
+ * Keeps the site, its images, the offline map and the Chinese voice usable with no network.
+ * The worker runs in production builds only; the voice download waits for an unmetered connection.
+ */
 export function enableOfflineUse(): void {
   if (import.meta.env.PROD) void registerOfflineWorker(import.meta.env.BASE_URL)
+  if (inApp && isUnmetered()) send('tts_prepare')
 }
 
 /** Native share sheet when available, otherwise copy the link. Returns what happened. */

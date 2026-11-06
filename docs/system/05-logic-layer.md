@@ -58,7 +58,7 @@ def __distance_km(a, b) -> float: ...                        # 私有
 | `@/modules/tools` | `listTools()`、`routeByRules(q)`、`runTool(name, args)`、`validateToolArgs()` | 對話框工具；內建 `show_map`、`show_image` |
 | `@/modules/search` | `buildSearchIndex()`、`search(q, limit)`、`searchDocuments()`、`searchReady` | 裝置端搜尋 |
 | `@/modules/recent` | `recent`、`addRecent()`、`clearRecent()` | 近期使用 |
-| `@/modules/env` | `inApp`、`appUserName`、`openMap()`、`shareLink()`、`speak()`、`stopSpeaking()`、`canSpeak`、`enableOfflineUse()` | 平台能力 |
+| `@/modules/env` | `inApp`、`appUserName`、`openMap()`、`shareLink()`、`speak()`、`stopSpeaking()`、`canSpeak`、`voiceStatus()`、`enableOfflineUse()` | 平台能力 |
 | `features.opendata` | `taipei_dataset()`、`UpstreamError` | 臺北資料大平台 |
 
 加購件（登入、模型、RAG、代理）的介面見 [09-addons.md](09-addons.md)。

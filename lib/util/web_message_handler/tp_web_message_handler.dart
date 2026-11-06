@@ -286,6 +286,52 @@ class QRCodeScanMessageHandler extends TPWebMessageHandler {
 /// Android WebView has no speechSynthesis, so the web page reads text aloud through these messages.
 /// Uses the phone's own text-to-speech engine, so nothing leaves the device.
 final FlutterTts _tts = FlutterTts();
+const String _ttsLanguage = 'zh-TW';
+const String _googleTtsEngine = 'com.google.android.tts';
+
+/// Android only in flutter_tts; other platforms simply report that nothing is known.
+Future<bool> _ttsQuery(Future<dynamic> Function() query) async {
+  try {
+    return await query() == true;
+  } catch (_) {
+    return false;
+  }
+}
+
+/// Some phones default to an engine without Chinese; Google's engine can fetch the voice.
+Future<void> _ttsUseChineseEngine() async {
+  if (await _ttsQuery(() => _tts.isLanguageAvailable(_ttsLanguage))) return;
+  try {
+    final engines = await _tts.getEngines;
+    if (engines is List && engines.contains(_googleTtsEngine)) {
+      await _tts.setEngine(_googleTtsEngine);
+    }
+  } catch (_) {
+    // no engine list on this platform
+  }
+}
+
+/// flutter_tts's isLanguageInstalled compares locales exactly, but Google's engine lists these
+/// voices as cmn-TW, so it stays false after the download. Read the voice list instead.
+Future<bool> _ttsVoiceInstalled() async {
+  try {
+    final voices = await _tts.getVoices;
+    if (voices is! List) return false;
+    return voices.whereType<Map>().any((voice) {
+      final locale = '${voice['locale']}'.toLowerCase().replaceAll('_', '-');
+      return (locale == 'zh-tw' || locale == 'cmn-tw') &&
+          '${voice['network_required']}' == '0' &&
+          !'${voice['features']}'.contains('notInstalled');
+    });
+  } catch (_) {
+    return false; // no voice list on this platform
+  }
+}
+
+Future<Map<String, bool>> _ttsStatus() async => {
+      'available': await _ttsQuery(() => _tts.isLanguageAvailable(_ttsLanguage)),
+      'installed': await _ttsVoiceInstalled(),
+    };
 
 class TtsSpeakMessageHandler extends TPWebMessageHandler {
   @override
@@ -301,7 +347,8 @@ class TtsSpeakMessageHandler extends TPWebMessageHandler {
     if (message is! Map) return;
     final Object? text = message['text'];
     if (text is! String || text.isEmpty) return;
-    await _tts.setLanguage(message['lang'] is String ? message['lang'] as String : 'zh-TW');
+    await _ttsUseChineseEngine();
+    await _tts.setLanguage(message['lang'] is String ? message['lang'] as String : _ttsLanguage);
     await _tts.speak(text);
   }
 }
@@ -318,5 +365,48 @@ class TtsStopMessageHandler extends TPWebMessageHandler {
     required onReply,
   }) async {
     await _tts.stop();
+  }
+}
+
+/// Replies {available, installed}: installed means the voice works with no network.
+class TtsStatusMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'tts_status';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    await _ttsUseChineseEngine();
+    onReply?.call(replyWebMessage(data: await _ttsStatus()));
+  }
+}
+
+/// Fetches the offline Chinese voice ahead of time. There is no API to request the download:
+/// Google's engine starts it the first time it is asked to speak that language, so this speaks
+/// one word at zero volume when the voice isn't on the phone yet.
+class TtsPrepareMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'tts_prepare';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    await _ttsUseChineseEngine();
+    final status = await _ttsStatus();
+    if (status['available'] == true && status['installed'] != true) {
+      await _tts.setLanguage(_ttsLanguage);
+      await _tts.setVolume(0);
+      await _tts.speak('語音');
+      await _tts.setVolume(1);
+    }
+    onReply?.call(replyWebMessage(data: status));
   }
 }

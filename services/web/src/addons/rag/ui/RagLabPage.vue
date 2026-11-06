@@ -3,6 +3,7 @@
 import { computed, defineAsyncComponent, onMounted, ref } from 'vue'
 import { Download } from 'lucide-vue-next'
 import { BaseButton, ChatComposer, EmptyState, PageContainer, type InfoRow } from '@/ui'
+import { voiceStatus, type VoiceStatus } from '@/modules/env'
 import { DeviceModelCard as loadDeviceModelCard, EMBEDDING_MODEL, useModel, type ModelKey } from '@/addons/model'
 import { useRag, type RagAnswer } from '../index'
 import AnswerCard from './AnswerCard.vue'
@@ -17,6 +18,8 @@ const answering = ref(false)
 const streamed = ref('')
 const result = ref<RagAnswer | null>(null)
 const error = ref('')
+const voice = ref<VoiceStatus | null>(null)
+const VOICE_LABEL = { 'offline-ready': '已下載，斷網可朗讀', 'needs-download': '尚未下載（連 Wi-Fi 開啟 App 會自動下載）', unavailable: '這支手機沒有繁中語音' } as const
 
 const ov = () => (override.value === 'auto' ? undefined : override.value)
 const hwRows = computed<InfoRow[]>(() => {
@@ -27,6 +30,7 @@ const hwRows = computed<InfoRow[]>(() => {
     { label: '記憶體', value: h.memoryGB === null ? '無法得知' : `約 ${h.memoryGB} GB` },
     { label: 'CPU', value: `${h.cores} 核` },
     { label: '可用空間', value: h.freeStorageMB === null ? '無法得知' : `${h.freeStorageMB} MB` },
+    ...(voice.value ? [{ label: '繁中語音', value: VOICE_LABEL[voice.value] }] : []),
   ]
 })
 const busy = computed(() => ['probing', 'downloading', 'indexing'].includes(status.value))
@@ -54,7 +58,10 @@ async function submit(text: string) {
   }
 }
 
-onMounted(() => inspect(ov()))
+onMounted(async () => {
+  void inspect(ov())
+  voice.value = await voiceStatus()
+})
 </script>
 
 <template>

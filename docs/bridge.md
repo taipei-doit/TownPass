@@ -28,6 +28,8 @@ App 端實作在 `lib/util/web_message_handler/tp_web_message_handler.dart`。
 | `qr_code_scan` | — | 掃描結果 | 開相機掃 QR code |
 | `tts_speak` | `{text, lang}` | — | 用手機內建語音念出文字（WebView 沒有 `speechSynthesis`） |
 | `tts_stop` | — | — | 停止朗讀 |
+| `tts_status` | — | `{available, installed}` | `installed` 代表斷網也能朗讀 |
+| `tts_prepare` | — | `{available, installed}` | 語音包還沒裝就靜音念一次，觸發引擎下載；非行動網路時網頁啟動會自動送出 |
 
 > 確切的 data 格式以 Dart 原始碼為準，用到前先看一下對應的 handler。
 
