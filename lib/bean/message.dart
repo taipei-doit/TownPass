@@ -4,6 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'message.g.dart';
 
+/// 訊息列表資料模型
 @JsonSerializable(explicitToJson: true)
 class MessageList {
   final List<MessageItem> data;
@@ -16,6 +17,7 @@ class MessageList {
   Map<String, dynamic> toJson() => _$MessageListToJson(this);
 }
 
+/// 訊息單項資料模型
 @JsonSerializable(explicitToJson: true)
 class MessageItem {
   final String title;
@@ -53,6 +55,7 @@ const String _personalType = 'PERSONAL';
 const String _tcgType = 'TCG';
 const String _systemType = 'SYSTEM';
 
+/// 訊息種類列舉
 @JsonEnum()
 enum MessageType {
   @JsonValue(_personalType)
