@@ -1,0 +1,15 @@
+<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="48" height="48" rx="24" fill="#5AB4C5"/>
+  <!-- Hoodie & Penguin Outline -->
+  <path d="M24 10C16.8203 10 11 15.8203 11 23V31C11 34.866 14.134 38 18 38H30C33.866 38 37 34.866 37 31V23C37 15.8203 31.1797 10 24 10ZM34.5 31C34.5 33.4853 32.4853 35.5 30 35.5H18C15.5147 35.5 13.5 33.4853 13.5 31V23C13.5 17.201 18.201 12.5 24 12.5C29.799 12.5 34.5 17.201 34.5 23V31Z" fill="white"/>
+  <!-- Sunglasses (Taipei Codefest Penguin signature) -->
+  <path d="M15.5 18.5H21.5C22.3284 18.5 23 19.1716 23 20V22C23 23.1046 22.1046 24 21 24H16.5C15.3954 24 14.5 23.1046 14.5 22V19.5C14.5 18.9477 14.9477 18.5 15.5 18.5Z" fill="white"/>
+  <path d="M26.5 18.5H32.5C33.0523 18.5 33.5 18.9477 33.5 19.5V22C33.5 23.1046 32.6046 24 31.5 24H27C25.8954 24 25 23.1046 25 22V20C25 19.1716 25.6716 18.5 26.5 18.5Z" fill="white"/>
+  <rect x="22.5" y="19.8" width="3" height="2" fill="white"/>
+  <!-- Beak -->
+  <path d="M24 24.8L21.2 27.3C20.8 27.65 21.05 28.3 21.58 28.3H26.42C26.95 28.3 27.2 27.65 26.8 27.3L24 24.8Z" fill="white"/>
+  <!-- Hoodie Drawstrings & Location Pin -->
+  <path d="M19 30.5V33.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <path d="M29 30.5V33.5" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="24" cy="32" r="2" fill="white"/>
+</svg>

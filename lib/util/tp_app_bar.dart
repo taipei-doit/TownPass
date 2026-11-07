@@ -29,9 +29,11 @@ class TPAppBar extends StatelessWidget implements PreferredSizeWidget {
   });
 
   @override
-  Size get preferredSize => Size.fromHeight(kTPToolbarHeight + (bottom?.preferredSize.height ?? 0));
+  Size get preferredSize =>
+      Size.fromHeight(kTPToolbarHeight + (bottom?.preferredSize.height ?? 0));
 
-  TPAppBarController get _titleController => controller ?? TPAppBarController(title);
+  TPAppBarController get _titleController =>
+      controller ?? TPAppBarController(title);
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +60,8 @@ class TPAppBar extends StatelessWidget implements PreferredSizeWidget {
           SizedBox(
             width: 24,
             height: 24,
-            child: Semantics(excludeSemantics: true, child: Assets.svg.logoS.svg()),
+            child: Semantics(
+                excludeSemantics: true, child: Assets.svg.logoS.svg()),
           ),
           const SizedBox(width: 8),
         ],
