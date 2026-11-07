@@ -10,6 +10,7 @@ import 'package:town_pass/gen/assets.gen.dart';
 // 好行（HowGo 無障礙導航，含室內導航）與 好行管理（室內場館管理後台）兩個微服務（開發用）：
 // 以 --dart-define 指定網址時顯示並釘選於首頁服務，例如
 // flutter run --dart-define=HOWGO_URL=http://192.168.88.214:3000 --dart-define=HOWGO_ADMIN_URL=http://192.168.88.214:5174/admin.html
+// 雲端部署（Cloudflare）：--dart-define=HOWGO_URL=https://howgo.xmoty.me --dart-define=HOWGO_ADMIN_URL=https://howgo-admin.xmoty.me/
 const String howGoUrl = String.fromEnvironment('HOWGO_URL');
 const String howGoAdminUrl = String.fromEnvironment('HOWGO_ADMIN_URL');
 

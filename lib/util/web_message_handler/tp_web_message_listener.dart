@@ -9,6 +9,7 @@ abstract class TPWebMessageListener {
   // 這樣做可以提升應用程式的啟動效能，因為這些處理器通常是無狀態的。
   static final List<TPWebMessageHandler> _cachedMessageHandlers = [
         UserinfoWebMessageHandler(),
+        UserGenderMessageHandler(),
         LaunchMapWebMessageHandler(),
         PhoneCallMessageHandler(),
         Agree1999MessageHandler(),

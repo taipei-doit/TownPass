@@ -122,6 +122,32 @@ class UserinfoWebMessageHandler extends TPWebMessageHandler {
   }
 }
 
+/// 性別（好行「找廁所」導向對應性別廁所用）：由身分證／居留證號第 2 碼推得，只回傳性別、不回傳證號。
+/// 回覆 `{ gender: 'male' | 'female' | null }`；未登入或證號無法判斷時為 null。
+class UserGenderMessageHandler extends TPWebMessageHandler {
+  @override
+  String get name => 'user_gender';
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required onReply,
+  }) async {
+    onReply?.call(replyWebMessage(
+      data: {'gender': genderFromIdNumber(Get.find<AccountService>().account?.idNumber)},
+    ));
+  }
+}
+
+/// 身分證號第 2 碼 1／2、新式居留證號 8／9 分別為男／女；其他格式回傳 null。
+String? genderFromIdNumber(String? idNumber) {
+  final String? id = idNumber?.trim().toUpperCase();
+  if (id == null || !RegExp(r'^[A-Z][1289][0-9]{8}$').hasMatch(id)) return null;
+  return switch (id[1]) { '1' || '8' => 'male', _ => 'female' };
+}
+
 class LaunchMapWebMessageHandler extends TPWebMessageHandler {
   @override
   String get name => 'launch_map';
