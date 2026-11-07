@@ -117,21 +117,31 @@ class WifiScanStreamMessageHandler extends TPWebMessageStreamHandler {
 /// `t` 為感測器事件時間（epoch 毫秒，含小數），只包含該批有資料的感測器。
 /// iOS 另帶 `magnetometer_accuracy`（CMMagneticFieldCalibrationAccuracy：1 中、2 高），供網頁提示畫 8 字校正。
 class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
-  /// iOS 校正後磁力計（見 ios/Runner/AppDelegate.swift），事件為 `[epoch 毫秒, x, y, z, 校正精度]`。
-  static const EventChannel _calibratedMagnetometerChannel = EventChannel('town_pass/calibrated_magnetometer');
+  /// iOS 動作感測（見 ios/Runner/AppDelegate.swift，CMDeviceMotion 已校正），事件為
+  /// `[epoch 毫秒, ax, ay, az, gx, gy, gz, mx, my, mz, 磁力計校正精度]`；三種感測器共用同一個串流。
+  static const EventChannel _deviceMotionChannel = EventChannel('town_pass/device_motion');
+  static Stream<List<num>>? _deviceMotionStream;
+
+  // EventChannel 同時只能有一個原生 listener，三種感測器必須共用同一個 broadcast stream
+  static Stream<List<num>> _deviceMotion(Duration samplingPeriod) => _deviceMotionStream ??= _deviceMotionChannel
+      .receiveBroadcastStream({'interval_us': samplingPeriod.inMicroseconds})
+      .map((event) => (event as List).cast<num>());
 
   static final Map<String, Stream<List<num>> Function(Duration samplingPeriod)> _sensorStreams = {
-    'accelerometer': (samplingPeriod) => accelerometerEventStream(samplingPeriod: samplingPeriod)
-        .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
+    // iOS 改用 CMDeviceMotion：sensors_plus 的 iOS 時間戳在裝置休眠後會落後，陀螺儀/磁力計也是未校正的原始值
+    'accelerometer': (samplingPeriod) => Platform.isIOS
+        ? _deviceMotion(samplingPeriod).map((e) => [e[0], e[1], e[2], e[3]])
+        : accelerometerEventStream(samplingPeriod: samplingPeriod)
+            .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
     'user_accelerometer': (samplingPeriod) => userAccelerometerEventStream(samplingPeriod: samplingPeriod)
         .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
-    'gyroscope': (samplingPeriod) => gyroscopeEventStream(samplingPeriod: samplingPeriod)
-        .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
-    // sensors_plus 在 iOS 給的是未校正的原始磁力計值，地磁定位需要扣除裝置偏差後的數值
+    'gyroscope': (samplingPeriod) => Platform.isIOS
+        ? _deviceMotion(samplingPeriod).map((e) => [e[0], e[4], e[5], e[6]])
+        : gyroscopeEventStream(samplingPeriod: samplingPeriod)
+            .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
+    // 未校正或低精度（< 1）時仍混有裝置偏差，先不送；第 5 欄的校正精度另以 magnetometer_accuracy 送出
     'magnetometer': (samplingPeriod) => Platform.isIOS
-        ? _calibratedMagnetometerChannel
-            .receiveBroadcastStream({'interval_us': samplingPeriod.inMicroseconds})
-            .map((event) => (event as List).cast<num>())
+        ? _deviceMotion(samplingPeriod).where((e) => e[10] >= 1).map((e) => [e[0], e[7], e[8], e[9], e[10]])
         : magnetometerEventStream(samplingPeriod: samplingPeriod)
             .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
     'barometer': (samplingPeriod) => barometerEventStream(samplingPeriod: samplingPeriod)
