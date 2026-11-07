@@ -23,7 +23,7 @@ class ActivityListView extends StatelessWidget {
       body: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 16),
         itemCount: list.data.length,
-        separatorBuilder: (_, __) => const TPLine.horizontal(),
+        separatorBuilder: (_, _) => const TPLine.horizontal(),
         itemBuilder: (_, index) => _ActivityItemWidget(item: list.data[index]),
       ),
     );

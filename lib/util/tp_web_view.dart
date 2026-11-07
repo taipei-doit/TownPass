@@ -85,7 +85,7 @@ class TPWebView extends StatelessWidget {
             controller.loadData(data: _failedToLoadUrlData(url: url));
           }
         },
-        onUpdateVisitedHistory: (_, __, ___) async {
+        onUpdateVisitedHistory: (_, _, _) async {
           canGoBack.value = await webViewController.value?.canGoBack() ?? false;
         },
         onTitleChanged: (_, title) {

@@ -27,15 +27,15 @@ class ActivityBannerWidget extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   scrollDirection: Axis.horizontal,
                   itemCount: 3,
-                  separatorBuilder: (_, __) => const SizedBox(width: 16),
-                  itemBuilder: (_, __) => const _Banner(),
+                  separatorBuilder: (_, _) => const SizedBox(width: 16),
+                  itemBuilder: (_, _) => const _Banner(),
                 ),
               ),
             false => ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.list!.data.length,
-                separatorBuilder: (_, __) => const SizedBox(width: 16),
+                separatorBuilder: (_, _) => const SizedBox(width: 16),
                 itemBuilder: (_, index) => _Banner(activity: controller.list!.data[index]),
               ),
           },
@@ -102,7 +102,7 @@ class _Banner extends StatelessWidget {
 class _BannerRectangle extends StatelessWidget {
   final Widget? child;
 
-  const _BannerRectangle({this.child});
+  const _BannerRectangle() : child = null;
 
   @override
   Widget build(BuildContext context) {

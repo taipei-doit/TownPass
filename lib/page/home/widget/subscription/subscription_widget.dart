@@ -141,7 +141,7 @@ class SubscriptionWidget extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 12.0),
                   itemCount: subscriptionList.length,
-                  separatorBuilder: (_, __) => const TPLine.horizontal(
+                  separatorBuilder: (_, _) => const TPLine.horizontal(
                     margin: EdgeInsets.symmetric(vertical: 12.0),
                   ),
                   itemBuilder: (_, index) => SubscriptionItemWidget(item: subscriptionList[index]),

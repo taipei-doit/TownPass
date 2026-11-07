@@ -38,7 +38,7 @@ class PinnedServiceWidget extends GetView<PinnedServiceWidgetController> {
                   _AddMoreButton(onTap: onMoreTap),
                 ))
               .splitBetweenIndexed(
-                (index, _, __) => index % 4 == 0,
+                (index, _, _) => index % 4 == 0,
               )
               .map<TableRow>(
                 (rowList) {

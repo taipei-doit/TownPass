@@ -120,7 +120,7 @@ class BillView extends StatelessWidget {
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               itemCount: 1,
-              separatorBuilder: (_, __) => const SizedBox(width: 12.0),
+              separatorBuilder: (_, _) => const SizedBox(width: 12.0),
               itemBuilder: (_, index) {
                 return GestureDetector(
                   behavior: HitTestBehavior.opaque,
@@ -169,7 +169,7 @@ class BillView extends StatelessWidget {
               name: item.name,
               onTap: () async => await TPRoute.openUri(uri: item.uri),
             ),
-          ).toList(),
+          ),
         ],
       ),
     );

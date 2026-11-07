@@ -45,7 +45,7 @@ class FeedbackView extends GetView<FeedbackViewController> {
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
                                 shrinkWrap: true,
                                 itemCount: FeedbackType.values.length,
-                                separatorBuilder: (_, __) => const TPLine.horizontal(color: TPColors.grayscale200),
+                                separatorBuilder: (_, _) => const TPLine.horizontal(color: TPColors.grayscale200),
                                 itemBuilder: (context, index) {
                                   final FeedbackType feedbackType = FeedbackType.values[index];
                                   return GestureDetector(
