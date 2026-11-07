@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:town_pass/util/web_message_handler/tp_sensor_web_message_handler.dart';
 import 'package:town_pass/util/web_message_handler/tp_web_message_handler.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
@@ -16,11 +17,15 @@ abstract class TPWebMessageListener {
         OpenLinkMessageHandler(),
         NotifyMessageHandler(),
         QRCodeScanMessageHandler(),
+        WifiScanMessageHandler(),
+        WifiScanStreamMessageHandler(),
+        SensorStreamMessageHandler(),
       ];
 
   static List<TPWebMessageHandler> get messageHandler => _cachedMessageHandlers;
 
-  static WebMessageListener webMessageListener() {
+  /// `owner` 用來區分各 WebView 的串流，WebView 關閉時以同一個 `owner` 呼叫 [cancelStreams]。
+  static WebMessageListener webMessageListener({required Object owner}) {
     return WebMessageListener(
       jsObjectName: 'flutterObject',
       onPostMessage: (webMessage, sourceOrigin, isMainFrame, replyProxy) async {
@@ -31,15 +36,34 @@ abstract class TPWebMessageListener {
         final Map dataMap = jsonDecode(webMessage.data);
         for (TPWebMessageHandler handler in messageHandler) {
           if (handler.name == dataMap['name']) {
-            await handler.handle(
-              message: dataMap['data'],
-              sourceOrigin: sourceOrigin,
-              isMainFrame: isMainFrame,
-              onReply: (reply) => replyProxy.postMessage(reply),
-            );
+            switch (handler) {
+              case TPWebMessageStreamHandler handler:
+                await handler.handleStream(
+                  owner: owner,
+                  message: dataMap['data'],
+                  sourceOrigin: sourceOrigin,
+                  isMainFrame: isMainFrame,
+                  onReply: (reply) => replyProxy.postMessage(reply),
+                );
+              default:
+                await handler.handle(
+                  message: dataMap['data'],
+                  sourceOrigin: sourceOrigin,
+                  isMainFrame: isMainFrame,
+                  onReply: (reply) => replyProxy.postMessage(reply),
+                );
+            }
           }
         }
       },
     );
+  }
+
+  static Future<void> cancelStreams({required Object owner}) async {
+    for (TPWebMessageHandler handler in messageHandler) {
+      if (handler is TPWebMessageStreamHandler) {
+        await handler.cancel(owner: owner);
+      }
+    }
   }
 }

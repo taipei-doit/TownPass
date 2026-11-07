@@ -36,6 +36,75 @@ abstract class TPWebMessageHandler {
   }
 }
 
+/// 持續推送資料給網頁的處理器（例如感測器串流）。
+///
+/// 網頁傳入 `{action: 'start', ...}` 開始、`{action: 'stop'}` 停止，開始後會透過同一個
+/// reply proxy 重複回傳 `{name, data}`。每個 WebView 以 `owner` 區分各自的串流，
+/// WebView 關閉或換頁時由 `TPWebMessageListener.cancelStreams` 統一停止。
+abstract class TPWebMessageStreamHandler extends TPWebMessageHandler {
+  final Map<Object, Future<void> Function()> _cancellers = {};
+
+  /// 開始串流，回傳停止串流用的 callback。
+  Future<Future<void> Function()> start({
+    required Map config,
+    required void Function(Object? data) onData,
+  });
+
+  @override
+  Future<void> handle({
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required Function(WebMessage replyWebMessage)? onReply,
+  }) {
+    return handleStream(
+      owner: this,
+      message: message,
+      sourceOrigin: sourceOrigin,
+      isMainFrame: isMainFrame,
+      onReply: onReply,
+    );
+  }
+
+  Future<void> handleStream({
+    required Object owner,
+    required Object? message,
+    required WebUri? sourceOrigin,
+    required bool isMainFrame,
+    required Function(WebMessage replyWebMessage)? onReply,
+  }) async {
+    await cancel(owner: owner);
+
+    final Map config = message is Map ? message : const {};
+    if (config['action'] != 'start' || onReply == null) {
+      onReply?.call(replyWebMessage(data: true));
+      return;
+    }
+
+    final Future<void> Function() canceller = await start(
+      config: config,
+      onData: (data) {
+        try {
+          onReply(replyWebMessage(data: data));
+        } catch (error) {
+          // reply proxy 已失效（WebView 已關閉）
+          printError(info: error.toString());
+          cancel(owner: owner);
+        }
+      },
+    );
+
+    // start 等待期間若又收到新的 start，先停掉前一個避免殘留
+    final Future<void> Function()? previous = _cancellers[owner];
+    _cancellers[owner] = canceller;
+    await previous?.call();
+  }
+
+  Future<void> cancel({required Object owner}) async {
+    await _cancellers.remove(owner)?.call();
+  }
+}
+
 class UserinfoWebMessageHandler extends TPWebMessageHandler {
   @override
   String get name => 'userinfo';

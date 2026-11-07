@@ -252,9 +252,15 @@ class TPInAppWebView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return _TPWebMessageStreamScope(
+      builder: (owner) => _buildInAppWebView(owner: owner),
+    );
+  }
+
+  Widget _buildInAppWebView({required Object owner}) {
     return InAppWebView(
       onWebViewCreated: (controller) async {
-        await controller.addWebMessageListener(TPWebMessageListener.webMessageListener());
+        await controller.addWebMessageListener(TPWebMessageListener.webMessageListener(owner: owner));
         onWebViewCreated?.call(controller);
       },
       gestureRecognizers: gestureRecognizers,
@@ -288,7 +294,11 @@ class TPInAppWebView extends StatelessWidget {
       onReceivedHttpError: onReceivedHttpError,
       onLoadResource: onLoadResource,
       onLoadResourceWithCustomScheme: onLoadResourceWithCustomScheme,
-      onLoadStart: onLoadStart,
+      onLoadStart: (controller, url) {
+        // 換頁後舊頁面的串流不再有接收者
+        TPWebMessageListener.cancelStreams(owner: owner);
+        onLoadStart?.call(controller, url);
+      },
       onLoadStop: onLoadStop,
       onLongPressHitTestResult: onLongPressHitTestResult,
       onPrintRequest: onPrintRequest,
@@ -328,6 +338,29 @@ class TPInAppWebView extends StatelessWidget {
       onMicrophoneCaptureStateChanged: onMicrophoneCaptureStateChanged,
     );
   }
+}
+
+/// 提供每個 WebView 專屬的 `owner`，WebView 移除時停止其所有網頁串流（例如感測器）。
+class _TPWebMessageStreamScope extends StatefulWidget {
+  final Widget Function(Object owner) builder;
+
+  const _TPWebMessageStreamScope({required this.builder});
+
+  @override
+  State<_TPWebMessageStreamScope> createState() => _TPWebMessageStreamScopeState();
+}
+
+class _TPWebMessageStreamScopeState extends State<_TPWebMessageStreamScope> {
+  final Object _owner = Object();
+
+  @override
+  void dispose() {
+    TPWebMessageListener.cancelStreams(owner: _owner);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) => widget.builder(_owner);
 }
 
 String _failedToLoadUrlData({String? url}) {

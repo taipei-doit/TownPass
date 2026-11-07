@@ -4,4 +4,6 @@
          to allow setting breakpoints, to provide hot reload, etc.
     -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- Debug only: allow loading microservices from a LAN dev server over http:// -->
+    <application android:usesCleartextTraffic="true"/>
 </manifest>

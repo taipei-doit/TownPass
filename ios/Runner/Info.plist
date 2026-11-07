@@ -75,6 +75,8 @@
 			<key>LocationTemporaryUsageKey</key>
 			<string>TownPass 需要精確定位權限才可正常使用</string>
 		</dict>
+		<key>NSMotionUsageDescription</key>
+		<string>TownPass 需要動作與氣壓感測器以提供室內定位與導航</string>
 		<key>NSCameraUsageDescription</key>
         <string>This app needs camera access to scan QR codes</string>
         <key>NSPhotoLibraryUsageDescription</key>
