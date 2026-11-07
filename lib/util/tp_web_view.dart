@@ -89,10 +89,7 @@ class TPWebView extends StatelessWidget {
           canGoBack.value = await webViewController.value?.canGoBack() ?? false;
         },
         onTitleChanged: (_, title) {
-          appBarController.title.value = switch (forceTitle == null) {
-            true => title,
-            false => forceTitle,
-          };
+          appBarController.title.value = forceTitle ?? title;
         },
         onGeolocationPermissionsShowPrompt: (controller, origin) async {
           // should be deal individually (ask for user agreement)
@@ -341,7 +338,8 @@ String _failedToLoadUrlData({String? url}) {
 
   <h1>Failed to load url:</h1>
 
-  <h3>${switch (url) {
+  <h3>
+${switch (url) {
     null => '(null)',
     String() when url.isEmpty => '(empty)',
     _ => url,
