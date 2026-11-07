@@ -77,6 +77,13 @@
 		</dict>
 		<key>NSMotionUsageDescription</key>
 		<string>TownPass 需要動作與氣壓感測器以提供室內定位與導航</string>
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>TownPass 需要連線到區域網路上的開發伺服器以載入室內導航</string>
+		<key>NSAppTransportSecurity</key>
+		<dict>
+			<key>NSAllowsLocalNetworking</key>
+			<true/>
+		</dict>
 		<key>NSCameraUsageDescription</key>
         <string>This app needs camera access to scan QR codes</string>
         <key>NSPhotoLibraryUsageDescription</key>

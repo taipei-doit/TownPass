@@ -5,6 +5,7 @@ class PinnedServiceWidgetController extends GetxController {
   final RxList<MyServiceItemId> _pinnedList = RxList(
     [
       MyServiceItemId.locationSearch,
+      if (indoorNavAdminUrl.isNotEmpty) MyServiceItemId.indoorAdmin,
       MyServiceItemId.districtOffice,
       MyServiceItemId.dashboard,
     ],

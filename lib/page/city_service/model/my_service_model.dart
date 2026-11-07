@@ -7,6 +7,11 @@ import 'package:town_pass/gen/assets.gen.dart';
 // First, add new service within the MyServiceItemId enum;
 // Then add MyServiceItem within MyServiceIdExt extension.
 
+// 室內導航微服務（開發用）：以 --dart-define 指定網址時，「找地點」改開室內導航、並顯示「場館管理」，例如
+// flutter run --dart-define=INDOOR_NAV_URL=http://192.168.88.214:8000/ --dart-define=INDOOR_NAV_ADMIN_URL=http://192.168.88.214:8000/admin.html
+const String indoorNavUrl = String.fromEnvironment('INDOOR_NAV_URL');
+const String indoorNavAdminUrl = String.fromEnvironment('INDOOR_NAV_ADMIN_URL');
+
 enum MyServiceItemId {
   dedicatedLine,
   districtOffice,
@@ -29,6 +34,7 @@ enum MyServiceItemId {
   library,
   locationSearch,
   zoo,
+  indoorAdmin,
   ;
 }
 
@@ -174,7 +180,14 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '提供各區日常服務地圖查找',
           icon: Assets.svg.iconLocationSearch24.svg(),
           category: MyServiceCategory.explore,
-          destinationUrl: 'https://taipei-pass-service.vercel.app/surrounding-service/',
+          destinationUrl: indoorNavUrl.isNotEmpty ? indoorNavUrl : 'https://taipei-pass-service.vercel.app/surrounding-service/',
+        ),
+      MyServiceItemId.indoorAdmin => MyServiceItem(
+          title: '場館管理',
+          description: '室內導航管理後台：平面圖、POI、場勘建圖、定位驗證',
+          icon: Assets.svg.iconMunicipalNavigation.svg(),
+          category: MyServiceCategory.explore,
+          destinationUrl: indoorNavAdminUrl,
         ),
       MyServiceItemId.zoo => MyServiceItem(
           title: '愛遊動物園',
