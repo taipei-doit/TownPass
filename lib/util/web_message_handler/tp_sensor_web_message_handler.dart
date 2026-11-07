@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:sensors_plus/sensors_plus.dart';
 import 'package:town_pass/util/web_message_handler/tp_web_message_handler.dart';
@@ -115,6 +116,9 @@ class WifiScanStreamMessageHandler extends TPWebMessageStreamHandler {
 /// 每 `batch_ms` 推送一次 `{accelerometer: [[t, x, y, z], ...], barometer: [[t, hPa], ...], unavailable: [...]}`，
 /// `t` 為感測器事件時間（epoch 毫秒，含小數），只包含該批有資料的感測器。
 class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
+  /// iOS 校正後磁力計（見 ios/Runner/AppDelegate.swift），事件為 `[epoch 毫秒, x, y, z, 校正精度]`。
+  static const EventChannel _calibratedMagnetometerChannel = EventChannel('town_pass/calibrated_magnetometer');
+
   static final Map<String, Stream<List<num>> Function(Duration samplingPeriod)> _sensorStreams = {
     'accelerometer': (samplingPeriod) => accelerometerEventStream(samplingPeriod: samplingPeriod)
         .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
@@ -122,8 +126,13 @@ class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
         .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
     'gyroscope': (samplingPeriod) => gyroscopeEventStream(samplingPeriod: samplingPeriod)
         .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
-    'magnetometer': (samplingPeriod) => magnetometerEventStream(samplingPeriod: samplingPeriod)
-        .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
+    // sensors_plus 在 iOS 給的是未校正的原始磁力計值，地磁定位需要扣除裝置偏差後的數值
+    'magnetometer': (samplingPeriod) => Platform.isIOS
+        ? _calibratedMagnetometerChannel
+            .receiveBroadcastStream({'interval_us': samplingPeriod.inMicroseconds})
+            .map((event) => (event as List).cast<num>().sublist(0, 4))
+        : magnetometerEventStream(samplingPeriod: samplingPeriod)
+            .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
     'barometer': (samplingPeriod) => barometerEventStream(samplingPeriod: samplingPeriod)
         .map((event) => [_epochMs(event.timestamp), event.pressure]),
   };
