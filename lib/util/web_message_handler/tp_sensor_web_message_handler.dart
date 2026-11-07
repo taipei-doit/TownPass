@@ -115,6 +115,7 @@ class WifiScanStreamMessageHandler extends TPWebMessageStreamHandler {
 /// 網頁傳入 `{action: 'start', sensors: ['accelerometer', 'gyroscope', 'magnetometer', 'barometer'], interval_ms: 20, batch_ms: 200}`，
 /// 每 `batch_ms` 推送一次 `{accelerometer: [[t, x, y, z], ...], barometer: [[t, hPa], ...], unavailable: [...]}`，
 /// `t` 為感測器事件時間（epoch 毫秒，含小數），只包含該批有資料的感測器。
+/// iOS 另帶 `magnetometer_accuracy`（CMMagneticFieldCalibrationAccuracy：1 中、2 高），供網頁提示畫 8 字校正。
 class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
   /// iOS 校正後磁力計（見 ios/Runner/AppDelegate.swift），事件為 `[epoch 毫秒, x, y, z, 校正精度]`。
   static const EventChannel _calibratedMagnetometerChannel = EventChannel('town_pass/calibrated_magnetometer');
@@ -130,7 +131,7 @@ class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
     'magnetometer': (samplingPeriod) => Platform.isIOS
         ? _calibratedMagnetometerChannel
             .receiveBroadcastStream({'interval_us': samplingPeriod.inMicroseconds})
-            .map((event) => (event as List).cast<num>().sublist(0, 4))
+            .map((event) => (event as List).cast<num>())
         : magnetometerEventStream(samplingPeriod: samplingPeriod)
             .map((event) => [_epochMs(event.timestamp), event.x, event.y, event.z]),
     'barometer': (samplingPeriod) => barometerEventStream(samplingPeriod: samplingPeriod)
@@ -154,10 +155,18 @@ class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
 
     final Map<String, List<List<num>>> buffer = {};
     final Set<String> unavailable = {};
+    num? magnetometerAccuracy;
     final List<StreamSubscription<List<num>>> subscriptions = [
       for (final String sensor in sensors)
         _sensorStreams[sensor]!(samplingPeriod).listen(
-          (sample) => (buffer[sensor] ??= []).add(sample),
+          (sample) {
+            // iOS 校正後磁力計多帶第 5 欄校正精度，與資料分開送，維持 [t, x, y, z] 格式
+            if (sample.length > 4) {
+              magnetometerAccuracy = sample[4];
+              sample = sample.sublist(0, 4);
+            }
+            (buffer[sensor] ??= []).add(sample);
+          },
           // 裝置沒有此感測器
           onError: (_) => unavailable.add(sensor),
           cancelOnError: true,
@@ -171,6 +180,7 @@ class SensorStreamMessageHandler extends TPWebMessageStreamHandler {
       onData({
         ...buffer,
         if (unavailable.isNotEmpty) 'unavailable': unavailable.toList(),
+        'magnetometer_accuracy': ?magnetometerAccuracy,
       });
       buffer.clear();
       unavailable.clear();

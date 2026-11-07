@@ -52,8 +52,8 @@ final class CalibratedMagnetometerStreamHandler: NSObject, FlutterStreamHandler 
     motionManager.startDeviceMotionUpdates(using: .xArbitraryCorrectedZVertical, to: OperationQueue.main) { [weak self] motion, _ in
       guard let self, let motion else { return }
       let field = motion.magneticField
-      // 系統尚未完成校正時數值不可信（多為 0），先不送；手機畫 8 字可加速校正
-      if field.accuracy == .uncalibrated { return }
+      // 未校正或低精度時仍混有裝置偏差（實測 |B| 可達 100–180 µT），先不送；手機畫 8 字可加速校正
+      if field.accuracy == .uncalibrated || field.accuracy == .low { return }
       events([
         (self.bootTime + motion.timestamp) * 1000,
         field.field.x, field.field.y, field.field.z,
