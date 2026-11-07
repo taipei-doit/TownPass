@@ -7,10 +7,11 @@ import 'package:town_pass/gen/assets.gen.dart';
 // First, add new service within the MyServiceItemId enum;
 // Then add MyServiceItem within MyServiceIdExt extension.
 
-// 室內導航微服務（開發用）：以 --dart-define 指定網址時，「找地點」改開室內導航、並顯示「場館管理」，例如
-// flutter run --dart-define=INDOOR_NAV_URL=http://192.168.88.214:8000/ --dart-define=INDOOR_NAV_ADMIN_URL=http://192.168.88.214:8000/admin.html
-const String indoorNavUrl = String.fromEnvironment('INDOOR_NAV_URL');
-const String indoorNavAdminUrl = String.fromEnvironment('INDOOR_NAV_ADMIN_URL');
+// 好行（HowGo 無障礙導航，含室內導航）與 好行管理（室內場館管理後台）兩個微服務（開發用）：
+// 以 --dart-define 指定網址時顯示並釘選於首頁服務，例如
+// flutter run --dart-define=HOWGO_URL=http://192.168.88.214:3000 --dart-define=HOWGO_ADMIN_URL=http://192.168.88.214:5174/admin.html
+const String howGoUrl = String.fromEnvironment('HOWGO_URL');
+const String howGoAdminUrl = String.fromEnvironment('HOWGO_ADMIN_URL');
 
 enum MyServiceItemId {
   dedicatedLine,
@@ -34,7 +35,8 @@ enum MyServiceItemId {
   library,
   locationSearch,
   zoo,
-  indoorAdmin,
+  howGo,
+  howGoAdmin,
   ;
 }
 
@@ -180,14 +182,23 @@ extension MyServiceIdExt on MyServiceItemId {
           description: '提供各區日常服務地圖查找',
           icon: Assets.svg.iconLocationSearch24.svg(),
           category: MyServiceCategory.explore,
-          destinationUrl: indoorNavUrl.isNotEmpty ? indoorNavUrl : 'https://taipei-pass-service.vercel.app/surrounding-service/',
+          destinationUrl: 'https://taipei-pass-service.vercel.app/surrounding-service/',
         ),
-      MyServiceItemId.indoorAdmin => MyServiceItem(
-          title: '場館管理',
-          description: '室內導航管理後台：平面圖、POI、場勘建圖、定位驗證',
+      MyServiceItemId.howGo => MyServiceItem(
+          title: '好行',
+          description: '無障礙步行導航：比較最快、平衡、輪椅友善路線，並可進入場館室內導航',
           icon: Assets.svg.iconMunicipalNavigation.svg(),
           category: MyServiceCategory.explore,
-          destinationUrl: indoorNavAdminUrl,
+          destinationUrl: howGoUrl,
+          forceWebViewTitle: '好行',
+        ),
+      MyServiceItemId.howGoAdmin => MyServiceItem(
+          title: '好行管理',
+          description: '場館室內導航管理：平面圖、POI、場勘建圖、定位驗證',
+          icon: Assets.svg.iconMunicipalNavigation.svg(),
+          category: MyServiceCategory.explore,
+          destinationUrl: howGoAdminUrl,
+          forceWebViewTitle: '好行管理',
         ),
       MyServiceItemId.zoo => MyServiceItem(
           title: '愛遊動物園',

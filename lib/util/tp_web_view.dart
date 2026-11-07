@@ -46,9 +46,23 @@ class TPWebView extends StatelessWidget {
 
   final RxBool canGoBack = RxBool(false);
 
+  /// 系統返回（Android 實體/手勢返回鍵）：網頁有上一頁時先在網頁內返回（觸發 `popstate`），
+  /// 沒有上一頁才關閉 WebView。右上角關閉（X）按鈕仍一律直接關閉。
+  Future<void> _onPopInvoked(BuildContext context, bool didPop, Object? result) async {
+    if (didPop) return;
+    final InAppWebViewController? controller = webViewController.value;
+    if (controller != null && await controller.canGoBack()) {
+      await controller.goBack();
+      return;
+    }
+    // 網頁已無上一頁（canGoBack 狀態過時）時，關閉此頁。
+    canGoBack.value = false;
+    if (context.mounted) Navigator.of(context).pop(result);
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    final Widget scaffold = Scaffold(
       appBar: TPAppBar(
         backgroundColor: TPColors.primary500,
         foregroundColor: TPColors.white,
@@ -99,6 +113,16 @@ class TPWebView extends StatelessWidget {
           return GeolocationPermissionShowPromptResponse(origin: origin, allow: true, retain: true);
         },
         onCloseWindow: (_) => Get.back(),
+        // iOS：網頁有上一頁時 Flutter 的滑動返回會被 PopScope 停用，改由 WKWebView 原生滑動手勢在網頁歷史中返回。
+        initialSettings: InAppWebViewSettings(allowsBackForwardNavigationGestures: true),
+      ),
+    );
+
+    return Obx(
+      () => PopScope<Object?>(
+        canPop: !canGoBack.value,
+        onPopInvokedWithResult: (didPop, result) => _onPopInvoked(context, didPop, result),
+        child: scaffold,
       ),
     );
   }
