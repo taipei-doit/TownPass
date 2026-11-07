@@ -1,6 +1,7 @@
-import 'package:town_pass/util/tp_colors.dart';
 import 'package:flutter/material.dart';
+import 'package:town_pass/util/tp_colors.dart';
 
+/// 通用的底部抽屜容器元件
 class TPBottomSheet extends StatelessWidget {
   final Widget child;
   final bool useSafeArea;
@@ -21,7 +22,7 @@ class TPBottomSheet extends StatelessWidget {
           BoxShadow(
             color: Color(0x19000000),
             blurRadius: 6,
-          )
+          ),
         ],
       ),
       child: SafeArea(
