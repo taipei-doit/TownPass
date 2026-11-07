@@ -7,7 +7,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        - 閱讀我們的所有文件，特別是我們的 [guideline](https://tpe-guideline.web.app/)，裡面可能已經有資訊可以幫助您解決您遇到的問題。
+        - 閱讀我們的所有文件，特別是我們的 [guideline](https://townpass.taipei/)，裡面可能已經有資訊可以幫助您解決您遇到的問題。
         - 確認您的 issue 尚未有人[回報](https://github.com/taipei-doit/TownPass-Services/issues)。
   - type: textarea
     id: description

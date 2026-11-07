@@ -8,7 +8,7 @@ Open source is a key driver of technological progress and social development. Th
 
 # Getting Started
 
-We highly recommend to read through our [document](https://tpe-guideline.web.app/en/docs/) for more detail.
+We highly recommend to read through our [document](https://townpass.taipei/en/docs/) for more detail.
 
 Here are some quick setup guide.
 
