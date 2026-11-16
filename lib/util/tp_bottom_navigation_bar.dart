@@ -14,6 +14,11 @@ class TPBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const labelStyle = TextStyle(
+      fontSize: 14,
+      fontWeight: FontWeight.w400,
+    );
+
     return Container(
       decoration: const BoxDecoration(
         boxShadow: [
@@ -30,14 +35,8 @@ class TPBottomNavigationBar extends StatelessWidget {
         items: TPBottomNavigationFactory.barItemList,
         selectedItemColor: TPColors.primary500,
         unselectedItemColor: TPColors.grayscale950,
-        selectedLabelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
-        unselectedLabelStyle: const TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w400,
-        ),
+        selectedLabelStyle: labelStyle,
+        unselectedLabelStyle: labelStyle,
         showUnselectedLabels: true,
         currentIndex: currentIndex,
         onTap: onTap,
