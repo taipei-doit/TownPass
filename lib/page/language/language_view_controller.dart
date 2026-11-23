@@ -3,17 +3,14 @@ import 'package:get/get.dart';
 enum Language {
   traditionalChinese,
   english,
-  ;
 }
 
 class LanguageViewController extends GetxController {
-  List<Language> get languageList => [
+  List<Language> get languageList => const [
         Language.traditionalChinese,
         Language.english,
       ];
 
   // TODO: update preference, update locale
-  void onIndexChange(int index) {
-
-  }
+  void onIndexChange(int index) {}
 }
